@@ -1,0 +1,27 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
+# The set of languages for which implicit dependencies are needed:
+set(CMAKE_DEPENDS_LANGUAGES
+  )
+
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "C:/ws/prj_evrp/Instance.cpp" "CMakeFiles/prj_evrp.dir/Instance.cpp.obj" "gcc" "CMakeFiles/prj_evrp.dir/Instance.cpp.obj.d"
+  "C:/ws/prj_evrp/Node.cpp" "CMakeFiles/prj_evrp.dir/Node.cpp.obj" "gcc" "CMakeFiles/prj_evrp.dir/Node.cpp.obj.d"
+  "C:/ws/prj_evrp/Search.cpp" "CMakeFiles/prj_evrp.dir/Search.cpp.obj" "gcc" "CMakeFiles/prj_evrp.dir/Search.cpp.obj.d"
+  "C:/ws/prj_evrp/Utils.cpp" "CMakeFiles/prj_evrp.dir/Utils.cpp.obj" "gcc" "CMakeFiles/prj_evrp.dir/Utils.cpp.obj.d"
+  "C:/ws/prj_evrp/main.cpp" "CMakeFiles/prj_evrp.dir/main.cpp.obj" "gcc" "CMakeFiles/prj_evrp.dir/main.cpp.obj.d"
+  )
+
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_LINKED_INFO_FILES
+  )
+
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_FORWARD_LINKED_INFO_FILES
+  )
+
+# Fortran module output directory.
+set(CMAKE_Fortran_TARGET_MODULE_DIR "")

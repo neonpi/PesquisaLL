@@ -1,0 +1,44 @@
+//
+// Created by Rafael on 24/11/2024.
+//
+
+#ifndef INSTANCE_H
+#define INSTANCE_H
+#include <string>
+#include <vector>
+#include "Node.h"
+#include <math.h>
+
+using namespace std;
+class Instance {
+public:
+    string inst_name;
+    int n_node;
+    vector<Node> nodes;
+    int customer_indexes[2]; //[i,j)
+    int charger_st_indexes[2]; //[i,j)
+    int locker_indexes[2]; //[i,j)
+    int qty_customers;
+    int qty_charger_st;
+    int qty_parcel_locker;
+    double batt_capacity; //Q
+    double load_capacity; //CV
+    double consumption_rate; //r
+    double charging_rate; //g
+    double avg_speed; //v
+    double** distances;
+    vector<vector<Node*>> nearest_stations; //distancia estacao
+    int minimum_vehicle;
+
+
+    explicit Instance();
+    ~Instance();
+
+    void calculate_distances();
+    void calcula_nearest_stations();
+    void print();
+};
+
+
+
+#endif //INSTANCE_H

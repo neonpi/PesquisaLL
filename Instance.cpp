@@ -17,7 +17,6 @@ Instance::Instance() {
 
     this->qty_customers = 0;
     this->qty_parcel_locker = 0;
-    this->qty_charger_st = 0;
 
     this->load_capacity=0;
     this->avg_speed=0;

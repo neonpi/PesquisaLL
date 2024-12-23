@@ -18,7 +18,6 @@ public:
     int customer_indexes[2]; //[i,j)
     int locker_indexes[2]; //[i,j)
     int qty_customers;
-    int qty_charger_st;
     int qty_parcel_locker;
     double load_capacity; //CV
     double avg_speed; //v

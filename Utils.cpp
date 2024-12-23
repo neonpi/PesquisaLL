@@ -135,26 +135,12 @@ Instance * Utils::buildInstance(string fileName) {
     }
 
 
-
-
     splited_line = tookenize(line," ");
-    //instance->batt_capacity = stod(splited_line.at(splited_line.size()-1));
+    instance->load_capacity = stod(splited_line.at(3));
 
     getline(file,line);
     splited_line = tookenize(line," ");
-    instance->load_capacity = stod(splited_line.at(splited_line.size()-1));
-
-    getline(file,line);
-    splited_line = tookenize(line," ");
-    //instance->consumption_rate = stod(splited_line.at(splited_line.size()-1));
-
-    getline(file,line);
-    splited_line = tookenize(line," ");
-    //instance->charging_rate = stod(splited_line.at(splited_line.size()-1));
-
-    getline(file,line);
-    splited_line = tookenize(line," ");
-    instance->avg_speed = stod(splited_line.at(splited_line.size()-1));
+    instance->avg_speed = stod(splited_line.at(3));
 
     instance->calculate_distances();
 
@@ -179,28 +165,21 @@ Instance * Utils::buildInstance(string fileName) {
 
 void Utils::defineNodeIndexes(Instance *instance) {
 
-    for(int i=0; i<instance->n_node; i++) {
-        if(instance->nodes.at(i).type == "f"
-                && (instance->nodes.at(i+1).type == "c1"
-                    || instance->nodes.at(i+1).type == "c2"
-                    || instance->nodes.at(i+1).type == "c3"))
-        {
-            //instance->charger_st_indexes[1]=i+1;
-            instance->customer_indexes[0]=i+1;
+    instance->customer_indexes[0] = 2;
 
-        }else if ((instance->nodes.at(i).type == "c1"
-                      || instance->nodes.at(i).type == "c2"
-                      || instance->nodes.at(i).type == "c3")
-                      && instance->nodes.at(i+1).type == "p") {
-            instance->locker_indexes[0]=i+1;
-            instance->customer_indexes[1]=i+1;
+    for(int i=2; i<instance->n_node; i++) {
+
+        if(instance->nodes.at(i).type == "p") {
+            instance->customer_indexes[1]=i;
+            instance->locker_indexes[0]=i;
+            instance->locker_indexes[1]=instance->n_node;
+            break;
         }
 
     }
-    instance->locker_indexes[1] = instance->n_node;
-    //instance->qty_charger_st = instance->charger_st_indexes[1] - 2;
-    instance->qty_customers = instance->customer_indexes[1] - instance->qty_charger_st - 2;
-    instance->qty_parcel_locker = instance->locker_indexes[1] - instance->qty_customers - instance->qty_charger_st - 2;
+
+    instance->qty_customers = instance->customer_indexes[1] - 2;
+    instance->qty_parcel_locker = instance->locker_indexes[1] - instance->qty_customers - 2;
 }
 
 vector<string> Utils::tookenize(string str, string symbol) {

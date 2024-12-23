@@ -42,9 +42,7 @@ void Search::initialize_routes() {
         depot_0.customer = &this->instance->nodes.at(0);
         depot_t.node = &this->instance->nodes.at(1);
         depot_t.customer = &this->instance->nodes.at(1);
-        depot_0.current_battery = this->instance->batt_capacity;
         depot_0.current_load = this->instance->load_capacity;
-        depot_t.current_battery = this->instance->batt_capacity;
         depot_t.current_load = this->instance->load_capacity;
         depot_0.max_time_off = depot_0.node->time_window[1];
         depot_t.max_time_off = depot_t.node->time_window[1];
@@ -55,74 +53,8 @@ void Search::initialize_routes() {
     }
 }
 
-//insercao mais proximo
-void Search::construct() {
-   /* int customers_served = 0;
-    int current_vehicle = 0;
-    int edge[2]={0,0};
-    while (customers_served < this->instance->qty_customers) {
-
-        int selected_node = select_node(current_vehicle);
-
-        double delta = find_edge(current_vehicle,selected_node,edge);
-
-        insert_edge(selected_node,edge,current_vehicle);
-
-        this->total_cost += delta;
-        this->visited[selected_node] = true; //TODO tratar o caso do locker, onde mais clientes devem ser visitados
-        current_vehicle = (current_vehicle + 1) % this->n_vehicles;
-
-        customers_served++;//TODO tratar o caso do locker, onde mais clientes devem ser visitados
-        this->print();
-    }*/
-}
-
-
-void Search::construct_2(double alpha, int max_it_greedy) {
-
-    insertion_heuristic();
-    //this->backup_best();
-    int num_iter_prob = max_it_greedy/2;
-
-    /*if (!this->is_viable()) {
-
-        double* cost_history = new double[max_it_greedy];
-        double rand_alpha;
-        //todo
-
-        int i=0;
-        while (!this->is_viable() && i++ < max_it_greedy) {
-            rand_alpha = 0.5;
-            insertion_heuristic();
-            this->update_cost_history(i,cost_history,alpha);
-
-            //todo
-            if (this->total_cost < this->best->total_cost) {
-                this->backup_best();
-            }
-
-            if (i%num_iter_prob && i>0) {
-                //atualiza alpha
-            }
-        }
-
-        delete[] cost_history;
-    }*/
-
-}
-
 void Search::construct_3() {
     this->insertion_heuristic();
-}
-
-void Search::update_cost_history(int iter, double *cost_history, double alpha) {
-    double penalty = 0.0;
-    for (int i=0;i<this->instance->n_node;i++) {
-        for (int j=i+1;j<this->instance->n_node;j++) {
-            penalty += this->instance->distances[i][j];
-        }
-    }
-    cost_history[iter] = this->total_cost + penalty;
 }
 
 void Search::insertion_heuristic() {
@@ -190,10 +122,8 @@ vector<tuple<int,int,vector<Sequence>>> Search::build_candidate_list() {
 
         Node* can_node = &this->instance->nodes.at(i);
         if (this->instance->nodes.at(i).type == "p") {
-            try_locker_candidate(&cand_list,can_node);
+
         }else if (this->instance->nodes.at(i).type != "c2") {
-            try_customer_candidate_2(&cand_list,can_node);
-            //try_customer_candidate(&cand_list,can_node);
         }
 
             }
@@ -225,7 +155,6 @@ void Search::fill_candidate_sequences(Sequence *previous_sequence, Sequence *can
     }
     ;
     cand_sequence->current_distance = previous_sequence->current_distance + distance;
-    cand_sequence->current_battery = previous_sequence->current_battery - this->instance->consumption_rate*(distance);
     cand_sequence->current_load = previous_sequence->current_load - customer_node->load_demand;
 
     if (cand_node->type == "p") {
@@ -246,8 +175,6 @@ void Search::fill_candidate_sequences_2(Sequence *previous_sequence, Sequence *n
     cand_sequence->customer = customer_node;
     cand_sequence->current_load = previous_sequence->current_load - customer_node->load_demand;
     cand_sequence->current_distance = previous_sequence->current_distance + distance_from_previous;
-    cand_sequence->current_battery = previous_sequence->current_battery - this->instance->consumption_rate*(distance_from_previous);
-    //TODO tratar bateria se for estação (talvez nao aqui)
 
     cand_sequence->current_time = previous_sequence->current_time + travel_time;
     /*TODO O somatorio de tempo aqui não vai tratar o timeoff do nó atual.
@@ -289,11 +216,6 @@ void Search::accumulate_virtual_sequence(Sequence *previous_sequence, Sequence *
     double travel_time = this->instance->avg_speed*(distance_previous_to_new);
     virtual_sequence->current_load -= virtual_sequence->node->load_demand;
     virtual_sequence->current_distance += distance_previous_to_new;
-    virtual_sequence->current_battery -= this->instance->consumption_rate*(distance_previous_to_new);
-
-    if (virtual_sequence->node->type =="f") {
-        virtual_sequence->current_battery = min(this->instance->batt_capacity, virtual_sequence->current_battery + this->instance->charging_rate*(virtual_sequence->time_off));
-    }
 
     virtual_sequence->current_time += travel_time + current_sequence->time_off;
 
@@ -315,212 +237,6 @@ void Search::accumulate_virtual_sequence(Sequence *previous_sequence, Sequence *
     }
 }
 
-void Search::try_customer_candidate(vector<tuple<int, int, vector<Sequence>>> *cand_list, Node *cand_node) {
-
-    if(!this->visited[cand_node->index]) {
-        int route_index = 0;
-        for (vector<Sequence> route : this->routes) {
-
-            Sequence* last_sequence = &(*(route.end()-1));
-            //O Load é viável?
-            if (is_load_viable(last_sequence,cand_node)) {
-
-
-                int previous_sequence_index = 0;
-                for (Sequence previous_sequence : route) {
-
-
-                    if (previous_sequence.node->id != "Dt") {
-
-                        Sequence customer_sequence;
-                        fill_candidate_sequences(&previous_sequence, &customer_sequence, cand_node, cand_node);
-
-                        //A bateria é viável?
-                        if (is_battery_viable(&customer_sequence)){
-
-                            // O Time window é viável?
-                            short time_window_viability = is_time_window_viable(&customer_sequence);
-
-                            if (time_window_viability == VIABLE_TW) {
-                                //Os nós da frente permanecem viaveis?
-                                vector<Sequence> cand_sequences= {customer_sequence};
-                                if (is_forward_viable(route_index,previous_sequence_index,&cand_sequences)) {
-                                    cand_list->push_back({route_index,previous_sequence_index,cand_sequences});
-                                }
-
-                            }else if (time_window_viability == EARLY_TW) {
-                                //É viável inserir uma estação no meio do caminho para ocupar o tempo de folga?
-                                Sequence station_sequence;
-                                Node* station = this->instance->nearest_stations.at(previous_sequence.node->index).at(cand_node->index);
-                                fill_candidate_sequences(&previous_sequence,&station_sequence, station, station);
-                                fill_candidate_sequences(&station_sequence,&customer_sequence,cand_node, cand_node);
-
-                                if (is_viable_insert_station(&station_sequence,&customer_sequence)) {
-                                    vector<Sequence> cand_sequences= {station_sequence,customer_sequence};
-                                    //Os nós da frente permanecem viaveis?
-
-                                    if (is_forward_viable(route_index,previous_sequence_index,&cand_sequences)) {
-                                        cand_list->push_back({route_index,previous_sequence_index,cand_sequences});
-                                    }
-                                }
-
-                            }
-
-                        }
-                        else {
-                            //É viável inserir uma estação no meio do caminho?
-                            Sequence station_sequence;
-                            Node* station = this->instance->nearest_stations.at(previous_sequence.node->index).at(cand_node->index);
-                            fill_candidate_sequences(&previous_sequence,&station_sequence, station, station);
-                            fill_candidate_sequences(&station_sequence,&customer_sequence,cand_node, cand_node);
-
-                            if (is_viable_insert_station(&station_sequence,&customer_sequence)) {
-                                vector<Sequence> cand_sequences= {station_sequence,customer_sequence};
-
-                                //Os nós da frente permanecem viaveis?
-                                if (is_forward_viable(route_index,previous_sequence_index,&cand_sequences)) {
-                                    cand_list->push_back({route_index,previous_sequence_index,cand_sequences});
-                                }
-                            }
-                        }
-                    }
-                    previous_sequence_index++;
-                }
-
-
-            }
-
-            route_index++;
-        }
-    }
-
-}
-
-void Search::try_customer_candidate_2(vector<tuple<int, int, vector<Sequence>>> *cand_list, Node *cand_node) {
-
-    if(!this->visited[cand_node->index]) {
-
-        int route_index = 0;
-        for (vector<Sequence> route : this->routes) {
-
-            Sequence* last_route_sequence = &(*(route.end()-1));
-            //O Load é viável?
-            if (is_load_viable(last_route_sequence,cand_node)) {
-
-
-                int previous_sequence_index = 0;
-                for (Sequence previous_sequence : route) {
-
-
-                    if (previous_sequence.node->id != "Dt") {
-                        Sequence* next_sequence = &route.at(previous_sequence_index+1);
-                        Sequence candidate_customer_sequence;
-                        fill_candidate_sequences_2(&previous_sequence,next_sequence, &candidate_customer_sequence, cand_node, cand_node);
-
-                        //A bateria é viável?
-                        if (is_battery_viable(&candidate_customer_sequence)){
-
-                            // O Time window é viável?
-                            short time_window_viability = is_time_window_viable(&candidate_customer_sequence);
-                            //TODO se for EARLY, tratar o time-off na hora de inserir. Se nessa hora for retirado da lista, é garantido que é viável
-                            if (time_window_viability != INVIABLE_TW) {
-                                //Os nós da frente permanecem viaveis?
-                                vector<Sequence> cand_sequences= {candidate_customer_sequence};
-                                if (is_forward_viable(route_index,previous_sequence_index,&cand_sequences)) {
-                                    cand_list->push_back({route_index,previous_sequence_index,cand_sequences});
-                                }
-
-                            }
-
-                        }
-                        else {
-                            //É viável inserir uma estação no meio do caminho?
-                            Sequence station_sequence;
-                            Node* station = this->instance->nearest_stations.at(previous_sequence.node->index).at(cand_node->index);
-                            fill_candidate_sequences_2(&previous_sequence,nullptr,&station_sequence, station, station);
-                            fill_candidate_sequences_2(&station_sequence,next_sequence,&candidate_customer_sequence,cand_node, cand_node);
-
-                            if (is_viable_insert_station(&station_sequence,&candidate_customer_sequence)) {
-                                vector<Sequence> cand_sequences= {station_sequence,candidate_customer_sequence};
-
-                                //Os nós da frente permanecem viaveis?
-                                if (is_forward_viable(route_index,previous_sequence_index,&cand_sequences)) {
-                                    cand_list->push_back({route_index,previous_sequence_index,cand_sequences});
-                                }
-                            }
-                        }
-                    }
-                    previous_sequence_index++;
-
-                }
-
-
-            }
-
-            route_index++;
-        }
-    }
-
-}
-
-void Search::try_locker_candidate(vector<tuple<int, int, vector<Sequence>>>* cand_list, Node* cand_node) {
-
-    int route_index = 0;
-    for (vector<Sequence> route : this->routes) {
-
-        Sequence* last_sequence = &(*(route.end()-1));
-        //Pra cada cliente
-        for (Node* customer_node: cand_node->designated_customers) {
-            if (!this->visited[customer_node->index]) {
-
-                //O load fica viável??
-                if (is_load_viable(last_sequence,customer_node)) {
-
-                    int previous_sequence_index = 0;
-                    for (Sequence previous_sequence : route) {
-
-                        if (previous_sequence.node->id != "Dt") {
-                            Sequence* next_sequence = &route.at(previous_sequence_index+1);
-                            Sequence candidate_locker_sequence;
-                            fill_candidate_sequences_2(&previous_sequence,next_sequence,&candidate_locker_sequence,cand_node,customer_node);
-
-                            //A bateria fica viável?
-                            if (is_battery_viable(&candidate_locker_sequence)) {
-
-                                vector<Sequence> cand_sequence= {candidate_locker_sequence};
-                                if (is_forward_viable(route_index,previous_sequence_index,&cand_sequence)) {
-                                    cand_list->push_back({route_index,previous_sequence_index,cand_sequence});
-                                }
-
-                            }else {
-
-                                //É viável inserir uma estação no meio do caminho?
-                                Sequence station_sequence;
-                                Node* station = this->instance->nearest_stations.at(previous_sequence.node->index).at(cand_node->index);
-                                fill_candidate_sequences_2(&previous_sequence,nullptr,&station_sequence, station, station);
-                                fill_candidate_sequences_2(&station_sequence,next_sequence,&candidate_locker_sequence,cand_node, customer_node);
-
-                                if (is_viable_insert_station(&station_sequence,&candidate_locker_sequence)) {
-                                    vector<Sequence> cand_sequences= {station_sequence,candidate_locker_sequence};
-
-                                    //Os nós da frente permanecem viaveis?
-                                    if (is_forward_viable(route_index,previous_sequence_index,&cand_sequences)) {
-                                        cand_list->push_back({route_index,previous_sequence_index,cand_sequences});
-                                    }
-                                }
-
-                            }
-                        }
-                        previous_sequence_index++;
-                    }
-
-
-                }
-            }
-        }
-        route_index++;
-    }
-}
 
 double Search::delta_distance(tuple<int,int,vector<Sequence>> cus) {
     Sequence a_previous_sequence = this->routes.at(get<0>(cus)).at(get<1>(cus));
@@ -600,7 +316,6 @@ void Search::update_forward(tuple<int,int,vector<Sequence>> candidate) {
         Sequence* sequence = &route->at(i);
         double distance = this->instance->distances[previous_sequence->node->index][sequence->node->index];
         sequence->current_load = previous_sequence->current_load - sequence->node->load_demand;
-        sequence->current_battery = previous_sequence->current_battery - this->instance->consumption_rate*distance;
         sequence->current_distance = previous_sequence->current_distance + distance;
         sequence->current_time = previous_sequence->current_time + this->instance->avg_speed*distance + sequence->node->service_time;
 
@@ -631,21 +346,15 @@ void Search::print_is_viable() {
     }
 
     int time_window=0;
-    int battery=0;
     int sp_visit=0;
     bool sp_visit_viable = true;
     bool time_window_viable = true;
-    bool battery_viable = true;
     bool load_viable = true;
     for (vector<Sequence> route: this->routes) {
         Sequence* seq = &*(route.end()-1);
         if (seq->node->type == "c2") {
             sp_visit_viable = false;
             sp_visit++;
-        }
-        if (seq->current_battery < 0) {
-            battery_viable = false;
-            battery ++;
         }
         if (seq->current_load < 0) {
             load_viable = false;
@@ -662,9 +371,6 @@ void Search::print_is_viable() {
 
     if (!load_viable) {
         cout<<"Load inviability"<<endl;
-    }
-    if (!battery_viable) {
-        cout<<"Battery inviability ("<<battery<<")"<<endl;
     }
     if (!customer_viable) {
         cout<<"Customer inviability ("<<customers<<")"<<endl;
@@ -684,10 +390,6 @@ bool Search::is_recharger_station(int node_index) {
 }
 bool Search::is_locker(int node_index) {
     return this->instance->nodes.at(node_index).type[0] == 'p';
-}
-
-bool Search::is_battery_viable(Sequence* candidate_sequence) {
-    return candidate_sequence->current_battery > 0;
 }
 
 short Search::is_time_window_viable(Sequence* candidate_sequence) {
@@ -714,7 +416,6 @@ bool Search::is_forward_viable(int route_index, int previous_sequence_index, vec
     virtual_sequence.node = candidate_sequence->node;
     virtual_sequence.customer = candidate_sequence->customer;
     virtual_sequence.current_time = candidate_sequence->current_time;
-    virtual_sequence.current_battery = candidate_sequence->current_battery;
     virtual_sequence.max_time_off = candidate_sequence->max_time_off;
     virtual_sequence.time_off = candidate_sequence->time_off;
 
@@ -733,52 +434,14 @@ bool Search::is_forward_viable(int route_index, int previous_sequence_index, vec
             return false;
         }
 
-        if (!is_battery_viable(&virtual_sequence) && time_window_viability != EARLY_TW) {
-            return false;
-        }
-
         previous_sequence = current_sequence;
         current_sequence_index++;
     }
 
-    //Avaliando a bateria para chegar ao deposito
-    Node* depot_node = route.at(current_sequence_index).node;
-    double distance_to_dt = this->instance->distances[virtual_sequence.node->index][depot_node->index];
-    if (virtual_sequence.current_battery < this->instance->consumption_rate*distance_to_dt) {
-
-        //Duas possibilidades de estação: A mais proxima entre os pares e a mais proxima da origem
-        vector<Node*> candidate_stations = {
-            this->instance->nearest_stations[virtual_sequence.node->index][depot_node->index],
-            virtual_sequence.node->nearest_station
-        };
-
-        for (Node* station: candidate_stations) {
-            double distance_to_station = this->instance->distances[virtual_sequence.node->index][station->index];
-            if (virtual_sequence.current_battery >= this->instance->consumption_rate*distance_to_station) {
-                return true;
-            }
-        }
-    }
-
     return true;
 
 }
 
-bool Search::is_viable_insert_station(Sequence* station_sequence, Sequence* cand_sequence) {
-
-
-    //Verificando se é possivel chegar à estação
-    if ( station_sequence->current_battery < 0) {
-        return false;
-    }
-
-    if (station_sequence->max_time_off < 0) {
-        return false;
-    }
-
-    return true;
-
-}
 
 void Search::print() {
     cout<<"TOTAL COST: "<<this->total_cost<<endl;

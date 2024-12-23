@@ -27,7 +27,6 @@ public:
     double min_time_off = 0.0;
     double max_time_off = 0.0;
     double current_time = 0.0;
-    double current_battery = 0.0;
     double current_distance = 0.0;
     double current_load = 0.0;
 
@@ -68,11 +67,8 @@ public:
     bool is_locker(int node_index);
 
     bool is_load_viable(Sequence* sequence, Node* cand_node){return sequence->current_load - cand_node->load_demand >= 0;}
-    bool is_battery_viable(Sequence* candidate_sequence);
     short is_time_window_viable(Sequence* candidate_sequence);
     bool is_forward_viable(int route_index, int previous_sequence_index, vector<Sequence>* cand_sequence);
-
-    bool is_viable_insert_station(Sequence* station_sequence, Sequence* cand_sequence);
 
     void print();
     string get_delta_to_print(tuple<int,int,vector<Sequence>> cus);

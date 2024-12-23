@@ -138,7 +138,7 @@ Instance * Utils::buildInstance(string fileName) {
 
 
     splited_line = tookenize(line," ");
-    instance->batt_capacity = stod(splited_line.at(splited_line.size()-1));
+    //instance->batt_capacity = stod(splited_line.at(splited_line.size()-1));
 
     getline(file,line);
     splited_line = tookenize(line," ");
@@ -146,18 +146,17 @@ Instance * Utils::buildInstance(string fileName) {
 
     getline(file,line);
     splited_line = tookenize(line," ");
-    instance->consumption_rate = stod(splited_line.at(splited_line.size()-1));
+    //instance->consumption_rate = stod(splited_line.at(splited_line.size()-1));
 
     getline(file,line);
     splited_line = tookenize(line," ");
-    instance->charging_rate = stod(splited_line.at(splited_line.size()-1));
+    //instance->charging_rate = stod(splited_line.at(splited_line.size()-1));
 
     getline(file,line);
     splited_line = tookenize(line," ");
     instance->avg_speed = stod(splited_line.at(splited_line.size()-1));
 
     instance->calculate_distances();
-    instance->calcula_nearest_stations();
 
     instance->minimum_vehicle = 0;
     double load = 0;
@@ -186,7 +185,7 @@ void Utils::defineNodeIndexes(Instance *instance) {
                     || instance->nodes.at(i+1).type == "c2"
                     || instance->nodes.at(i+1).type == "c3"))
         {
-            instance->charger_st_indexes[1]=i+1;
+            //instance->charger_st_indexes[1]=i+1;
             instance->customer_indexes[0]=i+1;
 
         }else if ((instance->nodes.at(i).type == "c1"
@@ -199,7 +198,7 @@ void Utils::defineNodeIndexes(Instance *instance) {
 
     }
     instance->locker_indexes[1] = instance->n_node;
-    instance->qty_charger_st = instance->charger_st_indexes[1] - 2;
+    //instance->qty_charger_st = instance->charger_st_indexes[1] - 2;
     instance->qty_customers = instance->customer_indexes[1] - instance->qty_charger_st - 2;
     instance->qty_parcel_locker = instance->locker_indexes[1] - instance->qty_customers - instance->qty_charger_st - 2;
 }

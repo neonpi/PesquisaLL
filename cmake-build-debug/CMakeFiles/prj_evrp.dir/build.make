@@ -52,10 +52,10 @@ RM = "C:\Program Files\JetBrains\CLion 2024.3\bin\cmake\win\x64\bin\cmake.exe" -
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\ws\prj_evrp
+CMAKE_SOURCE_DIR = C:\ws\prj_vrppl
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\ws\prj_evrp\cmake-build-debug
+CMAKE_BINARY_DIR = C:\ws\prj_vrppl\cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/prj_evrp.dir/depend.make
@@ -69,74 +69,74 @@ include CMakeFiles/prj_evrp.dir/progress.make
 include CMakeFiles/prj_evrp.dir/flags.make
 
 CMakeFiles/prj_evrp.dir/main.cpp.obj: CMakeFiles/prj_evrp.dir/flags.make
-CMakeFiles/prj_evrp.dir/main.cpp.obj: C:/ws/prj_evrp/main.cpp
+CMakeFiles/prj_evrp.dir/main.cpp.obj: C:/ws/prj_vrppl/main.cpp
 CMakeFiles/prj_evrp.dir/main.cpp.obj: CMakeFiles/prj_evrp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\ws\prj_evrp\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/prj_evrp.dir/main.cpp.obj"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/prj_evrp.dir/main.cpp.obj -MF CMakeFiles\prj_evrp.dir\main.cpp.obj.d -o CMakeFiles\prj_evrp.dir\main.cpp.obj -c C:\ws\prj_evrp\main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\ws\prj_vrppl\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/prj_evrp.dir/main.cpp.obj"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/prj_evrp.dir/main.cpp.obj -MF CMakeFiles\prj_evrp.dir\main.cpp.obj.d -o CMakeFiles\prj_evrp.dir\main.cpp.obj -c C:\ws\prj_vrppl\main.cpp
 
 CMakeFiles/prj_evrp.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/prj_evrp.dir/main.cpp.i"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\ws\prj_evrp\main.cpp > CMakeFiles\prj_evrp.dir\main.cpp.i
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\ws\prj_vrppl\main.cpp > CMakeFiles\prj_evrp.dir\main.cpp.i
 
 CMakeFiles/prj_evrp.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/prj_evrp.dir/main.cpp.s"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\ws\prj_evrp\main.cpp -o CMakeFiles\prj_evrp.dir\main.cpp.s
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\ws\prj_vrppl\main.cpp -o CMakeFiles\prj_evrp.dir\main.cpp.s
 
 CMakeFiles/prj_evrp.dir/Instance.cpp.obj: CMakeFiles/prj_evrp.dir/flags.make
-CMakeFiles/prj_evrp.dir/Instance.cpp.obj: C:/ws/prj_evrp/Instance.cpp
+CMakeFiles/prj_evrp.dir/Instance.cpp.obj: C:/ws/prj_vrppl/Instance.cpp
 CMakeFiles/prj_evrp.dir/Instance.cpp.obj: CMakeFiles/prj_evrp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\ws\prj_evrp\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/prj_evrp.dir/Instance.cpp.obj"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/prj_evrp.dir/Instance.cpp.obj -MF CMakeFiles\prj_evrp.dir\Instance.cpp.obj.d -o CMakeFiles\prj_evrp.dir\Instance.cpp.obj -c C:\ws\prj_evrp\Instance.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\ws\prj_vrppl\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/prj_evrp.dir/Instance.cpp.obj"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/prj_evrp.dir/Instance.cpp.obj -MF CMakeFiles\prj_evrp.dir\Instance.cpp.obj.d -o CMakeFiles\prj_evrp.dir\Instance.cpp.obj -c C:\ws\prj_vrppl\Instance.cpp
 
 CMakeFiles/prj_evrp.dir/Instance.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/prj_evrp.dir/Instance.cpp.i"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\ws\prj_evrp\Instance.cpp > CMakeFiles\prj_evrp.dir\Instance.cpp.i
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\ws\prj_vrppl\Instance.cpp > CMakeFiles\prj_evrp.dir\Instance.cpp.i
 
 CMakeFiles/prj_evrp.dir/Instance.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/prj_evrp.dir/Instance.cpp.s"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\ws\prj_evrp\Instance.cpp -o CMakeFiles\prj_evrp.dir\Instance.cpp.s
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\ws\prj_vrppl\Instance.cpp -o CMakeFiles\prj_evrp.dir\Instance.cpp.s
 
 CMakeFiles/prj_evrp.dir/Node.cpp.obj: CMakeFiles/prj_evrp.dir/flags.make
-CMakeFiles/prj_evrp.dir/Node.cpp.obj: C:/ws/prj_evrp/Node.cpp
+CMakeFiles/prj_evrp.dir/Node.cpp.obj: C:/ws/prj_vrppl/Node.cpp
 CMakeFiles/prj_evrp.dir/Node.cpp.obj: CMakeFiles/prj_evrp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\ws\prj_evrp\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/prj_evrp.dir/Node.cpp.obj"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/prj_evrp.dir/Node.cpp.obj -MF CMakeFiles\prj_evrp.dir\Node.cpp.obj.d -o CMakeFiles\prj_evrp.dir\Node.cpp.obj -c C:\ws\prj_evrp\Node.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\ws\prj_vrppl\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/prj_evrp.dir/Node.cpp.obj"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/prj_evrp.dir/Node.cpp.obj -MF CMakeFiles\prj_evrp.dir\Node.cpp.obj.d -o CMakeFiles\prj_evrp.dir\Node.cpp.obj -c C:\ws\prj_vrppl\Node.cpp
 
 CMakeFiles/prj_evrp.dir/Node.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/prj_evrp.dir/Node.cpp.i"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\ws\prj_evrp\Node.cpp > CMakeFiles\prj_evrp.dir\Node.cpp.i
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\ws\prj_vrppl\Node.cpp > CMakeFiles\prj_evrp.dir\Node.cpp.i
 
 CMakeFiles/prj_evrp.dir/Node.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/prj_evrp.dir/Node.cpp.s"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\ws\prj_evrp\Node.cpp -o CMakeFiles\prj_evrp.dir\Node.cpp.s
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\ws\prj_vrppl\Node.cpp -o CMakeFiles\prj_evrp.dir\Node.cpp.s
 
 CMakeFiles/prj_evrp.dir/Utils.cpp.obj: CMakeFiles/prj_evrp.dir/flags.make
-CMakeFiles/prj_evrp.dir/Utils.cpp.obj: C:/ws/prj_evrp/Utils.cpp
+CMakeFiles/prj_evrp.dir/Utils.cpp.obj: C:/ws/prj_vrppl/Utils.cpp
 CMakeFiles/prj_evrp.dir/Utils.cpp.obj: CMakeFiles/prj_evrp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\ws\prj_evrp\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/prj_evrp.dir/Utils.cpp.obj"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/prj_evrp.dir/Utils.cpp.obj -MF CMakeFiles\prj_evrp.dir\Utils.cpp.obj.d -o CMakeFiles\prj_evrp.dir\Utils.cpp.obj -c C:\ws\prj_evrp\Utils.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\ws\prj_vrppl\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/prj_evrp.dir/Utils.cpp.obj"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/prj_evrp.dir/Utils.cpp.obj -MF CMakeFiles\prj_evrp.dir\Utils.cpp.obj.d -o CMakeFiles\prj_evrp.dir\Utils.cpp.obj -c C:\ws\prj_vrppl\Utils.cpp
 
 CMakeFiles/prj_evrp.dir/Utils.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/prj_evrp.dir/Utils.cpp.i"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\ws\prj_evrp\Utils.cpp > CMakeFiles\prj_evrp.dir\Utils.cpp.i
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\ws\prj_vrppl\Utils.cpp > CMakeFiles\prj_evrp.dir\Utils.cpp.i
 
 CMakeFiles/prj_evrp.dir/Utils.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/prj_evrp.dir/Utils.cpp.s"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\ws\prj_evrp\Utils.cpp -o CMakeFiles\prj_evrp.dir\Utils.cpp.s
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\ws\prj_vrppl\Utils.cpp -o CMakeFiles\prj_evrp.dir\Utils.cpp.s
 
 CMakeFiles/prj_evrp.dir/Search.cpp.obj: CMakeFiles/prj_evrp.dir/flags.make
-CMakeFiles/prj_evrp.dir/Search.cpp.obj: C:/ws/prj_evrp/Search.cpp
+CMakeFiles/prj_evrp.dir/Search.cpp.obj: C:/ws/prj_vrppl/Search.cpp
 CMakeFiles/prj_evrp.dir/Search.cpp.obj: CMakeFiles/prj_evrp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\ws\prj_evrp\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/prj_evrp.dir/Search.cpp.obj"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/prj_evrp.dir/Search.cpp.obj -MF CMakeFiles\prj_evrp.dir\Search.cpp.obj.d -o CMakeFiles\prj_evrp.dir\Search.cpp.obj -c C:\ws\prj_evrp\Search.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\ws\prj_vrppl\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/prj_evrp.dir/Search.cpp.obj"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/prj_evrp.dir/Search.cpp.obj -MF CMakeFiles\prj_evrp.dir\Search.cpp.obj.d -o CMakeFiles\prj_evrp.dir\Search.cpp.obj -c C:\ws\prj_vrppl\Search.cpp
 
 CMakeFiles/prj_evrp.dir/Search.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/prj_evrp.dir/Search.cpp.i"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\ws\prj_evrp\Search.cpp > CMakeFiles\prj_evrp.dir\Search.cpp.i
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\ws\prj_vrppl\Search.cpp > CMakeFiles\prj_evrp.dir\Search.cpp.i
 
 CMakeFiles/prj_evrp.dir/Search.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/prj_evrp.dir/Search.cpp.s"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\ws\prj_evrp\Search.cpp -o CMakeFiles\prj_evrp.dir\Search.cpp.s
+	C:\PROGRA~1\JETBRA~1\CLION2~1.3\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\ws\prj_vrppl\Search.cpp -o CMakeFiles\prj_evrp.dir\Search.cpp.s
 
 # Object files for target prj_evrp
 prj_evrp_OBJECTS = \
@@ -158,7 +158,7 @@ prj_evrp.exe: CMakeFiles/prj_evrp.dir/build.make
 prj_evrp.exe: CMakeFiles/prj_evrp.dir/linkLibs.rsp
 prj_evrp.exe: CMakeFiles/prj_evrp.dir/objects1.rsp
 prj_evrp.exe: CMakeFiles/prj_evrp.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\ws\prj_evrp\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable prj_evrp.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\ws\prj_vrppl\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable prj_evrp.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\prj_evrp.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -170,6 +170,6 @@ CMakeFiles/prj_evrp.dir/clean:
 .PHONY : CMakeFiles/prj_evrp.dir/clean
 
 CMakeFiles/prj_evrp.dir/depend:
-	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\ws\prj_evrp C:\ws\prj_evrp C:\ws\prj_evrp\cmake-build-debug C:\ws\prj_evrp\cmake-build-debug C:\ws\prj_evrp\cmake-build-debug\CMakeFiles\prj_evrp.dir\DependInfo.cmake "--color=$(COLOR)"
+	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\ws\prj_vrppl C:\ws\prj_vrppl C:\ws\prj_vrppl\cmake-build-debug C:\ws\prj_vrppl\cmake-build-debug C:\ws\prj_vrppl\cmake-build-debug\CMakeFiles\prj_evrp.dir\DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/prj_evrp.dir/depend
 

@@ -1,0 +1,11 @@
+StringID Type x y demand ReadyTime DueDate ServiceTime
+D0 d 40 50.0 0.0 0.0 240.0 0.0
+Dt d 40 50.0 0.0 0.0 240.0 0.0
+C34 c2 85 35.0 30.0 68.0 182.0 10.0
+C21 c2 40 5.0 10.0 55.0 185.0 10.0
+C97 c2 4 18.0 35.0 58.0 131.0 10.0
+C71 c2 65 55.0 14.0 26.0 111.0 10.0
+C15 c3 2 40.0 20.0 96.0 190.0 10.0
+P0 p 59 25.0 0.0 0.0 240.0 45.0
+param CV := 200.0 nan nan nan nan
+param V := 1.0 nan nan nan nan

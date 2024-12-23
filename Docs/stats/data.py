@@ -77,14 +77,6 @@ def build_instances():
                 new_instance.nodes.append(new_node)
                 if(new_node.type == 'p'):
                     locker_count+=1
-            # elif(is_locker_line(line)):
-                # if(new_instance.name=="rc208prpl.dat"):
-                # customer = find_k_customer(new_instance.nodes,customer_count)
-                # customer_count+=1
-                # if customer.type != 'c1':
-                #     locker = find_k_locker(new_instance.nodes,line[1])
-                #     customer.assigned_locker = locker
-                #     locker.locker_customers.append(customer)
             elif (is_param(line)):
                 if locker_count==1:
                     locker = find_k_locker(new_instance.nodes,['1'])

@@ -16,18 +16,13 @@ public:
     int n_node;
     vector<Node> nodes;
     int customer_indexes[2]; //[i,j)
-    int charger_st_indexes[2]; //[i,j)
     int locker_indexes[2]; //[i,j)
     int qty_customers;
     int qty_charger_st;
     int qty_parcel_locker;
-    double batt_capacity; //Q
     double load_capacity; //CV
-    double consumption_rate; //r
-    double charging_rate; //g
     double avg_speed; //v
     double** distances;
-    vector<vector<Node*>> nearest_stations; //distancia estacao
     int minimum_vehicle;
 
 

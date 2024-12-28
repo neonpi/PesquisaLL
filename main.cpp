@@ -12,15 +12,6 @@ int main()
 
     vector<Instance*> instances = Utils::buildInstances();
 
-    //instances.at(0)->print();
-
-   /* Search* s = new Search(instances.at(0),2);
-    //s->construct();
-    //s->construct_2(0.5, 10);
-    s->insertion_heuristic();
-    s->is_viable();
-    s->print();*/
-
     //Utils::print_output(s);
     for(Instance* i: instances) {
         //if (i->inst_name == "c206C5_pl.dat") {

@@ -80,7 +80,8 @@ def build_path_edges(G,instance,show,debug):
     ]
     color_i=0
     paths_array = dt.build_paths(instance.name,debug)
-    path_graphs = []
+    
+    path_edges_trace = []
     for path_array in paths_array:
 
         path_edge_xs =[]
@@ -90,7 +91,7 @@ def build_path_edges(G,instance,show,debug):
             if(i < (len(path_array)-1)):
                 node_i = list(filter(lambda x: x.id == path_array[i], instance.nodes))[0]
                 node_j = list(filter(lambda x: x.id == path_array[i+1], instance.nodes))[0]
-
+                print(node_i,node_j)
                 G.add_edge(node_i.id, node_j.id)
 
                 x0 = node_i.x
@@ -104,7 +105,7 @@ def build_path_edges(G,instance,show,debug):
                 path_edge_ys.append(y1)
                 path_edge_ys.append(None)
         
-            path_graphs.append( go.Scatter(
+            path_edges_trace.append( go.Scatter(
                     x = path_edge_xs,
                     y = path_edge_ys,
                     visible= show,
@@ -118,7 +119,7 @@ def build_path_edges(G,instance,show,debug):
             )
         color_i+=1
 
-    return path_graphs
+    return path_edges_trace, paths_array
 
 
 def build_nodes(G,node_size):

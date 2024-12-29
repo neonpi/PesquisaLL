@@ -62,7 +62,6 @@ def build_instances():
         new_instance = Instance()
         new_instance.name = instance.split('\\')[4]
         locker_count = 0
-        customer_count = 0
         for line in file_instance.iterrows():
             if(is_node(line)):
                 new_node = Node()

@@ -66,16 +66,18 @@ void Search::insertion_heuristic() {
 
         //buscando aresta p insercao
         if (!cand_list.empty()) {
-            //int index = 0;
-            tuple<int,int,Sequence> candidate = cand_list.at(0);
-            /*while (delta_distance(candidate) == delta_distance(cand_list.at(index)) && index < cand_list.size()) {
-                tuple<int,int,vector<Sequence>> candidate_aux = cand_list.at(index);
-                if (get<2>(candidate_aux).at(get<2>(candidate_aux).size()-1).node->time_window[0] <
-                    get<2>(candidate).at(get<2>(candidate).size()-1).node->time_window[0]) {
-                    candidate = candidate_aux;
-                }
-                index++;
-            }*/
+            int list_index = 0;
+            tuple<int,int,Sequence> candidate = cand_list.at(list_index++);
+
+            //Evitar colocar um nó entre lockers
+            Sequence *previous_sequence = &this->routes.at(get<0>(candidate)).at(get<1>(candidate));
+            Sequence *next_sequence = &this->routes.at(get<0>(candidate)).at(get<1>(candidate)+1);
+            while(previous_sequence->node->id == next_sequence->node->id) {
+                candidate = cand_list.at(list_index++);
+                previous_sequence = &this->routes.at(get<0>(candidate)).at(get<1>(candidate));
+                next_sequence = &this->routes.at(get<0>(candidate)).at(get<1>(candidate)+1);
+            }
+
 
             //tuple<int,int,Node*> cand = cand_list.at(rand()%cand_list.size()); //Só pra testar
             insert_sequency(candidate);
@@ -84,26 +86,6 @@ void Search::insertion_heuristic() {
         cand_list.erase(cand_list.begin(),cand_list.end());
 
         cand_list = build_candidate_list();
-
-        /*for (tuple<int,int,vector<Sequence>>  t: cand_list) {
-            cout<<delta_distance(t)<<" ";
-        }cout<<endl;
-
-        cout<<"LIST: "<<endl;
-        for (tuple<int,int,vector<Sequence>> cand_el : cand_list) {
-                cout<<"rota:"<<get<0>(cand_el)<<" "<<"point:"<<get<1>(cand_el)<<" {";
-            for (Sequence s: get<2>(cand_el)) {
-                cout<<s.node->id<<"("<<s.customer->id<<") - ";
-            }
-            cout<<"}"<<endl;
-        }
-        cout<<endl;*/
-
-
-
-        /*for (it=cand_list.begin(); it!=cand_list.end(); ++it)
-            cout << ' ' << this->instance->distances[(this->routes.at(get<0>(*it)).end()-2)->node->index][get<2>(*it)->index];
-        cout<<endl;*/
 
     }while (!cand_list.empty());
 
@@ -381,17 +363,17 @@ void Search::calculate_total_cost() {
 void Search::print_is_viable() {
     bool customer_viable = true;
 
-    int customers = 0;
+    vector<string> customers = {};
     for (int i = this->instance->customer_indexes[0];
         i < this->instance->customer_indexes[1] ;i++) {
         if (!this->visited[i]) {
             customer_viable = false;
-            customers++;
+            customers.push_back(this->instance->nodes.at(i).id);
 
         }
     }
 
-    int time_window=0;
+    vector<string> time_window={};
     int sp_visit=0;
     bool sp_visit_viable = true;
     bool time_window_viable = true;
@@ -408,7 +390,7 @@ void Search::print_is_viable() {
         for (Sequence sequence: route) {
             if (sequence.current_time < sequence.node->time_window[0] || sequence.current_time > sequence.node->time_window[1]) {
                 time_window_viable = false;
-                time_window ++;
+                time_window.push_back(sequence.node->id);
             }
         }
     }
@@ -418,11 +400,26 @@ void Search::print_is_viable() {
     if (!load_viable) {
         cout<<"Load inviability"<<endl;
     }
-    if (!customer_viable) {
-        cout<<"Customer inviability ("<<customers<<")"<<endl;
-    }
     if (!sp_visit_viable) {
-        cout<<"Customer inviability ("<<sp_visit<<")"<<endl;
+        cout<<"Self pickup inviability"<<endl;
+    }
+    if (!customer_viable) {
+        cout<<"Customer inviability ("<<customers.size()<<"): (";
+        for(string customer: customers) {
+            cout<< customer<<", ";
+        }
+        cout<<")"<<endl;
+    }
+
+    if(!time_window_viable) {
+        cout<<"Time window inviability ("<<time_window.size()<<"): (";
+        for(string time: time_window) {
+            cout<< time;
+            if(time != *(time_window.end()-1)) {
+                cout<<", ";
+            }
+        }
+        cout<<")"<<endl;
     }
 
 

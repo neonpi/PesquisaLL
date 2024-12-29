@@ -16,10 +16,10 @@ selected_instance = [instance for instance in instances if instance.name == inst
 show_all_edges = st.sidebar.toggle("Show all edges")
 show_locker_edges = st.sidebar.toggle("Show locker edges")
 show_path_edges = st.sidebar.toggle("Show patch edges")
+show_path_string = st.sidebar.toggle("Show path string")
 node_size = st.sidebar.slider(label="Node size", min_value=1, max_value=50, value=15)
-
 st.sidebar.write("Instance data:")
-
+print(selected_instance)
 
 #Graph
 G = nx.MultiGraph()
@@ -35,8 +35,16 @@ for index_i, node_i in enumerate(selected_instance.nodes):
 node_trace = gph.build_nodes(G,node_size)
 all_edge_trace = gph.build_all_edges(G,show_all_edges)
 locker_edge_trace = gph.build_locker_edges(G,selected_instance,show_locker_edges)
-path_edges_trace = gph.build_path_edges(G,selected_instance,show_path_edges,True)
+path_edges_trace, paths_array = gph.build_path_edges(G,selected_instance,show_path_edges,True)
 
+if show_path_string:
+    st.write("Routes:")
+    for path in paths_array:
+        line = " -- "
+        for point in path:
+            line = line + point + " - "
+        
+        st.write(line)
 
 fig = gph.build_graph([node_trace,all_edge_trace, locker_edge_trace] + path_edges_trace)
 
@@ -46,7 +54,7 @@ if path_edges_trace == [] and show_path_edges:
 st.plotly_chart(fig)
 distances = pd.DataFrame(selected_instance.distances, columns = [node.id for node in selected_instance.nodes])
 distances.index = [node.id for node in selected_instance.nodes]
-distances_formatted = distances.applymap(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
+distances_formatted = distances.map(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
 
 st.write("Distance Matrix")
 st.table(distances_formatted)

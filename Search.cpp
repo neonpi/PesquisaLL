@@ -287,10 +287,32 @@ void Search::fill_next_virtual(Sequence *next_sequence, int scan_i) {
 
 }
 
+void Search::fill_previous_virtual(Sequence *previous_sequence, Sequence *next_sequence) {
+    double distance = this->instance->distances[this->virtual_sequence->node->index][previous_sequence->node->index];
+    this->virtual_sequence->current_distance -= distance;
+
+    this->virtual_sequence->current_time -= distance * this->instance->avg_speed;
+    //Considerando apenas um service time do locker
+    if(previous_sequence->node->id != this->virtual_sequence->node->id) {
+        this->virtual_sequence->current_time -= previous_sequence->node->service_time;
+    }
+
+    this->virtual_sequence->current_load -= previous_sequence->customer->load_demand;
+
+    this->virtual_sequence->max_time_off = min(virtual_sequence->max_time_off,next_sequence->node->time_window[1]) -
+        distance*this->instance->avg_speed;
+    if(previous_sequence->node->id != this->virtual_sequence->node->id) {
+        this->virtual_sequence->max_time_off -= previous_sequence->node->service_time;
+    }
+
+    this->virtual_sequence->node = previous_sequence->node;
+    this->virtual_sequence->customer = previous_sequence->customer;
+}
+
 bool Search::propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
     vector<Sequence>* route = &this->routes.at(route_index);
 
-    //Primeira ida, resolvendo distancias e time
+    //Primeiro scan, resolvendo distancias e time
     //TODO depois otimizar, talvez nao precise começar do começo
     route->at(0).clone(this->virtual_sequence);
     this->virtual_sequence->time_off = 0.0;
@@ -314,6 +336,38 @@ bool Search::propagate_virtual(int route_index, int previous_sequence_index, Seq
 
     }
 
+    //Segundo scan, resolvendo max-timeoff
+    virtual_sequence->max_time_off = virtual_sequence->node->time_window[1] - virtual_sequence->current_time;
+    if (broke_timeoff()) {
+        return false;
+    }
+
+    for(int i=route->size()-2;i>=0; i--) {
+        Sequence* previous_sequence = &route->at(i);
+        Sequence* next_sequence = &route->at(i+1);
+
+        if(i == previous_sequence_index) {
+
+            fill_previous_virtual(cand_sequence, next_sequence);
+            if(broke_timeoff()) {
+                return false;
+            }
+
+            fill_previous_virtual(previous_sequence, cand_sequence);
+            if(broke_timeoff()) {
+                return false;
+            }
+
+        }else {
+            fill_previous_virtual(previous_sequence, next_sequence);
+            if(broke_timeoff()) {
+                return false;
+            }
+
+        }
+
+    }
+
 
 
 
@@ -322,6 +376,10 @@ bool Search::propagate_virtual(int route_index, int previous_sequence_index, Seq
 
 bool Search::broke_time_window() {
     return this->virtual_sequence->current_time > this->virtual_sequence->node->time_window[1];
+}
+
+bool Search::broke_timeoff() {
+    return this->virtual_sequence->current_time > this->virtual_sequence->max_time_off;
 }
 
 

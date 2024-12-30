@@ -58,8 +58,10 @@ public:
     void try_locker_candidate(vector<tuple<int, int, Sequence>> *cand_list, Node* cand_node);
 
     void fill_next_virtual(Sequence* next_sequence, int scan_i);
+    void fill_previous_virtual(Sequence* previous_sequence, Sequence *next_sequence);
     bool propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence);
     bool broke_time_window();
+    bool broke_timeoff();
     void insert_sequency(tuple<int, int, Sequence> candidate);
     void update_forward(tuple<int, int, Sequence> candidate);
     bool sort_function(const tuple<int, int, Sequence> cus_a, const tuple<int, int, Sequence> cus_b);

@@ -78,3 +78,6 @@ O time-off vai ser definido na inserção
 Na construção da lista, vai ser definido só timeoff-max e min
 
 TODO: considerar tambem a segunda estação mais proxima entre 2 nós. A estação do depósito engana muito
+
+CONSIDERAR TIMEOFF PARA DEPOIS E TIMEOFF PARA ANTES
+é IMPOSSIVEL CONSEGUIR VIABILIDADE NA INSTANCIA C101C5_PL POR CONTA DA JANELA DE TEMPO DO CLIENTE C85

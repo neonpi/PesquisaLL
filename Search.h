@@ -53,12 +53,12 @@ public:
 
     vector<tuple<int, int, Sequence>> build_candidate_list();
     void fill_candidate_sequences(Sequence *previous_sequence, Sequence *next_sequence, Sequence* cand_sequence, Node *cand_node, Node *customer_node);
-    void accumulate_virtual_sequence(Sequence *previous_sequence, Sequence *virtual_sequence, Sequence *current_sequence, Sequence *next_sequence);
     void try_customer_candidate(vector<tuple<int, int, Sequence>> *cand_list, Node* cand_node);
     void try_locker_candidate(vector<tuple<int, int, Sequence>> *cand_list, Node* cand_node);
 
-    void fill_next_virtual(Sequence* next_sequence, int scan_i, double *delta_time, bool is_candidate);
-    void fill_previous_virtual(Sequence* previous_sequence, bool is_candidate_sequence);
+    void fill_time_dist_forward_virtual(Sequence* next_sequence, bool is_candidate);
+    void fill_max_toff_reverse_virtual(Sequence* previous_sequence, bool is_candidate_sequence);
+    void fill_toff_forward_virtual(Sequence* next_sequence, double *delta_time, bool is_candidate, bool *inviable, double next_sequence_timeoff);
 
     void fill_next(Sequence *current_sequence, Sequence* next_sequence, int scan_i, double *delta_time);
     void fill_previous(Sequence* current_sequence, Sequence *next_sequence);
@@ -66,9 +66,8 @@ public:
     void propagate(int route_index, int previous_sequence_index, Sequence *cand_sequence);
     bool propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence);
     bool broke_upper_time_window();
-    bool broke_timeoff();
+    bool broke_timeoff_upper();
     void insert_sequency(tuple<int, int, Sequence> candidate);
-    void update_forward(tuple<int, int, Sequence> candidate);
     bool sort_function(const tuple<int, int, Sequence> cus_a, const tuple<int, int, Sequence> cus_b);
     bool sort_function_tw(tuple<int,int,vector<Sequence>> cus_a,tuple<int,int,vector<Sequence>> cus_b);
     double delta_distance(tuple<int,int,vector<Sequence>> cus);
@@ -77,12 +76,10 @@ public:
     void print_is_viable();
 
     bool is_customer(int node_index);
-    bool is_recharger_station(int node_index);
     bool is_locker(int node_index);
 
     bool is_load_viable(int route_index, Node* cand_node){return this->instance->load_capacity > (this->routes.at(route_index).end()-1)->current_load + cand_node->load_demand;}
     short is_time_window_viable(Sequence* candidate_sequence);
-    bool is_forward_viable(int route_index, int previous_sequence_index, Sequence *candidate_sequence);
 
     void print();
     string get_delta_to_print(tuple<int,int,vector<Sequence>> cus);

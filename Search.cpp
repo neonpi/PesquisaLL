@@ -338,33 +338,33 @@ void Search::fill_toff_forward_virtual(Sequence *next_sequence, double *delta_ti
 
 }
 
-void Search::fill_next(Sequence *current_sequence, Sequence *next_sequence, int scan_i, double *delta_time) {
+void Search::fill_time_dist_forward(Sequence *previous_sequence, Sequence *current_sequence) {
 
-    double distance = this->instance->distances[current_sequence->node->index][next_sequence->node->index];
+    double distance = this->instance->distances[previous_sequence->node->index][current_sequence->node->index];
 
-    if(scan_i == 1) {
+    current_sequence->current_distance = previous_sequence->current_distance + distance;
+    current_sequence->current_time = previous_sequence->current_time + distance * this->instance->avg_speed;
 
-        double time_off = max(0.0,next_sequence->node->time_window[0] - this->virtual_sequence->current_time);
-        current_sequence->time_off = time_off;
-        current_sequence->current_time += time_off;
+    //Considerando apenas um service time do locker
+    if(current_sequence->node->id != previous_sequence->node->id) {
+        current_sequence->current_time += current_sequence->node->service_time;
+
+    }
+
+
+    /*if(scan_i == 1) {
+
+        double time_off = max(0.0,current_sequence->node->time_window[0] - this->virtual_sequence->current_time);
+        previous_sequence->time_off = time_off;
+        previous_sequence->current_time += time_off;
 
         if(delta_time!=nullptr) {
             *delta_time+=time_off;
         }
 
-        next_sequence->max_time_off -= *delta_time;
+        current_sequence->max_time_off -= *delta_time;
 
-    }else {
-
-        next_sequence->current_distance = current_sequence->current_distance + distance;
-        next_sequence->current_time = current_sequence->current_time + distance * this->instance->avg_speed;
-
-        //Considerando apenas um service time do locker
-        if(next_sequence->node->id != current_sequence->node->id) {
-            next_sequence->current_time += next_sequence->node->service_time;
-
-        }
-    }
+    }*/
 
 }
 
@@ -386,22 +386,22 @@ void Search::fill_previous(Sequence *current_sequence, Sequence *next_sequence) 
 void Search::propagate(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
     vector<Sequence>* route = &this->routes.at(route_index);
 
-    Sequence* current_sequence = nullptr;
-    Sequence* next_sequence = &route->at(0);
-    next_sequence->max_time_off = 0.0;
-    next_sequence->time_off = 0.0;
+    Sequence* current_sequence = &route->at(0);
+    Sequence* previous_sequence = nullptr;
+    current_sequence->max_time_off = 0.0;
+    current_sequence->time_off = 0.0;
 
     for(int i=1; i<route->size(); i++) {
 
-        current_sequence = next_sequence;
-        next_sequence = &route->at(i);
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
 
-        fill_next(current_sequence,next_sequence,0,nullptr);
+        fill_time_dist_forward(previous_sequence,current_sequence);
 
     }
 
     //Segundo scan, resolvendo max-timeoff
-    Sequence* last_sequence = &route->at(route->size()-1);
+    /*Sequence* last_sequence = &route->at(route->size()-1);
     last_sequence->max_time_off = last_sequence->node->time_window[1] - last_sequence->current_time;
     current_sequence = nullptr;
     for(int i=route->size()-2;i>=0; i--) {
@@ -418,12 +418,12 @@ void Search::propagate(int route_index, int previous_sequence_index, Sequence *c
         current_sequence = &route->at(i) - 1;
         next_sequence = &route->at(i);
 
-        fill_next(current_sequence,next_sequence,1, &delta_time);
+        fill_time_dist_forward(current_sequence,next_sequence);
 
 
         delta_time += current_sequence->time_off;
 
-    }
+    }*/
 
 }
 

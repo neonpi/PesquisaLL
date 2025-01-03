@@ -60,7 +60,7 @@ public:
     void fill_max_toff_reverse_virtual(Sequence* previous_sequence, bool is_candidate_sequence);
     void fill_toff_forward_virtual(Sequence* next_sequence, double *delta_time, bool is_candidate, bool *inviable, double next_sequence_timeoff);
 
-    void fill_next(Sequence *current_sequence, Sequence* next_sequence, int scan_i, double *delta_time);
+    void fill_time_dist_forward(Sequence *previous_sequence, Sequence* current_sequence);
     void fill_previous(Sequence* current_sequence, Sequence *next_sequence);
 
     void propagate(int route_index, int previous_sequence_index, Sequence *cand_sequence);

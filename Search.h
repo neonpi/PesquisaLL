@@ -57,10 +57,15 @@ public:
     void try_customer_candidate(vector<tuple<int, int, Sequence>> *cand_list, Node* cand_node);
     void try_locker_candidate(vector<tuple<int, int, Sequence>> *cand_list, Node* cand_node);
 
-    void fill_next_virtual(Sequence* next_sequence, int scan_i);
-    void fill_previous_virtual(Sequence* previous_sequence, Sequence *next_sequence);
+    void fill_next_virtual(Sequence* next_sequence, int scan_i, double *delta_time, bool is_candidate);
+    void fill_previous_virtual(Sequence* previous_sequence, bool is_candidate_sequence);
+
+    void fill_next(Sequence *current_sequence, Sequence* next_sequence, int scan_i, double *delta_time);
+    void fill_previous(Sequence* current_sequence, Sequence *next_sequence);
+
+    void propagate(int route_index, int previous_sequence_index, Sequence *cand_sequence);
     bool propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence);
-    bool broke_time_window();
+    bool broke_upper_time_window();
     bool broke_timeoff();
     void insert_sequency(tuple<int, int, Sequence> candidate);
     void update_forward(tuple<int, int, Sequence> candidate);
@@ -75,7 +80,7 @@ public:
     bool is_recharger_station(int node_index);
     bool is_locker(int node_index);
 
-    bool is_load_viable(Sequence* last_sequence, Node* cand_node){return this->instance->load_capacity > last_sequence->current_load + cand_node->load_demand;}
+    bool is_load_viable(int route_index, Node* cand_node){return this->instance->load_capacity > (this->routes.at(route_index).end()-1)->current_load + cand_node->load_demand;}
     short is_time_window_viable(Sequence* candidate_sequence);
     bool is_forward_viable(int route_index, int previous_sequence_index, Sequence *candidate_sequence);
 

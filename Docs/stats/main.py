@@ -64,6 +64,9 @@ st.table(load_demands)
 time_demands = pd.DataFrame([[node.service_time for node in selected_instance.nodes]], columns=[node.id for node in selected_instance.nodes])
 st.write("Time Demmand")
 st.table(time_demands)
+time_window = pd.DataFrame([[(node.ready_time,node.due_time) for node in selected_instance.nodes]], columns=[node.id for node in selected_instance.nodes])
+st.write("Time Window")
+st.table(time_window)
 
 
 # st.write(G)

@@ -70,6 +70,10 @@ void Search::insertion_heuristic() {
 
         int list_index = 0;
         tuple<int,int,Sequence> candidate = cand_list.at(list_index++);
+        //TODO TESTE
+        /*while(get<2>(candidate).node->id!="C35") {
+            candidate = cand_list.at(list_index++);
+        }*/
 
         //Evitar colocar um nó entre lockers
         /*Sequence *previous_sequence = &this->routes.at(get<0>(candidate)).at(get<1>(candidate));
@@ -368,18 +372,16 @@ void Search::fill_time_dist_forward(Sequence *previous_sequence, Sequence *curre
 
 }
 
-void Search::fill_previous(Sequence *current_sequence, Sequence *next_sequence) {
+void Search::fill_max_toff_referse(Sequence *current_sequence, Sequence *next_sequence) {
 
-    double distance = this->instance->distances[current_sequence->node->index][next_sequence->node->index];
+   // double distance = this->instance->distances[current_sequence->node->index][next_sequence->node->index];
 
 
     //TODO tratar arredondamentos
+    current_sequence->max_time_off =
+        min(next_sequence->max_time_off,
+            next_sequence->node->time_window[1] - next_sequence->current_time);
 
-    current_sequence->max_time_off = min(next_sequence->max_time_off,
-        next_sequence->node->time_window[1] - current_sequence->current_time);
-    if(current_sequence->node->id != next_sequence->node->id) {
-        current_sequence->max_time_off -= current_sequence->node->service_time;
-    }
 
 }
 
@@ -395,23 +397,27 @@ void Search::propagate(int route_index, int previous_sequence_index, Sequence *c
 
         previous_sequence = current_sequence;
         current_sequence = &route->at(i);
+        current_sequence->max_time_off = 0.0;
+        current_sequence->time_off = 0.0;
 
         fill_time_dist_forward(previous_sequence,current_sequence);
 
     }
 
     //Segundo scan, resolvendo max-timeoff
-    /*Sequence* last_sequence = &route->at(route->size()-1);
+    Sequence* last_sequence = &route->at(route->size()-1);
     last_sequence->max_time_off = last_sequence->node->time_window[1] - last_sequence->current_time;
-    current_sequence = nullptr;
+
+    Sequence* next_sequence = nullptr;
     for(int i=route->size()-2;i>=0; i--) {
         current_sequence = &route->at(i);
         next_sequence = &route->at(i+1);
 
-        fill_previous(current_sequence, next_sequence);
+        fill_max_toff_referse(current_sequence, next_sequence);
 
     }
 
+    /*
     //Terceiro scan, tratando time-off
     double delta_time = 0.0;
     for(int i=1; i<route->size();i++) {

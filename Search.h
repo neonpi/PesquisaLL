@@ -56,12 +56,13 @@ public:
     void try_customer_candidate(vector<tuple<int, int, Sequence>> *cand_list, Node* cand_node);
     void try_locker_candidate(vector<tuple<int, int, Sequence>> *cand_list, Node* cand_node);
 
-    void fill_time_dist_forward_virtual(Sequence* next_sequence, bool is_candidate);
+    void fill_time_dist_load_forward_virtual(Sequence* next_sequence, bool is_candidate);
     void fill_max_toff_reverse_virtual(Sequence* previous_sequence, bool is_candidate_sequence);
     void fill_toff_forward_virtual(Sequence* next_sequence, double *delta_time, bool is_candidate, bool *inviable, double next_sequence_timeoff);
 
-    void fill_time_dist_forward(Sequence *previous_sequence, Sequence* current_sequence);
+    void fill_time_dist_load_forward(Sequence *previous_sequence, Sequence* current_sequence);
     void fill_max_toff_referse(Sequence* current_sequence, Sequence *next_sequence);
+    void fill_toff_forward(Sequence* current_sequence, Sequence *next_sequence, double *delta_time);
 
     void propagate(int route_index, int previous_sequence_index, Sequence *cand_sequence);
     bool propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence);

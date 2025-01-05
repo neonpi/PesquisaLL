@@ -242,7 +242,7 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence>>* cand_list, 
     }
 }
 
-void Search::fill_time_dist_forward_virtual(Sequence *next_sequence, bool is_candidate) {
+void Search::fill_time_dist_load_forward_virtual(Sequence *next_sequence, bool is_candidate) {
 
 
     double distance = this->instance->distances[this->virtual_sequence->node->index][next_sequence->node->index];
@@ -342,11 +342,12 @@ void Search::fill_toff_forward_virtual(Sequence *next_sequence, double *delta_ti
 
 }
 
-void Search::fill_time_dist_forward(Sequence *previous_sequence, Sequence *current_sequence) {
+void Search::fill_time_dist_load_forward(Sequence *previous_sequence, Sequence *current_sequence) {
 
     double distance = this->instance->distances[previous_sequence->node->index][current_sequence->node->index];
 
     current_sequence->current_distance = previous_sequence->current_distance + distance;
+    current_sequence->current_load = previous_sequence->current_load + current_sequence->customer->load_demand;
     current_sequence->current_time = previous_sequence->current_time + distance * this->instance->avg_speed;
 
     //Considerando apenas um service time do locker
@@ -356,32 +357,32 @@ void Search::fill_time_dist_forward(Sequence *previous_sequence, Sequence *curre
     }
 
 
-    /*if(scan_i == 1) {
-
-        double time_off = max(0.0,current_sequence->node->time_window[0] - this->virtual_sequence->current_time);
-        previous_sequence->time_off = time_off;
-        previous_sequence->current_time += time_off;
-
-        if(delta_time!=nullptr) {
-            *delta_time+=time_off;
-        }
-
-        current_sequence->max_time_off -= *delta_time;
-
-    }*/
-
 }
 
 void Search::fill_max_toff_referse(Sequence *current_sequence, Sequence *next_sequence) {
-
-   // double distance = this->instance->distances[current_sequence->node->index][next_sequence->node->index];
-
 
     //TODO tratar arredondamentos
     current_sequence->max_time_off =
         min(next_sequence->max_time_off,
             next_sequence->node->time_window[1] - next_sequence->current_time);
 
+
+}
+
+void Search::fill_toff_forward(Sequence *current_sequence, Sequence *next_sequence, double *delta_time) {
+
+    double distance = this->instance->distances[current_sequence->node->index][next_sequence->node->index];
+
+    double time_off = max(0.0,
+        min(current_sequence->max_time_off,
+            next_sequence->node->time_window[0] - (current_sequence->current_time + distance)));
+
+    current_sequence->time_off = time_off;
+    current_sequence->current_time += time_off;
+
+    *delta_time += time_off;
+    next_sequence->max_time_off -= *delta_time;
+    next_sequence->current_time += *delta_time;
 
 }
 
@@ -400,7 +401,7 @@ void Search::propagate(int route_index, int previous_sequence_index, Sequence *c
         current_sequence->max_time_off = 0.0;
         current_sequence->time_off = 0.0;
 
-        fill_time_dist_forward(previous_sequence,current_sequence);
+        fill_time_dist_load_forward(previous_sequence,current_sequence);
 
     }
 
@@ -417,19 +418,16 @@ void Search::propagate(int route_index, int previous_sequence_index, Sequence *c
 
     }
 
-    /*
+
     //Terceiro scan, tratando time-off
     double delta_time = 0.0;
     for(int i=1; i<route->size();i++) {
         current_sequence = &route->at(i) - 1;
         next_sequence = &route->at(i);
 
-        fill_time_dist_forward(current_sequence,next_sequence);
+        fill_toff_forward(current_sequence,next_sequence, &delta_time);
 
-
-        delta_time += current_sequence->time_off;
-
-    }*/
+    }
 
 }
 
@@ -447,13 +445,13 @@ bool Search::propagate_virtual(int route_index, int previous_sequence_index, Seq
         Sequence* current_sequence = &route->at(i);
 
         if(i-1 == previous_sequence_index) {
-            fill_time_dist_forward_virtual(cand_sequence,true);
+            fill_time_dist_load_forward_virtual(cand_sequence,true);
             if(broke_upper_time_window()) {
                 return false;
             }
         }
 
-        fill_time_dist_forward_virtual(current_sequence,false);
+        fill_time_dist_load_forward_virtual(current_sequence,false);
         if(broke_upper_time_window()) {
             return false;
         }

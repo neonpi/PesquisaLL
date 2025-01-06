@@ -10,7 +10,7 @@ int main()
     srand(0);
     cout<<"LOADING INSTANCES"<<endl;
 
-    vector<Instance*> instances = Utils::buildInstances();
+    vector<Instance*> instances = Utils::buildInstances("evrptwprpl");
 
     //Utils::print_output(s);
     for(Instance* i: instances) {

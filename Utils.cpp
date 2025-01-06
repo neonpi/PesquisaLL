@@ -7,10 +7,9 @@
 #include <algorithm>
 
 
-vector<Instance *> Utils::buildInstances() {
+vector<Instance *> Utils::buildInstances(string problem) {
     ifstream file;
-    file.open("instances/instances.txt");
-
+    file.open("instances/instances_" + problem + ".txt");
     string line;
     vector<Instance*> instances;
 

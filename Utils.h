@@ -7,12 +7,13 @@
 #include "Instance.h"
 #include <fstream>
 #include <vector>
+#include <sstream>
 #include "Search.h"
 
 
 class Utils {
 public:
-    static vector<Instance*> buildInstances();
+    static vector<Instance*> buildInstances(string problem);
     static void print_output(Search* search);
     static vector<string> tookenize(string str, string symbol);
 

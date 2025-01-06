@@ -6,14 +6,22 @@
 
 Instance * Vrppl::buildInstance(string fileName) {
 
-    Instance* instance = new Instance();
-
     ifstream file;
     file.open(fileName);
     string line;
 
+    if(!file.is_open()) {
+        cout<<"File not found"<<endl;
+        exit(1);
+    }
+
     vector<Node> nodes;
     vector<string> splited_line;
+
+    Instance* instance = new Instance();
+
+    vector<string> instanceName = Utils::tookenize(fileName,"\\");
+    instance->inst_name = instanceName.at(instanceName.size()-1);
 
     //Numero de clientes e número de lockers
     getline(file,line);
@@ -41,7 +49,7 @@ Instance * Vrppl::buildInstance(string fileName) {
         getline(file,line);
 
         Node node;
-        node.id = "C" + to_string(i-2);
+        node.id = "C" + to_string(i);
         node.load_demand = stoi(line);
         node.index = nodes.size();
         nodes.push_back(node);
@@ -55,8 +63,6 @@ Instance * Vrppl::buildInstance(string fileName) {
         nodes.push_back(node);
     }
 
-
-    instance->nodes = nodes;
     instance->n_node = nodes.size();
 
     //Definindo coordenadas, TW, ST e Customer type
@@ -83,16 +89,34 @@ Instance * Vrppl::buildInstance(string fileName) {
             case 3:
                 nodes.at(i).type = "c3";
                 break;
-            default:
+            case 4:
                 nodes.at(i).type = "p";
+                break;
+            default:
+                nodes.at(i).type = "unknown";
                 break;
         }
 
     }
 
+    instance->nodes = nodes;
+    defineNodeIndexes(instance);
 
-
-    for(string s:splited_line) {
-        cout<<s<<endl;
+    for(int i=instance->customer_indexes[0];i<instance->customer_indexes[1];i++) {
+        getline(file,line);
+        if(instance->nodes.at(i).type != "c1") {
+            splited_line = Utils::tookenize(line," ");
+            for(int j=0;j<splited_line.size();j++) {
+                if(splited_line.at(j) == "1") {
+                    Node* locker = &instance->nodes.at(instance->locker_indexes[0] + j);
+                    instance->nodes.at(i).designated_locker = locker;
+                    locker->designated_customers.push_back(&instance->nodes.at(i));
+                }
+            }
+        }
     }
+
+    instance->calculate_distances();
+
+    return instance;
 }

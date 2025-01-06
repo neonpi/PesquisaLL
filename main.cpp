@@ -15,6 +15,7 @@ int main()
 
     //Utils::print_output(s);
     for(Instance* i: instances) {
+        i->print();
         if (i->inst_name == "c206C5_pl.dat") {
         //if (i->inst_name == "c101C5_pl.dat") {
         //if (i->inst_name == "rc208prpl.dat") {

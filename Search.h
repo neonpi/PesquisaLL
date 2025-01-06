@@ -38,6 +38,14 @@ public:
         clone->current_load = this->current_load;
     }
 
+    void reset_values() {
+        this->time_off = 0.0;
+        this->max_time_off = 0.0;
+        this->current_distance = 0.0;
+        this->current_time = 0.0;
+        this->current_load = 0.0;
+    }
+
 };
 
 class Search {

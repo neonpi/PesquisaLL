@@ -71,9 +71,11 @@ void Search::insertion_heuristic() {
         int list_index = 0;
         tuple<int,int,Sequence> candidate = cand_list.at(list_index++);
         //TODO TESTE
-        /*while(get<2>(candidate).node->id!="C35") {
-            candidate = cand_list.at(list_index++);
-        }*/
+        if( this->routes.at(0).size()==2 ) {
+            while(get<2>(candidate).node->id!="C35") {
+                candidate = cand_list.at(list_index++);
+            }
+        }
 
         //Evitar colocar um nó entre lockers
         /*Sequence *previous_sequence = &this->routes.at(get<0>(candidate)).at(get<1>(candidate));
@@ -89,6 +91,7 @@ void Search::insertion_heuristic() {
             //tuple<int,int,Node*> cand = cand_list.at(rand()%cand_list.size()); //Só pra testar
         insert_sequency(candidate);
         Utils::print_output(this);
+
 
 
         cand_list.erase(cand_list.begin(),cand_list.end());
@@ -281,7 +284,9 @@ void Search::fill_max_toff_reverse_virtual(Sequence *previous_sequence, bool is_
     this->virtual_sequence->current_time -= distance * this->instance->avg_speed;
     //Considerando apenas um service time do locker
     if(previous_sequence->node->id != this->virtual_sequence->node->id) {
-        this->virtual_sequence->current_time -= this->virtual_sequence->node->service_time;
+        this->virtual_sequence->current_time =
+            max(0.0,this->virtual_sequence->current_time - this->virtual_sequence->node->service_time);
+            //TODO levar isso tambem pra função do propagate
     }
 
     this->virtual_sequence->current_load -= this->virtual_sequence->customer->load_demand;
@@ -437,8 +442,7 @@ bool Search::propagate_virtual(int route_index, int previous_sequence_index, Seq
     //Primeiro scan, resolvendo distancias e time
     //TODO depois otimizar, talvez nao precise começar do começo
     route->at(0).clone(this->virtual_sequence);
-    this->virtual_sequence->time_off = 0.0;
-    this->virtual_sequence->max_time_off = 0.0;
+    this->virtual_sequence->reset_values();
 
     for(int i=1; i<route->size(); i++) {
 

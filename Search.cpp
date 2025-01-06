@@ -90,7 +90,7 @@ void Search::insertion_heuristic() {
 
             //tuple<int,int,Node*> cand = cand_list.at(rand()%cand_list.size()); //Só pra testar
         insert_sequency(candidate);
-        Utils::print_output(this);
+        Utils::print_output_file(this);
 
 
 

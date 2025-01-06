@@ -10,7 +10,8 @@ int main()
     srand(0);
     cout<<"LOADING INSTANCES"<<endl;
 
-    vector<Instance*> instances = Utils::buildInstances("vrppl");
+    //vector<Instance*> instances = Utils::buildInstances("vrppl");
+    vector<Instance*> instances = Utils::buildInstances("evrptwprpl");
 
     //Utils::print_output(s);
     for(Instance* i: instances) {
@@ -21,7 +22,7 @@ int main()
             Search* s = new Search(i,1);
             s->construct();
             s->print_is_viable();
-            Utils::print_output(s);
+            Utils::print_output_file(s);
             s->print();
             delete s;
             cout<<endl<<endl;

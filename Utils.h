@@ -7,19 +7,18 @@
 #include "Instance.h"
 #include <fstream>
 #include <vector>
-#include <sstream>
 #include "Search.h"
 
 
 class Utils {
 public:
     static vector<Instance*> buildInstances(string problem);
-    static void print_output(Search* search);
+    static void print_output_file(Search* search);
     static vector<string> tookenize(string str, string symbol);
 
 private:
-    static Instance* buildInstance(string fileName);
-    static void defineNodeIndexes(Instance* instance);
+    static Instance* buildInstance_evrptwprpl(string fileName);
+
 
 };
 

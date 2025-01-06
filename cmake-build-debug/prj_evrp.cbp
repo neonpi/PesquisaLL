@@ -106,6 +106,24 @@
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Utils.h">
 			<Option target="prj_evrp"/>
 		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/instance_factory/Evrptwprpl.cpp">
+			<Option target="prj_evrp"/>
+		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/instance_factory/Evrptwprpl.h">
+			<Option target="prj_evrp"/>
+		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/instance_factory/Factory.cpp">
+			<Option target="prj_evrp"/>
+		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/instance_factory/Factory.h">
+			<Option target="prj_evrp"/>
+		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/instance_factory/Vrppl.cpp">
+			<Option target="prj_evrp"/>
+		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/instance_factory/Vrppl.h">
+			<Option target="prj_evrp"/>
+		</Unit>
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/main.cpp">
 			<Option target="prj_evrp"/>
 		</Unit>

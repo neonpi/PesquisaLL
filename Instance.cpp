@@ -15,8 +15,8 @@ Instance::Instance() {
     this->locker_indexes[0] = 0;
     this->locker_indexes[1] = 0;
 
-    this->qty_customers = 0;
-    this->qty_parcel_locker = 0;
+    this->customers_qty = 0;
+    this->locker_qty = 0;
 
     this->load_capacity=0;
     this->avg_speed=0;

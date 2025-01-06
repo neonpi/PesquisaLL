@@ -17,8 +17,8 @@ public:
     vector<Node> nodes;
     int customer_indexes[2]; //[i,j)
     int locker_indexes[2]; //[i,j)
-    int qty_customers;
-    int qty_parcel_locker;
+    int customers_qty;
+    int locker_qty;
     double load_capacity; //CV
     double avg_speed; //v
     double** distances;

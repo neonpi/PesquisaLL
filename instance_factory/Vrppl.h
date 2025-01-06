@@ -4,10 +4,14 @@
 
 #ifndef VRPPL_H
 #define VRPPL_H
+#include "../Utils.h"
+#include "Factory.h"
 
 
 
-class Vrppl {
+class Vrppl: public Factory {
+public:
+    static Instance* buildInstance(string fileName);
 
 };
 

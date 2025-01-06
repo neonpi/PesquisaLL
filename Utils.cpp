@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include "instance_factory/Evrptwprpl.h"
+#include "instance_factory/Vrppl.h"
 
 
 vector<Instance *> Utils::buildInstances(string problem) {
@@ -19,7 +20,7 @@ vector<Instance *> Utils::buildInstances(string problem) {
         while(getline(file,line)) {
             Instance* new_instance = nullptr;
             if(problem == "vrppl") {
-
+                new_instance = Vrppl::buildInstance(line);
             }else {
                 new_instance = Evrptwprpl::buildInstance(line);
             }

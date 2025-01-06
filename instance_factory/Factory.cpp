@@ -19,6 +19,6 @@ void Factory::defineNodeIndexes(Instance *instance) {
 
     }
 
-    instance->qty_customers = instance->customer_indexes[1] - 2;
-    instance->qty_parcel_locker = instance->locker_indexes[1] - instance->qty_customers - 2;
+    instance->customers_qty = instance->customer_indexes[1] - 2;
+    instance->locker_qty = instance->locker_indexes[1] - instance->customers_qty - 2;
 }

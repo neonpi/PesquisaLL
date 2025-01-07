@@ -71,11 +71,11 @@ void Search::insertion_heuristic() {
         int list_index = 0;
         tuple<int,int,Sequence> candidate = cand_list.at(list_index++);
         //TODO TESTE
-        if( this->routes.at(0).size()==2 ) {
+        /*if( this->routes.at(0).size()==2 ) {
             while(get<2>(candidate).node->id!="C35") {
                 candidate = cand_list.at(list_index++);
             }
-        }
+        }*/
 
         //Evitar colocar um nó entre lockers
         /*Sequence *previous_sequence = &this->routes.at(get<0>(candidate)).at(get<1>(candidate));

@@ -1,0 +1,26 @@
+route
+D0 Dt
+D0 Dt
+D0 Dt
+D0 Dt
+D0 Dt
+D0 Dt
+D0 Dt
+D0 Dt
+D0 Dt
+D0 P0 C1 C7 P0 P0 Dt
+D0 Dt
+D0 Dt
+D0 C10 C8 C23 P1 P1 P1 P1 C19 C12 C16 Dt
+D0 Dt
+D0 Dt
+D0 P0 P0 P0 P0 P0 P0 P0 P0 Dt
+D0 Dt
+D0 Dt
+D0 Dt
+D0 Dt
+D0 Dt
+D0 Dt
+D0 Dt
+D0 Dt
+D0 C21 C18 Dt

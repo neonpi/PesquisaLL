@@ -76,6 +76,10 @@ def build_path_edges(G,instance,show,debug):
     "#F2C2B7", "#D9E4F5", "#E8D5B5", "#A6C4CF", "#F2D7D5",
     "#B7C9E2", "#E1F5C4", "#DAF7A6", "#C4D79B", "#F5C2E1",
     "#B5EAD5", "#C4A6CF", "#F7DAF5", "#E2B7C9", "#D5F2E8",
+    "#CFB5A6", "#A6C4B7", "#9BF7DA", "#F5E2C4", "#D5F2A6",
+    "#F2C2B7", "#D9E4F5", "#E8D5B5", "#A6C4CF", "#F2D7D5",
+    "#B7C9E2", "#E1F5C4", "#DAF7A6", "#C4D79B", "#F5C2E1",
+    "#B5EAD5", "#C4A6CF", "#F7DAF5", "#E2B7C9", "#D5F2E8",
     "#CFB5A6", "#A6C4B7", "#9BF7DA", "#F5E2C4", "#D5F2A6"
     ]
     color_i=0

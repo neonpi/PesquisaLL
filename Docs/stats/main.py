@@ -35,7 +35,8 @@ for index_i, node_i in enumerate(selected_instance.nodes):
 node_trace = gph.build_nodes(G,node_size)
 all_edge_trace = gph.build_all_edges(G,show_all_edges)
 locker_edge_trace = gph.build_locker_edges(G,selected_instance,show_locker_edges)
-path_edges_trace, paths_array = gph.build_path_edges(G,selected_instance,show_path_edges,True)
+# path_edges_trace, paths_array = gph.build_path_edges(G,selected_instance,show_path_edges,True)
+path_edges_trace, paths_array = gph.build_path_edges(G,selected_instance,show_path_edges,False)
 
 if show_path_string:
     st.write("Routes:")

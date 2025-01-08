@@ -1,0 +1,16 @@
+Inserção que causa problema:
+C9
+V_0: D0 -> C19 -> C24 -> C22(P0) -> C21(P0) -> C20(P0) -> Dt ->
+V_0: D0 -> C19 -> C24 -> C9 -> C22(P0) -> C21(P0) -> C20(P0) -> Dt ->
+
+Cada locker pode ser visitado mais de uma vez, inclusive pelo mesmo veículo
+
+$\delta_k \rightarrow$ Tempo em que o veículo k deixa o depósito
+$t_{ij} \rightarrow$ tempo de trajeto
+$\mu_{ik} \rightarrow$ tempo em que o veículo começa a servir o cliente $i$ $N_{CPL}$
+$[a_i,b_i] \rightarrow$ Janela de tempo
+$h_i \rightarrow$ Cliente recebeu em casa
+$l_i \rightarrow$ Cliente recebeu no locker
+$y_{ij} \rightarrow$ Se o cliente i está atribuido ao locker j
+
+Este artigo NÃO UTILIZA tempo de folga entre clientes. Apenas no depósito

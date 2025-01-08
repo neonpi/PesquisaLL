@@ -17,16 +17,16 @@ int main()
     cout<<"RUNNING EXPERIMENTS"<<endl;
     for(Instance* i: instances) {
         //i->print();
-        //if (i->inst_name == "C101_co_25.txt") {
+        if (i->inst_name == "C105_co_25.txt") {
             cout<<"Instance "<< i->inst_name<<endl;
-            Search* s = new Search(i,25);
+            Search* s = new Search(i,1);
             s->construct();
             s->print_is_viable();
             Utils::print_output_file(s);
             s->print();
             delete s;
             cout<<endl<<endl;
-        //}
+        }
 
     }
     //delete s;

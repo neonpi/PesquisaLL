@@ -19,7 +19,7 @@ Instance * Vrppl::buildInstance(string fileName) {
     vector<string> splited_line;
 
     Instance* instance = new Instance();
-
+    instance->avg_speed = 1.0;
     vector<string> instanceName = Utils::tookenize(fileName,"\\");
     instance->inst_name = instanceName.at(instanceName.size()-1);
 

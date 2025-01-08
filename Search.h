@@ -50,7 +50,7 @@ public:
 
 class Search {
 public:
-    Search(Instance* instance, int n_vehicles);
+    Search(Instance* instance);
     ~Search();
 
     void initialize_routes();

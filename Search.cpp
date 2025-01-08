@@ -6,10 +6,9 @@
 
 #include "Utils.h"
 
-Search::Search(Instance *instance, int n_vehicles) {
+Search::Search(Instance *instance) {
     this->instance = instance;
-    //this->n_vehicles = max(n_vehicles,instance->minimum_vehicle);
-    this->n_vehicles = n_vehicles;
+    this->n_vehicles = instance->minimum_vehicle;
     this->customer_served = 0;
     this->total_cost = 0.0;
     this->best = nullptr;
@@ -90,15 +89,9 @@ void Search::insertion_heuristic() {
 
 
             //tuple<int,int,Node*> cand = cand_list.at(rand()%cand_list.size()); //Só pra testar
-        cout<<endl<<endl<<get<2>(candidate).node->id<<endl;
-        if(get<2>(candidate).node->id == "C9") {
-            cout<<endl;
-        }
-        this->print();
+
         insert_sequency(candidate);
         Utils::print_output_file(this);
-
-        this->print_is_viable();
 
 
         cand_list.erase(cand_list.begin(),cand_list.end());
@@ -642,11 +635,11 @@ void Search::print_is_viable() {
 
     if (!load_viable) {
         cout<<"Load inviability"<<endl;
-        exit(10);
+        //exit(10);
     }
     if (!sp_visit_viable) {
         cout<<"Self pickup inviability"<<endl;
-        exit(10);
+        //exit(10);
     }
     if (!customer_viable) {
         cout<<"Customer inviability ("<<customers.size()<<"): (";
@@ -666,9 +659,7 @@ void Search::print_is_viable() {
         }
         cout<<")"<<endl;
         cout<<this->instance->inst_name<<endl;
-        Utils::print_output_file(this);
-        this->print();
-        exit(10);
+        //exit(10);
 
     }
 

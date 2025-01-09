@@ -1,2 +1,2 @@
-Output/*.dat
-cmake-build-debug/Output/*.dat
+Output/
+cmake-build-debug/Output/

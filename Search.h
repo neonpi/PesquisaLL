@@ -71,6 +71,7 @@ public:
     bool broke_time_window();
     bool sort_function(const tuple<int, int, Sequence> cus_a, const tuple<int, int, Sequence> cus_b);
 
+
     void calculate_total_cost();
     void print_is_viable();
 
@@ -79,8 +80,9 @@ public:
 
     bool is_load_viable(int route_index, Node* cand_node){return this->instance->load_capacity > (this->routes.at(route_index).end()-1)->current_load + cand_node->load_demand;}
 
+    double delta_distance(tuple<int, int, Sequence> cus);
     void print();
-    string get_delta_to_print(tuple<int,int,vector<Sequence>> cus);
+    void print_candidate_list(vector<tuple<int, int, Sequence>> *cand_list);
 
     Instance* instance;
     vector<vector<Sequence>> routes;

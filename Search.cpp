@@ -120,7 +120,10 @@ vector<tuple<int, int, Sequence>> Search::build_candidate_list() {
             }
 
     //funcao lambda
+    //print_candidate_list(&cand_list);
     sort(cand_list.begin(),cand_list.end(),[this](const tuple<int,int,Sequence> cus_a, const tuple<int,int,Sequence> cus_b){return sort_function(cus_a,cus_b);});
+
+    print_candidate_list(&cand_list);
 
     return cand_list;
 }
@@ -292,28 +295,41 @@ bool Search::broke_time_window() {
 
 bool Search::sort_function(const tuple<int, int, Sequence> cus_a, const tuple<int, int, Sequence> cus_b) {
     Sequence a_previous_sequence = this->routes.at(get<0>(cus_a)).at(get<1>(cus_a));
-    Sequence a_next_sequence = this->routes.at(get<0>(cus_a)).at(get<1>(cus_a));
+    Sequence a_next_sequence = this->routes.at(get<0>(cus_a)).at(get<1>(cus_a)+1);
 
     double distance_prev_next = this->instance->distances[a_previous_sequence.node->index][a_next_sequence.node->index];
     double distance_prev_cus = this->instance->distances[a_previous_sequence.node->index][get<2>(cus_a).node->index];
     double distance_cus_next = this->instance->distances[get<2>(cus_a).node->index][a_next_sequence.node->index];
-    double distance_between = 0.0;
 
 
-    double delta_cus_a = distance_prev_cus + distance_cus_next + distance_between -distance_prev_next;
+    double delta_cus_a = distance_prev_cus + distance_cus_next - distance_prev_next;
 
 
     Sequence b_previous_sequence = this->routes.at(get<0>(cus_b)).at(get<1>(cus_b));
-    Sequence b_next_sequence = this->routes.at(get<0>(cus_b)).at(get<1>(cus_b));
+    Sequence b_next_sequence = this->routes.at(get<0>(cus_b)).at(get<1>(cus_b)+1);
 
     distance_prev_next = this->instance->distances[b_previous_sequence.node->index][b_next_sequence.node->index];
     distance_prev_cus = this->instance->distances[b_previous_sequence.node->index][get<2>(cus_b).node->index];
     distance_cus_next = this->instance->distances[get<2>(cus_b).node->index][b_next_sequence.node->index];
-    distance_between = 0.0;
 
-    double delta_cus_b = distance_prev_cus + distance_cus_next + distance_between -distance_prev_next;
+    double delta_cus_b = distance_prev_cus + distance_cus_next - distance_prev_next;
 
    return delta_cus_a < delta_cus_b;
+}
+
+double Search::delta_distance(tuple<int, int, Sequence> cus) {
+    if(get<2>(cus).node->id == "C20" && this->routes.at(13).size() == 3 && get<0>(cus) == 13) {
+        cout<<endl;
+    }
+    Sequence a_previous_sequence = this->routes.at(get<0>(cus)).at(get<1>(cus));
+    Sequence a_next_sequence = this->routes.at(get<0>(cus)).at(get<1>(cus)+1);
+
+    double distance_prev_next = this->instance->distances[a_previous_sequence.node->index][a_next_sequence.node->index];
+    double distance_prev_cus = this->instance->distances[a_previous_sequence.node->index][get<2>(cus).node->index];
+    double distance_cus_next = this->instance->distances[get<2>(cus).node->index][a_next_sequence.node->index];
+
+
+    return  distance_prev_cus + distance_cus_next - distance_prev_next;
 }
 
 void Search::insert_sequency(tuple<int, int, Sequence> candidate) {
@@ -353,20 +369,25 @@ void Search::print_is_viable() {
         }
     }
 
-    vector<string> time_window={};
     int sp_visit=0;
     bool sp_visit_viable = true;
+
     bool time_window_viable = true;
+    vector<string> time_window={};
+
     bool load_viable = true;
+
     for (vector<Sequence> route: this->routes) {
         Sequence* seq = &*(route.end()-1);
         if (seq->node->type == "c2") {
             sp_visit_viable = false;
             sp_visit++;
         }
-        if (seq->current_load < 0) {
+
+        if (seq->current_load > this->instance->load_capacity) {
             load_viable = false;
         }
+
         for (Sequence sequence: route) {
             if (sequence.current_time < sequence.node->time_window[0] || sequence.current_time > sequence.node->time_window[1]) {
                 time_window_viable = false;
@@ -381,10 +402,12 @@ void Search::print_is_viable() {
         cout<<"Load inviability"<<endl;
         //exit(10);
     }
+
     if (!sp_visit_viable) {
         cout<<"Self pickup inviability"<<endl;
         //exit(10);
     }
+    
     if (!customer_viable) {
         cout<<"Customer inviability ("<<customers.size()<<"): (";
         for(string customer: customers) {
@@ -436,21 +459,13 @@ void Search::print() {
     }
 }
 
-string Search::get_delta_to_print(tuple<int, int, vector<Sequence>> cus) {
-    Sequence previous_sequence = this->routes.at(get<0>(cus)).at(get<1>(cus));
-    Sequence next_sequence = this->routes.at(get<0>(cus)).at(get<1>(cus));
-
-    double distance_prev_next = this->instance->distances[previous_sequence.node->index][next_sequence.node->index];
-    double distance_prev_cus = this->instance->distances[previous_sequence.node->index][get<2>(cus).begin()->node->index];
-    double distance_cus_next = this->instance->distances[(get<2>(cus).end()-1)->node->index][next_sequence.node->index];
-    double distance_between = 0.0;
-
-    if (get<2>(cus).size() > 1) {
-        distance_between += this->instance->distances[get<2>(cus).begin()->node->index][(get<2>(cus).end()-1)->node->index];
+void Search::print_candidate_list(vector<tuple<int, int, Sequence>>* cand_list) {
+    for(tuple<int,int,Sequence> cand: *cand_list) {
+        int cand_route = get<0>(cand);
+        int cand_index = get<1>(cand);
+        Sequence *cand_sequence = &get<2>(cand);
+        cout<<cand_route<<" - "<<cand_index<<" - "<<cand_sequence->node->id<<" - "<<delta_distance(cand)<<endl;;
     }
-
-    double delta_cus_a = distance_prev_cus + distance_cus_next + distance_between -distance_prev_next;
-
-    return to_string(delta_cus_a);
-
+    cout<<endl;
 }
+

@@ -26,7 +26,7 @@ int main()
             search->print();
             delete search;
             cout<<endl<<endl;
-        }
+       }
 
     }
     //delete s;

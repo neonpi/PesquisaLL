@@ -47,9 +47,6 @@ void Search::initialize_routes() {
         depot_t.customer = &this->instance->nodes.at(1);
         depot_0.current_load = 0;
         depot_t.current_load = 0;
-        depot_0.max_time_off = depot_0.node->time_window[1];
-        depot_t.max_time_off = depot_t.node->time_window[1];
-
         vector<Sequence> route ={depot_0, depot_t};
         this->routes.push_back(route);
         this->routes.at(i).reserve(this->instance->n_node);
@@ -126,44 +123,6 @@ vector<tuple<int, int, Sequence>> Search::build_candidate_list() {
     sort(cand_list.begin(),cand_list.end(),[this](const tuple<int,int,Sequence> cus_a, const tuple<int,int,Sequence> cus_b){return sort_function(cus_a,cus_b);});
 
     return cand_list;
-}
-
-
-void Search::fill_candidate_sequences(Sequence *previous_sequence, Sequence *next_sequence, Sequence *cand_sequence,
-    Node *cand_node, Node *customer_node) {
-    Node* previous_node = previous_sequence->node;
-
-    double distance_from_previous = this->instance->distances[previous_node->index][cand_node->index];
-    double travel_time = this->instance->avg_speed*(distance_from_previous);
-    cand_sequence->node = cand_node;
-    cand_sequence->customer = customer_node;
-    cand_sequence->current_load = previous_sequence->current_load - customer_node->load_demand;
-    cand_sequence->current_distance = previous_sequence->current_distance + distance_from_previous;
-
-    cand_sequence->current_time = previous_sequence->current_time + travel_time;
-    /*TODO O somatorio de tempo aqui não vai tratar o timeoff do nó atual.
-    TODO Ele vai ser tratado SOMENTE quando uma estação for necessária ou um timeoff for obrigadório por conta de time window
-    TODO Isso na hora de verificar as viabilidades*/
-
-    //tratando o service time
-    if (previous_sequence->node->type =="p") {
-        if (previous_sequence->node->id != cand_node->id) {
-            cand_sequence->current_time += cand_node->service_time;
-        }
-    }else {
-        cand_sequence->current_time += cand_node->service_time;
-    }
-    //O time window do proximo no pode diminuir ainda mais o timeoff, se a tw do proximo no terminar bem antes
-    if (next_sequence!=nullptr) {
-        Node* next_node = next_sequence->node;
-        cand_sequence->max_time_off = min(next_node->time_window[1], next_sequence->max_time_off) - cand_sequence->current_time;
-    }
-
-    if (cand_node->type == "p") {
-        cand_sequence->method = 'p';
-    }else {
-        cand_sequence->method = 'h';
-    }
 }
 
 void Search::try_customer_candidate(vector<tuple<int, int, Sequence>> *cand_list, Node *cand_node) {
@@ -245,192 +204,53 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence>>* cand_list, 
     }
 }
 
-void Search::fill_time_dist_load_forward_virtual(Sequence *next_sequence, bool is_candidate) {
+void Search::fill_forward_virtual(Sequence *next_sequence) {
 
 
     double distance = this->instance->distances[this->virtual_sequence->node->index][next_sequence->node->index];
     this->virtual_sequence->current_distance += distance;
 
-    this->virtual_sequence->current_time += distance * this->instance->avg_speed;
-    //Considerando apenas um service time do locker
+    this->virtual_sequence->current_time += distance * this->instance->avg_speed + this->virtual_sequence->node->service_time;
 
-
-    if(next_sequence->node->id != this->virtual_sequence->node->id) {
-        this->virtual_sequence->current_time += next_sequence->node->service_time;
+    //Verificando se precisa de timeoff no depósito
+    if(this->virtual_sequence->node->id == "D0" && this->virtual_sequence->current_time < next_sequence->node->time_window[0]) {
+        this->virtual_sequence->current_time += next_sequence->node->time_window[0] - this->virtual_sequence->current_time;
     }
 
     this->virtual_sequence->current_load += next_sequence->customer->load_demand;
-
-
-
     this->virtual_sequence->node = next_sequence->node;
     this->virtual_sequence->customer = next_sequence->customer;
 
-    if(is_candidate) {
-        next_sequence->current_time = this->virtual_sequence->current_time;
-    }
-
 }
 
-void Search::fill_max_toff_reverse_virtual(Sequence *previous_sequence, bool is_candidate_sequence) {
-    double distance = this->instance->distances[this->virtual_sequence->node->index][previous_sequence->node->index];
-    this->virtual_sequence->current_distance -= distance;
-
-    this->virtual_sequence->max_time_off =
-        min(this->virtual_sequence->max_time_off,
-            this->virtual_sequence->node->time_window[1] - this->virtual_sequence->current_time);
-
-    //TODO tratar arredondamentos
-    this->virtual_sequence->current_time -= distance * this->instance->avg_speed;
-    //Considerando apenas um service time do locker
-    if(previous_sequence->node->id != this->virtual_sequence->node->id) {
-        this->virtual_sequence->current_time =
-            max(0.0,this->virtual_sequence->current_time - this->virtual_sequence->node->service_time);
-            //TODO levar isso tambem pra função do propagate
-    }
-
-    this->virtual_sequence->current_load -= this->virtual_sequence->customer->load_demand;
-
-
-    this->virtual_sequence->node = previous_sequence->node;
-    this->virtual_sequence->customer = previous_sequence->customer;
-
-
-    if(is_candidate_sequence) {
-        previous_sequence->max_time_off = this->virtual_sequence->max_time_off;
-    }
-}
-
-void Search::fill_toff_forward_virtual(Sequence *next_sequence, double *delta_time, bool is_candidate, bool *inviable, double next_sequence_timeoff) {
-
-    double distance = this->instance->distances[this->virtual_sequence->node->index][next_sequence->node->index];
-    this->virtual_sequence->current_distance += distance;
-    this->virtual_sequence->current_load += next_sequence->customer->load_demand;
-    this->virtual_sequence->current_time += distance * this->instance->avg_speed;
-
-
-    //TENTANDO INCLUIR TIMEOFF
-    double time_off = max(0.0,
-        min(this->virtual_sequence->max_time_off,
-            next_sequence->node->time_window[0] - this->virtual_sequence->current_time));
-
-    //Verificando se é possível chegar ao cliente no horário inicial
-    this->virtual_sequence->current_time += time_off;
-    if(this->virtual_sequence->current_time < next_sequence->node->time_window[0]) {
-        *inviable = true;
-        return;
-    }
-
-
-    if(next_sequence->node->id != this->virtual_sequence->node->id) {
-        this->virtual_sequence->current_time += next_sequence->node->service_time;
-    }
-
-    *delta_time+=time_off;
-    this->virtual_sequence->max_time_off = next_sequence_timeoff - *delta_time;
-    //O TIMEOFF AQUI NAO INTERESSA TODO talvez isso nao funcione porque next_sequence->timeoff da rota é zero
-    //TODO rever essa atribuição quando está no deposito final
-
-    //Verificando se é possível completar o serviço no cliente
-    if(this->virtual_sequence->current_time > next_sequence->node->time_window[1]) {
-        *inviable = true;
-        return;
-    }
-
-    this->virtual_sequence->node = next_sequence->node;
-    this->virtual_sequence->customer = next_sequence->customer;
-
-    if(is_candidate) {
-        next_sequence->current_time = this->virtual_sequence->current_time;
-        next_sequence->max_time_off -= *delta_time;
-    }
-
-}
-
-void Search::fill_time_dist_load_forward(Sequence *previous_sequence, Sequence *current_sequence) {
-
-    double distance = this->instance->distances[previous_sequence->node->index][current_sequence->node->index];
-
-    current_sequence->current_distance = previous_sequence->current_distance + distance;
-    current_sequence->current_load = previous_sequence->current_load + current_sequence->customer->load_demand;
-    current_sequence->current_time = previous_sequence->current_time + distance * this->instance->avg_speed;
-
-    //Considerando apenas um service time do locker
-    if(current_sequence->node->id != previous_sequence->node->id) {
-        current_sequence->current_time += current_sequence->node->service_time;
-
-    }
-
-
-}
-
-void Search::fill_max_toff_referse(Sequence *current_sequence, Sequence *next_sequence) {
-
-    //TODO tratar arredondamentos
-    current_sequence->max_time_off =
-        min(next_sequence->max_time_off,
-            next_sequence->node->time_window[1] - next_sequence->current_time);
-
-
-}
-
-void Search::fill_toff_forward(Sequence *current_sequence, Sequence *next_sequence, double *delta_time) {
+void Search::fill_forward(Sequence *current_sequence, Sequence *next_sequence) {
 
     double distance = this->instance->distances[current_sequence->node->index][next_sequence->node->index];
 
-    double time_off = max(0.0,
-        min(current_sequence->max_time_off,
-            next_sequence->node->time_window[0] - (current_sequence->current_time + distance)));
+    next_sequence->current_distance = current_sequence->current_distance + distance;
 
-    current_sequence->time_off = time_off;
-    current_sequence->current_time += time_off;
+    next_sequence->current_time = current_sequence->current_time + current_sequence->node->service_time + distance * this->instance->avg_speed;
 
-    *delta_time += time_off;
-    next_sequence->max_time_off -= *delta_time;
-    next_sequence->current_time += *delta_time;
+    if(current_sequence->node->id == "D0" && next_sequence->current_time < next_sequence->node->time_window[0]) {
+        current_sequence->time_off = next_sequence->node->time_window[0] - next_sequence->current_time;
+        next_sequence->current_time += current_sequence->time_off;
+    }
+
+    next_sequence->current_load = current_sequence->current_load + next_sequence->customer->load_demand;
 
 }
 
-void Search::propagate(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
+void Search::propagate(int route_index) {
     vector<Sequence>* route = &this->routes.at(route_index);
 
-    Sequence* current_sequence = &route->at(0);
-    Sequence* previous_sequence = nullptr;
-    current_sequence->max_time_off = 0.0;
-    current_sequence->time_off = 0.0;
-
-    for(int i=1; i<route->size(); i++) {
-
-        previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
-        current_sequence->max_time_off = 0.0;
-        current_sequence->time_off = 0.0;
-
-        fill_time_dist_load_forward(previous_sequence,current_sequence);
-
-    }
-
-    //Segundo scan, resolvendo max-timeoff
-    Sequence* last_sequence = &route->at(route->size()-1);
-    last_sequence->max_time_off = last_sequence->node->time_window[1] - last_sequence->current_time;
-
+    Sequence* current_sequence = nullptr;
     Sequence* next_sequence = nullptr;
-    for(int i=route->size()-2;i>=0; i--) {
+
+    for(int i=0; i<(route->size() - 1); i++) {
+
         current_sequence = &route->at(i);
         next_sequence = &route->at(i+1);
-
-        fill_max_toff_referse(current_sequence, next_sequence);
-
-    }
-
-
-    //Terceiro scan, tratando time-off
-    double delta_time = 0.0;
-    for(int i=1; i<route->size();i++) {
-        current_sequence = &route->at(i) - 1;
-        next_sequence = &route->at(i);
-
-        fill_toff_forward(current_sequence,next_sequence, &delta_time);
+        fill_forward(current_sequence,next_sequence);
 
     }
 
@@ -439,7 +259,6 @@ void Search::propagate(int route_index, int previous_sequence_index, Sequence *c
 bool Search::propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
     vector<Sequence>* route = &this->routes.at(route_index);
 
-    //Primeiro scan, resolvendo distancias e time
     //TODO depois otimizar, talvez nao precise começar do começo
     route->at(0).clone(this->virtual_sequence);
     this->virtual_sequence->reset_values();
@@ -449,97 +268,28 @@ bool Search::propagate_virtual(int route_index, int previous_sequence_index, Seq
         Sequence* current_sequence = &route->at(i);
 
         if(i-1 == previous_sequence_index) {
-            fill_time_dist_load_forward_virtual(cand_sequence,true);
-            if(broke_upper_time_window()) {
+            fill_forward_virtual(cand_sequence);
+            if(broke_time_window()) {
                 return false;
             }
         }
 
-        fill_time_dist_load_forward_virtual(current_sequence,false);
-        if(broke_upper_time_window()) {
+        fill_forward_virtual(current_sequence);
+        if(broke_time_window()) {
             return false;
         }
-
-    }
-
-    //Segundo scan, resolvendo max-timeoff. Aqui a virtual_sequence eh sempre o Dt
-
-    this->virtual_sequence->max_time_off = this->virtual_sequence->node->time_window[1] - this->virtual_sequence->current_time;
-    if (broke_timeoff_upper()) {
-        return false;
-    }
-    vector<double> max_timeoffs = {this->virtual_sequence->max_time_off};
-
-    for(int i=route->size()-2;i>=0; i--) {
-        Sequence* previous_sequence = &route->at(i);
-
-        if(i == previous_sequence_index) {
-
-            fill_max_toff_reverse_virtual(cand_sequence, true);
-            if(broke_timeoff_upper()) {
-                return false;
-            }
-
-        }
-
-        fill_max_toff_reverse_virtual(previous_sequence, false);
-        max_timeoffs.insert(max_timeoffs.begin(),this->virtual_sequence->max_time_off);
-        if(broke_timeoff_upper()) {
-            return false;
-        }
-
-    }
-
-    //Terceiro scan, tratando time-off
-    double delta_time = 0.0;
-    bool inviable = false;
-    for(int i=1; i<route->size();i++) {
-        Sequence* next_sequence = &route->at(i);
-
-        if(i-1 == previous_sequence_index) {
-            fill_toff_forward_virtual(cand_sequence,&delta_time,true, &inviable, cand_sequence->max_time_off);
-            if (inviable) {
-                return false;
-            }
-        }
-
-        fill_toff_forward_virtual(next_sequence,&delta_time,false, &inviable, max_timeoffs.at(i));
-        if (inviable) {
-            return false;
-        }
-
-
 
     }
 
     return true;
 }
 
-bool Search::broke_upper_time_window() {
+bool Search::broke_time_window() {
 
-    return this->virtual_sequence->current_time > this->virtual_sequence->node->time_window[1];
+    return this->virtual_sequence->current_time < this->virtual_sequence->node->time_window[0] ||
+        this->virtual_sequence->current_time > this->virtual_sequence->node->time_window[1];
 }
 
-bool Search::broke_timeoff_upper() {
-    return this->virtual_sequence->max_time_off < 0;
-}
-
-
-double Search::delta_distance(tuple<int,int,vector<Sequence>> cus) {
-    Sequence a_previous_sequence = this->routes.at(get<0>(cus)).at(get<1>(cus));
-    Sequence a_next_sequence = this->routes.at(get<0>(cus)).at(get<1>(cus));
-    double distance_prev_next = this->instance->distances[a_previous_sequence.node->index][a_next_sequence.node->index];
-    double distance_prev_cus = this->instance->distances[a_previous_sequence.node->index][get<2>(cus).begin()->node->index];
-    double distance_cus_next = this->instance->distances[(get<2>(cus).end()-1)->node->index][a_next_sequence.node->index];
-    double distance_between = 0.0;
-
-
-    if (get<2>(cus).size() > 1) {
-        distance_between += this->instance->distances[get<2>(cus).begin()->node->index][(get<2>(cus).end()-1)->node->index];
-    }
-
-    return distance_prev_cus + distance_cus_next + distance_between -distance_prev_next;
-}
 bool Search::sort_function(const tuple<int, int, Sequence> cus_a, const tuple<int, int, Sequence> cus_b) {
     Sequence a_previous_sequence = this->routes.at(get<0>(cus_a)).at(get<1>(cus_a));
     Sequence a_next_sequence = this->routes.at(get<0>(cus_a)).at(get<1>(cus_a));
@@ -565,12 +315,6 @@ bool Search::sort_function(const tuple<int, int, Sequence> cus_a, const tuple<in
 
    return delta_cus_a < delta_cus_b;
 }
-bool Search::sort_function_tw(const tuple<int,int,vector<Sequence>> cus_a, const tuple<int,int,vector<Sequence>> cus_b) {
-    Node* a = get<2>(cus_a).at(get<2>(cus_a).size()-1).node;
-    Node* b = get<2>(cus_b).at(get<2>(cus_b).size()-1).node;
-
-   return a->time_window[1] < b->time_window[1];
-}
 
 void Search::insert_sequency(tuple<int, int, Sequence> candidate) {
     int route_index = get<0>(candidate);
@@ -582,7 +326,7 @@ void Search::insert_sequency(tuple<int, int, Sequence> candidate) {
         1,
         *candidate_sequence);
 
-    propagate(route_index,previous_sequence_index,candidate_sequence);
+    propagate(route_index);
 
     this->visited[candidate_sequence->customer->index] = true;
 
@@ -672,24 +416,6 @@ bool Search::is_customer(int node_index) {
 bool Search::is_locker(int node_index) {
     return this->instance->nodes.at(node_index).type[0] == 'p';
 }
-
-short Search::is_time_window_viable(Sequence* candidate_sequence) {
-    Node* cand_node = candidate_sequence->node;
-
-    if (candidate_sequence->max_time_off < 0 || candidate_sequence->current_time > cand_node->time_window[1]) {
-        return INVIABLE_TW;
-    }
-
-    if (candidate_sequence->current_time < cand_node->time_window[0]) {
-        if (candidate_sequence->current_time + candidate_sequence->max_time_off >= cand_node->time_window[0]) {
-            return EARLY_TW;
-        }
-        return INVIABLE_TW;
-    }
-
-    return VIABLE_TW;
-}
-
 
 void Search::print() {
     cout<<"TOTAL COST: "<<this->total_cost<<endl;

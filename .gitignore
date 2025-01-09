@@ -1,2 +1,2 @@
-Output/
-cmake-build-debug/Output/
+Output/*
+cmake-build-debug/Output/*

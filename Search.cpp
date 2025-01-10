@@ -59,8 +59,8 @@ void Search::construct() {
 
 void Search::insertion_heuristic() {
 
-    vector<tuple<int,int,Sequence>> cand_list = build_candidate_list(); //(rota,antecessor,cliente destino)
-    vector<tuple<int,int,Sequence>>::iterator it;
+    vector<tuple<int,int,Sequence,double>> cand_list = build_candidate_list(); //(rota,antecessor,cliente destino)
+    vector<tuple<int,int,Sequence,double>>::iterator it;
     double alpha = 0.05;
 
     while(!cand_list.empty()) {
@@ -74,7 +74,7 @@ void Search::insertion_heuristic() {
         if(candidates>0) {
             rand_index = rand()%candidates;
         }
-        tuple<int,int,Sequence> candidate = cand_list.at(rand_index);
+        tuple<int,int,Sequence,double> candidate = cand_list.at(rand_index);
         //TODO TESTE
         /*if( this->routes.at(0).size()==2 ) {
             while(get<2>(candidate).node->id!="C35") {
@@ -110,12 +110,11 @@ void Search::insertion_heuristic() {
     }
 }
 
-vector<tuple<int, int, Sequence>> Search::build_candidate_list() {
+vector<tuple<int, int, Sequence, double>> Search::build_candidate_list() {
 
-    vector<tuple<int,int,Sequence>> cand_list;
+    vector<tuple<int,int,Sequence, double>> cand_list;
 
-    for (int i=this->instance->customer_indexes[0];
-            i<this->instance->locker_indexes[1];i++) {
+    for (int i=this->instance->customer_indexes[0];i<this->instance->locker_indexes[1];i++) {
 
         Node* cand_node = &this->instance->nodes.at(i);
         if (this->instance->nodes.at(i).type == "p") {
@@ -125,18 +124,18 @@ vector<tuple<int, int, Sequence>> Search::build_candidate_list() {
 
         }
 
-            }
+    }
 
     //funcao lambda
     //print_candidate_list(&cand_list);
-    sort(cand_list.begin(),cand_list.end(),[this](const tuple<int,int,Sequence> cus_a, const tuple<int,int,Sequence> cus_b){return sort_function(cus_a,cus_b);});
+    sort(cand_list.begin(),cand_list.end(),[this](const tuple<int,int,Sequence, double> cus_a, const tuple<int,int,Sequence, double> cus_b){return get<3>(cus_a) < get<3>(cus_b);});
 
     //print_candidate_list(&cand_list);
 
     return cand_list;
 }
 
-void Search::try_customer_candidate(vector<tuple<int, int, Sequence>> *cand_list, Node *cand_node) {
+void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node *cand_node) {
     if(!this->visited[cand_node->index]) {
 
         int route_index = 0;
@@ -157,7 +156,9 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence>> *cand_list
                         bool is_insertion_viable = propagate_virtual(route_index, previous_sequence_index, &cand_sequence);
 
                         if(is_insertion_viable) {
-                            cand_list->push_back({route_index,previous_sequence_index,cand_sequence});
+                            tuple<int, int, Sequence, double> cand_tuple = {route_index,previous_sequence_index,cand_sequence, 0.0};
+                            calculate_delta_distance(&cand_tuple);
+                            cand_list->push_back(cand_tuple);
                         }
 
                     }
@@ -174,7 +175,7 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence>> *cand_list
 }
 
 
-void Search::try_locker_candidate(vector<tuple<int, int, Sequence>>* cand_list, Node* cand_node) {
+void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node* cand_node) {
 
     int route_index = 0;
     for (vector<Sequence> route : this->routes) {
@@ -199,7 +200,9 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence>>* cand_list, 
                             bool is_insertion_viable = propagate_virtual(route_index, previous_sequence_index, &cand_sequence);
 
                             if(is_insertion_viable) {
-                                cand_list->push_back({route_index,previous_sequence_index,cand_sequence});
+                                tuple<int, int, Sequence, double> cand_tuple = {route_index,previous_sequence_index,cand_sequence, 0.0};
+                                calculate_delta_distance(&cand_tuple);
+                                cand_list->push_back(cand_tuple);
                             }
 
                         }
@@ -324,19 +327,19 @@ bool Search::sort_function(const tuple<int, int, Sequence> cus_a, const tuple<in
    return delta_cus_a < delta_cus_b;
 }
 
-double Search::delta_distance(tuple<int, int, Sequence> cus) {
-    Sequence a_previous_sequence = this->routes.at(get<0>(cus)).at(get<1>(cus));
-    Sequence a_next_sequence = this->routes.at(get<0>(cus)).at(get<1>(cus)+1);
+void Search::calculate_delta_distance(tuple<int, int, Sequence, double> *cus) {
+    Sequence a_previous_sequence = this->routes.at(get<0>(*cus)).at(get<1>(*cus));
+    Sequence a_next_sequence = this->routes.at(get<0>(*cus)).at(get<1>(*cus)+1);
 
     double distance_prev_next = this->instance->distances[a_previous_sequence.node->index][a_next_sequence.node->index];
-    double distance_prev_cus = this->instance->distances[a_previous_sequence.node->index][get<2>(cus).node->index];
-    double distance_cus_next = this->instance->distances[get<2>(cus).node->index][a_next_sequence.node->index];
+    double distance_prev_cus = this->instance->distances[a_previous_sequence.node->index][get<2>(*cus).node->index];
+    double distance_cus_next = this->instance->distances[get<2>(*cus).node->index][a_next_sequence.node->index];
 
-
-    return  distance_prev_cus + distance_cus_next - distance_prev_next;
+    double delta_distance = distance_prev_cus + distance_cus_next - distance_prev_next;
+    get<3>(*cus) = delta_distance;
 }
 
-void Search::insert_sequency(tuple<int, int, Sequence> candidate) {
+void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
     int route_index = get<0>(candidate);
     int previous_sequence_index = get<1>(candidate);
     Sequence* candidate_sequence = &get<2>(candidate);
@@ -463,12 +466,12 @@ void Search::print() {
     }
 }
 
-void Search::print_candidate_list(vector<tuple<int, int, Sequence>>* cand_list) {
-    for(tuple<int,int,Sequence> cand: *cand_list) {
+void Search::print_candidate_list(vector<tuple<int, int, Sequence, double>> *cand_list) {
+    for(tuple<int,int,Sequence, double> cand: *cand_list) {
         int cand_route = get<0>(cand);
         int cand_index = get<1>(cand);
         Sequence *cand_sequence = &get<2>(cand);
-        cout<<cand_route<<" - "<<cand_index<<" - "<<cand_sequence->node->id<<" - "<<delta_distance(cand)<<endl;;
+        cout<<cand_route<<" - "<<cand_index<<" - "<<cand_sequence->node->id<<" - "<<get<3>(cand)<<endl;;
     }
     cout<<endl;
 }

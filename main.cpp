@@ -7,7 +7,7 @@
 using namespace std;
 int main()
 {
-    srand(0);
+    int runs = 1;
     cout<<"LOADING INSTANCES"<<endl;
     vector<Instance*> instances = Utils::buildInstances("vrppl");
     //vector<Instance*> instances = Utils::buildInstances("evrptwprpl");
@@ -16,17 +16,14 @@ int main()
     //Utils::print_output(s);
     cout<<"RUNNING EXPERIMENTS"<<endl;
     for(Instance* instance: instances) {
-        //i->print();
-       // if (instance->inst_name == "C101_co_25.txt") {
         if (instance->inst_name != "R103_co_100.txt") {
-            if (instance->inst_name == "C105_co_100.txt") {
+            //if (instance->inst_name == "C105_co_100.txt") {
                 cout<<"Instance "<< instance->inst_name<<endl;
 
                 double best = -1.0;
                 double avg=0.0;
-                int runs = 1;
                 for(int i=0;i<runs;i++) {
-                    long seed = 49692;//clock();
+                    long seed = clock();
                     srand(seed);
                     Search* search = new Search(instance);
                     search->construct();
@@ -41,7 +38,7 @@ int main()
 
                 cout<<"AVG:"<<avg/(double)runs<<endl;
                 cout<<"BEST:"<<best<<endl<<endl;
-            }
+            //}
         }
 
     }

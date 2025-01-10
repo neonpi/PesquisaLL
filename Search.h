@@ -56,11 +56,11 @@ public:
     void construct();
     void insertion_heuristic();
 
-    vector<tuple<int, int, Sequence>> build_candidate_list();
-    void insert_sequency(tuple<int, int, Sequence> candidate);
+    vector<tuple<int, int, Sequence, double>> build_candidate_list();
+    void insert_sequency(tuple<int, int, Sequence, double> candidate);
 
-    void try_customer_candidate(vector<tuple<int, int, Sequence>> *cand_list, Node* cand_node);
-    void try_locker_candidate(vector<tuple<int, int, Sequence>> *cand_list, Node* cand_node);
+    void try_customer_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node* cand_node);
+    void try_locker_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node* cand_node);
 
     void propagate(int route_index);
     bool propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence);
@@ -80,9 +80,9 @@ public:
 
     bool is_load_viable(int route_index, Node* cand_node){return this->instance->load_capacity > (this->routes.at(route_index).end()-1)->current_load + cand_node->load_demand;}
 
-    double delta_distance(tuple<int, int, Sequence> cus);
+    void calculate_delta_distance(tuple<int, int, Sequence, double> *cus);
     void print();
-    void print_candidate_list(vector<tuple<int, int, Sequence>> *cand_list);
+    void print_candidate_list(vector<tuple<int, int, Sequence, double>> *cand_list);
 
     Instance* instance;
     vector<vector<Sequence>> routes;

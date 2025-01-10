@@ -18,6 +18,8 @@ Este artigo NÃO UTILIZA tempo de folga entre clientes. Apenas no depósito
 
 Não considera o tempo de serviço para validar o time window. O que importa é somente o tempo de chegada.
 
+Instância R103_co_100 possui clientes sem locker. O gurobi nao conseguiu resultados
+
 Pesquisador:
 40002022
 40003965

@@ -17,16 +17,32 @@ int main()
     cout<<"RUNNING EXPERIMENTS"<<endl;
     for(Instance* instance: instances) {
         //i->print();
-        if (instance->inst_name == "C101_co_25.txt") {
-            cout<<"Instance "<< instance->inst_name<<endl;
-            Search* search = new Search(instance);
-            search->construct();
-            search->print_is_viable();
-            Utils::print_output_file(search);
-            search->print();
-            delete search;
-            cout<<endl<<endl;
-       }
+       // if (instance->inst_name == "C101_co_25.txt") {
+        if (instance->inst_name != "R103_co_100.txt") {
+            if (instance->inst_name == "C105_co_100.txt") {
+                cout<<"Instance "<< instance->inst_name<<endl;
+
+                double best = -1.0;
+                double avg=0.0;
+                int runs = 1;
+                for(int i=0;i<runs;i++) {
+                    long seed = 49692;//clock();
+                    srand(seed);
+                    Search* search = new Search(instance);
+                    search->construct();
+                    if(best == -1.0 || search->total_cost < best){best = search->total_cost;}
+                    avg+=search->total_cost;
+                    cout<<seed<<endl;
+                    search->print();
+                    search->print_is_viable();
+                    Utils::print_output_file(search);
+                    delete search;
+                }
+
+                cout<<"AVG:"<<avg/(double)runs<<endl;
+                cout<<"BEST:"<<best<<endl<<endl;
+            }
+        }
 
     }
     //delete s;

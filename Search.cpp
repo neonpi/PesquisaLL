@@ -61,12 +61,20 @@ void Search::insertion_heuristic() {
 
     vector<tuple<int,int,Sequence>> cand_list = build_candidate_list(); //(rota,antecessor,cliente destino)
     vector<tuple<int,int,Sequence>>::iterator it;
-
+    double alpha = 0.05;
 
     while(!cand_list.empty()) {
 
-        int list_index = 0;
-        tuple<int,int,Sequence> candidate = cand_list.at(list_index++);
+        //tuple<int,int,Sequence> candidate = cand_list.at(0); //GULOSO
+
+        //Randomizado
+        int candidates = int(cand_list.size()*alpha);
+
+        int rand_index = 0;
+        if(candidates>0) {
+            rand_index = rand()%candidates;
+        }
+        tuple<int,int,Sequence> candidate = cand_list.at(rand_index);
         //TODO TESTE
         /*if( this->routes.at(0).size()==2 ) {
             while(get<2>(candidate).node->id!="C35") {
@@ -75,7 +83,9 @@ void Search::insertion_heuristic() {
         }*/
 
         //Evitar colocar um nó entre lockers
-        /*Sequence *previous_sequence = &this->routes.at(get<0>(candidate)).at(get<1>(candidate));
+        /*int list_index = 0;
+        tuple<int,int,Sequence> candidate = cand_list.at(list_index++);
+        Sequence *previous_sequence = &this->routes.at(get<0>(candidate)).at(get<1>(candidate));
         Sequence *next_sequence = &this->routes.at(get<0>(candidate)).at(get<1>(candidate)+1);
 
         while(previous_sequence->node->id == next_sequence->node->id) {
@@ -85,10 +95,8 @@ void Search::insertion_heuristic() {
         }*/
 
 
-            //tuple<int,int,Node*> cand = cand_list.at(rand()%cand_list.size()); //Só pra testar
-
         insert_sequency(candidate);
-        Utils::print_output_file(this);
+        //Utils::print_output_file(this);
 
 
         cand_list.erase(cand_list.begin(),cand_list.end());
@@ -123,13 +131,12 @@ vector<tuple<int, int, Sequence>> Search::build_candidate_list() {
     //print_candidate_list(&cand_list);
     sort(cand_list.begin(),cand_list.end(),[this](const tuple<int,int,Sequence> cus_a, const tuple<int,int,Sequence> cus_b){return sort_function(cus_a,cus_b);});
 
-    print_candidate_list(&cand_list);
+    //print_candidate_list(&cand_list);
 
     return cand_list;
 }
 
 void Search::try_customer_candidate(vector<tuple<int, int, Sequence>> *cand_list, Node *cand_node) {
-
     if(!this->visited[cand_node->index]) {
 
         int route_index = 0;
@@ -318,9 +325,6 @@ bool Search::sort_function(const tuple<int, int, Sequence> cus_a, const tuple<in
 }
 
 double Search::delta_distance(tuple<int, int, Sequence> cus) {
-    if(get<2>(cus).node->id == "C20" && this->routes.at(13).size() == 3 && get<0>(cus) == 13) {
-        cout<<endl;
-    }
     Sequence a_previous_sequence = this->routes.at(get<0>(cus)).at(get<1>(cus));
     Sequence a_next_sequence = this->routes.at(get<0>(cus)).at(get<1>(cus)+1);
 
@@ -407,13 +411,14 @@ void Search::print_is_viable() {
         cout<<"Self pickup inviability"<<endl;
         //exit(10);
     }
-    
+
     if (!customer_viable) {
         cout<<"Customer inviability ("<<customers.size()<<"): (";
         for(string customer: customers) {
             cout<< customer<<", ";
         }
         cout<<")"<<endl;
+        //exit(2);
     }
 
     if(!time_window_viable) {
@@ -447,7 +452,6 @@ void Search::print() {
     cout<<"PATHS: "<<endl;
     for (int i=0; i<this->n_vehicles; i++) {
         cout<<"V_"<<i<<": ";
-        int j=0;
         for (Sequence sequence: this->routes.at(i)) {
             cout<<sequence.customer->id;
             if (sequence.node->type == "p") {

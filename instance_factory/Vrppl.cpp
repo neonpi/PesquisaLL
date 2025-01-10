@@ -101,7 +101,6 @@ Instance * Vrppl::buildInstance(string fileName) {
 
     instance->nodes = nodes;
     defineNodeIndexes(instance);
-
     for(int i=instance->customer_indexes[0];i<instance->customer_indexes[1];i++) {
         getline(file,line);
         if(instance->nodes.at(i).type != "c1") {
@@ -111,6 +110,7 @@ Instance * Vrppl::buildInstance(string fileName) {
                     Node* locker = &instance->nodes.at(instance->locker_indexes[0] + j);
                     instance->nodes.at(i).designated_locker = locker;
                     locker->designated_customers.push_back(&instance->nodes.at(i));
+                    break;
                 }
             }
         }

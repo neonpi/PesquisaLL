@@ -33,11 +33,11 @@ public:
     void try_customer_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node* cand_node);
     void try_locker_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node* cand_node);
 
-    void propagate(int route_index);
+    void propagate(int route_index, int previous_sequence_index);
     bool propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence);
 
-    void fill_forward_virtual(Sequence* next_sequence);
-    void fill_forward(Sequence *current_sequence, Sequence* next_sequence);
+    void fill_forward_virtual(Sequence *previous_sequence, Sequence* current_sequence);
+    void fill_forward(Sequence *previous_sequence, Sequence* current_sequence);
 
     bool broke_time_window();
     bool sort_function(const tuple<int, int, Sequence> cus_a, const tuple<int, int, Sequence> cus_b);

@@ -61,11 +61,18 @@ void Search::insertion_heuristic() {
 
     vector<tuple<int,int,Sequence,double>> cand_list = build_candidate_list(); //(rota,antecessor,cliente destino)
     vector<tuple<int,int,Sequence,double>>::iterator it;
-    //double alpha = 0.05;
+    double alpha = 0.05;
 
     while(!cand_list.empty()) {
 
-        tuple<int,int,Sequence,double> candidate = cand_list.at(0); //GULOSO
+        int cand_index = 0;
+        if(this->routes.at(0).size()==2) {
+            while(get<0>(cand_list.at(cand_index))!= 0 || get<2>(cand_list.at(cand_index)).node->id!="C3") {
+                cand_index++;
+            }
+        }
+        tuple<int,int,Sequence,double> candidate = cand_list.at(cand_index);
+        //tuple<int,int,Sequence,double> candidate = cand_list.at(0); //GULOSO
 
         //Randomizado
         /*int candidates = int(cand_list.size()*alpha);
@@ -217,53 +224,51 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *can
     }
 }
 
-void Search::fill_forward_virtual(Sequence *next_sequence) {
+void Search::fill_forward_virtual(Sequence *previous_sequence, Sequence *current_sequence) {
 
+    double distance = this->instance->distances[previous_sequence->node->index][current_sequence->node->index];
+    this->virtual_sequence->current_time += distance * this->instance->avg_speed + previous_sequence->node->service_time;
 
-    double distance = this->instance->distances[this->virtual_sequence->node->index][next_sequence->node->index];
-    this->virtual_sequence->current_distance += distance;
-
-    this->virtual_sequence->current_time += distance * this->instance->avg_speed + this->virtual_sequence->node->service_time;
-
-    //Verificando se precisa de timeoff no depósito
-    if(this->virtual_sequence->node->id == "D0" && this->virtual_sequence->current_time < next_sequence->node->time_window[0]) {
-        this->virtual_sequence->current_time += next_sequence->node->time_window[0] - this->virtual_sequence->current_time;
+    //Verificando se precisa de timeoff no
+    if(this->virtual_sequence->current_time < current_sequence->node->time_window[0]) {
+        this->virtual_sequence->time_off = current_sequence->node->time_window[0] - this->virtual_sequence->current_time;
+        this->virtual_sequence->current_time += this->virtual_sequence->time_off;
     }
 
-    this->virtual_sequence->current_load += next_sequence->customer->load_demand;
-    this->virtual_sequence->node = next_sequence->node;
-    this->virtual_sequence->customer = next_sequence->customer;
+    //TODO depois tirar essas atribuições, porque nao precisa.
+    this->virtual_sequence->node = current_sequence->node;
+    this->virtual_sequence->customer = current_sequence->customer;
 
 }
 
-void Search::fill_forward(Sequence *current_sequence, Sequence *next_sequence) {
+void Search::fill_forward(Sequence *previous_sequence, Sequence *current_sequence) {
 
-    double distance = this->instance->distances[current_sequence->node->index][next_sequence->node->index];
+    current_sequence->current_load = previous_sequence->current_load + current_sequence->customer->load_demand;
 
-    next_sequence->current_distance = current_sequence->current_distance + distance;
+    double distance = this->instance->distances[previous_sequence->node->index][current_sequence->node->index];
+    current_sequence->current_distance = previous_sequence->current_distance + distance;
 
-    next_sequence->current_time = current_sequence->current_time + current_sequence->node->service_time + distance * this->instance->avg_speed;
+    current_sequence->current_time = previous_sequence->current_time + previous_sequence->node->service_time + distance * this->instance->avg_speed;
 
-    if(current_sequence->node->id == "D0" && next_sequence->current_time < next_sequence->node->time_window[0]) {
-        current_sequence->time_off = next_sequence->node->time_window[0] - next_sequence->current_time;
-        next_sequence->current_time += current_sequence->time_off;
+    if(current_sequence->current_time < current_sequence->node->time_window[0]) {
+        previous_sequence->time_off = current_sequence->node->time_window[0] - current_sequence->current_time;
+        current_sequence->current_time += previous_sequence->time_off;
     }
 
-    next_sequence->current_load = current_sequence->current_load + next_sequence->customer->load_demand;
 
 }
 
-void Search::propagate(int route_index) {
+void Search::propagate(int route_index, int previous_sequence_index) {
     vector<Sequence>* route = &this->routes.at(route_index);
 
-    Sequence* current_sequence = nullptr;
-    Sequence* next_sequence = nullptr;
+    Sequence* previous_sequence = nullptr;
+    Sequence* current_sequence = &route->at(previous_sequence_index);
 
-    for(int i=0; i<(route->size() - 1); i++) {
+    for(int i=previous_sequence_index+1; i<route->size(); i++) {
 
+        previous_sequence = current_sequence;
         current_sequence = &route->at(i);
-        next_sequence = &route->at(i+1);
-        fill_forward(current_sequence,next_sequence);
+        fill_forward(previous_sequence,current_sequence);
 
     }
 
@@ -272,22 +277,21 @@ void Search::propagate(int route_index) {
 bool Search::propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
     vector<Sequence>* route = &this->routes.at(route_index);
 
-    //TODO depois otimizar, talvez nao precise começar do começo
-    route->at(0).clone(this->virtual_sequence);
-    this->virtual_sequence->reset_values();
+    route->at(previous_sequence_index).clone(this->virtual_sequence);
 
-    for(int i=1; i<route->size(); i++) {
+    Sequence* previous_sequence = &route->at(previous_sequence_index);
+    Sequence* current_sequence = cand_sequence;
+    fill_forward_virtual(previous_sequence, current_sequence);
+    if(broke_time_window()) {
+        return false;
+    }
 
-        Sequence* current_sequence = &route->at(i);
+    for(int i=previous_sequence_index+1; i<route->size(); i++) {
 
-        if(i-1 == previous_sequence_index) {
-            fill_forward_virtual(cand_sequence);
-            if(broke_time_window()) {
-                return false;
-            }
-        }
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
 
-        fill_forward_virtual(current_sequence);
+        fill_forward_virtual(previous_sequence, current_sequence);
         if(broke_time_window()) {
             return false;
         }
@@ -349,7 +353,7 @@ void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
         1,
         *candidate_sequence);
 
-    propagate(route_index);
+    propagate(route_index, previous_sequence_index);
 
     this->visited[candidate_sequence->customer->index] = true;
 

@@ -16,7 +16,7 @@ int main()
     //Utils::print_output(s);
     cout<<"RUNNING EXPERIMENTS"<<endl;
     for(Instance* instance: instances) {
-        if (instance->inst_name != "R103_co_100.txt") {
+        //if (instance->inst_name != "R103_co_100.txt") {
             //if (instance->inst_name == "C105_co_100.txt") {
                 cout<<"Instance "<< instance->inst_name<<endl;
 
@@ -39,7 +39,7 @@ int main()
                 cout<<"AVG:"<<avg/(double)runs<<endl;
                 cout<<"BEST:"<<best<<endl<<endl;
             //}
-        }
+        //}
 
     }
     //delete s;

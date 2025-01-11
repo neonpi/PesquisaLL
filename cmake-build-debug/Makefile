@@ -200,6 +200,30 @@ Search.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Search.cpp.s
 .PHONY : Search.cpp.s
 
+Sequence.obj: Sequence.cpp.obj
+.PHONY : Sequence.obj
+
+# target to build an object file
+Sequence.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Sequence.cpp.obj
+.PHONY : Sequence.cpp.obj
+
+Sequence.i: Sequence.cpp.i
+.PHONY : Sequence.i
+
+# target to preprocess a source file
+Sequence.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Sequence.cpp.i
+.PHONY : Sequence.cpp.i
+
+Sequence.s: Sequence.cpp.s
+.PHONY : Sequence.s
+
+# target to generate assembly for a file
+Sequence.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Sequence.cpp.s
+.PHONY : Sequence.cpp.s
+
 Utils.obj: Utils.cpp.obj
 .PHONY : Utils.obj
 
@@ -338,6 +362,9 @@ help:
 	@echo ... Search.obj
 	@echo ... Search.i
 	@echo ... Search.s
+	@echo ... Sequence.obj
+	@echo ... Sequence.i
+	@echo ... Sequence.s
 	@echo ... Utils.obj
 	@echo ... Utils.i
 	@echo ... Utils.s

@@ -10,40 +10,11 @@
 #define INVIABLE_TW 2
 
 #include "Instance.h"
+#include "Sequence.h"
 #include <algorithm>
-#include <iosfwd>
 #include <tuple>
 #include <vector>
 using namespace std;
-
-class Sequence {
-public:
-    Node* node = nullptr;
-    Node* customer = nullptr;
-    char method = 'u';
-    double time_off = 0.0;
-    double current_distance = 0.0;
-    double current_time = 0.0;
-    double current_load = 0.0;
-
-    void clone(Sequence* clone) {
-        clone->node = this->node;
-        clone->customer = this->customer;
-        clone->method = this->method;
-        clone->time_off = this->time_off;
-        clone->current_distance = this->current_distance;
-        clone->current_time = this->current_time;
-        clone->current_load = this->current_load;
-    }
-
-    void reset_values() {
-        this->time_off = 0.0;
-        this->current_distance = 0.0;
-        this->current_time = 0.0;
-        this->current_load = 0.0;
-    }
-
-};
 
 class Search {
 public:

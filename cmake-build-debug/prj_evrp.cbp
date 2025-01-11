@@ -100,6 +100,12 @@
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Search.h">
 			<Option target="prj_evrp"/>
 		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Sequence.cpp">
+			<Option target="prj_evrp"/>
+		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Sequence.h">
+			<Option target="prj_evrp"/>
+		</Unit>
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Utils.cpp">
 			<Option target="prj_evrp"/>
 		</Unit>

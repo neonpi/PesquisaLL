@@ -23,13 +23,13 @@ int main()
                 double best = -1.0;
                 double avg=0.0;
                 for(int i=0;i<runs;i++) {
-                    long seed = clock();
-                    srand(seed);
+                    //long seed = clock();
+                    //srand(seed);
                     Search* search = new Search(instance);
                     search->construct();
                     if(best == -1.0 || search->total_cost < best){best = search->total_cost;}
                     avg+=search->total_cost;
-                    cout<<seed<<endl;
+                    //cout<<seed<<endl;
                     search->print();
                     search->print_is_viable();
                     Utils::print_output_file(search);

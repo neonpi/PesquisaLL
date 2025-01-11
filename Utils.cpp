@@ -43,15 +43,17 @@ void Utils::print_output_file(Search *search) {
     file<<"route"<<endl;
 
     for (vector<Sequence> route: search->routes) {
-        string route_string = "";
+        if(route.size()>2) {
+            string route_string = "";
 
-        for (Sequence sequence: route) {
-            route_string+=sequence.node->id;
-            if (sequence.node->id != "Dt") {
-                route_string+=" ";
+            for (Sequence sequence: route) {
+                route_string+=sequence.node->id;
+                if (sequence.node->id != "Dt") {
+                    route_string+=" ";
+                }
             }
+            file<<route_string<<endl;
         }
-        file<<route_string<<endl;
 
     }
 

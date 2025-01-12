@@ -33,7 +33,7 @@ Instance * Vrppl::buildInstance(string fileName) {
     //Numero de veíclos e capacidade de carga
     getline(file,line);
     splited_line = Utils::tookenize(line," ");
-    instance->minimum_vehicle = stoi(splited_line.at(0));
+    instance->max_vehicle = stoi(splited_line.at(0));
     instance->load_capacity = stod(splited_line.at(1));
 
     Node node_d0,node_dt;

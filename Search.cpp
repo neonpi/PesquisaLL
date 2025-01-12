@@ -8,7 +8,7 @@
 
 Search::Search(Instance *instance) {
     this->instance = instance;
-    this->n_vehicles = instance->minimum_vehicle;
+    this->n_vehicles = instance->max_vehicle;
     this->customer_served = 0;
     this->total_cost = 0.0;
     this->best = nullptr;
@@ -66,11 +66,11 @@ void Search::insertion_heuristic() {
     while(!cand_list.empty()) {
 
         int cand_index = 0;
-        if(this->routes.at(0).size()==2) {
+        /*if(this->routes.at(0).size()==2) {
             while(get<0>(cand_list.at(cand_index))!= 0 || get<2>(cand_list.at(cand_index)).node->id!="C3") {
                 cand_index++;
             }
-        }
+        }*/
         tuple<int,int,Sequence,double> candidate = cand_list.at(cand_index);
         //tuple<int,int,Sequence,double> candidate = cand_list.at(0); //GULOSO
 
@@ -453,20 +453,31 @@ bool Search::is_locker(int node_index) {
 }
 
 void Search::print() {
-    cout<<"TOTAL COST: "<<this->total_cost<<endl;
-    cout<<"MIN_V: "<<this->instance->minimum_vehicle<<endl;
-    cout<<"USED_V: "<<this->n_vehicles<<endl;
-    cout<<"PATHS: "<<endl;
+    int used_vehicles = 0;
+    vector<string> routes_string;
+
     for (int i=0; i<this->n_vehicles; i++) {
-        cout<<"V_"<<i<<": ";
-        for (Sequence sequence: this->routes.at(i)) {
-            cout<<sequence.customer->id;
-            if (sequence.node->type == "p") {
-                cout<<"("<<sequence.node->id<<")";
+        if(this->routes.at(i).size()>2) {
+            string s= "V_"+to_string(i)+": ";
+            for (Sequence sequence: this->routes.at(i)) {
+                s+=sequence.customer->id;
+                if (sequence.node->type == "p") {
+                    s+="("+sequence.node->id+")";
+                }
+                s+=" -> ";
             }
-            cout<<" -> ";
+            routes_string.push_back(s);
+            used_vehicles++;
         }
-        cout<<endl;
+    }
+
+    cout<<"TOTAL COST: "<<this->total_cost<<endl;
+    cout<<"MAX_V: "<<this->instance->max_vehicle<<endl;
+    cout<<"USED_V: "<<used_vehicles<<endl;
+    cout<<"PATHS: "<<endl;
+
+    for(string s: routes_string) {
+        cout<<s<<endl;
     }
 }
 

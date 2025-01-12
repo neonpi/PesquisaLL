@@ -22,7 +22,7 @@ public:
     double load_capacity; //CV
     double avg_speed; //v
     double** distances;
-    int minimum_vehicle;
+    int max_vehicle;
 
 
     explicit Instance();

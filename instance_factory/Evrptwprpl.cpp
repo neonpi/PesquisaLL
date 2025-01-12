@@ -97,19 +97,19 @@ Instance * Evrptwprpl::buildInstance(string fileName) {
 
     instance->calculate_distances();
 
-    instance->minimum_vehicle = 0;
+    instance->max_vehicle = 0;
     double load = 0;
     for (Node node: instance->nodes) {
         load += node.load_demand;
 
         if (load>=instance->load_capacity) {
-            instance->minimum_vehicle++;
+            instance->max_vehicle++;
             load-=instance->load_capacity;
         }
     }
 
     if (load>0) {
-        instance->minimum_vehicle++;
+        instance->max_vehicle++;
     }
 
     file.close();

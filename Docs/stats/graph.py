@@ -71,7 +71,7 @@ def build_locker_edges(G,instance, show):
             ),
             mode='lines'
         )
-def build_path_edges(G,instance,show,debug):
+def build_path_edges_trace(G,instance,show, paths_array_strings):
     colors = [
     "#F2C2B7", "#D9E4F5", "#E8D5B5", "#A6C4CF", "#F2D7D5",
     "#B7C9E2", "#E1F5C4", "#DAF7A6", "#C4D79B", "#F5C2E1",
@@ -83,10 +83,9 @@ def build_path_edges(G,instance,show,debug):
     "#CFB5A6", "#A6C4B7", "#9BF7DA", "#F5E2C4", "#D5F2A6"
     ]
     color_i=0
-    paths_array = dt.build_paths(instance.name,debug)
     
     path_edges_trace = []
-    for path_array in paths_array:
+    for path_array in paths_array_strings:
 
         path_edge_xs =[]
         path_edge_ys = []
@@ -95,7 +94,6 @@ def build_path_edges(G,instance,show,debug):
             if(i < (len(path_array)-1)):
                 node_i = list(filter(lambda x: x.id == path_array[i], instance.nodes))[0]
                 node_j = list(filter(lambda x: x.id == path_array[i+1], instance.nodes))[0]
-                print(node_i,node_j)
                 G.add_edge(node_i.id, node_j.id)
 
                 x0 = node_i.x
@@ -123,7 +121,7 @@ def build_path_edges(G,instance,show,debug):
             )
         color_i+=1
 
-    return path_edges_trace, paths_array
+    return path_edges_trace
 
 
 def build_nodes(G,node_size):

@@ -48,7 +48,17 @@ def build_paths(instance_name, debug):
 
     finally:
         return routes    
-        
+
+def build_path_strings(selected_instance,in_debug_mode):
+    paths_array_strings = build_paths(selected_instance.name,in_debug_mode)
+
+    i = 0
+    for path_i in range(len(paths_array_strings)):
+        paths_array_strings[path_i] = [f"V{i}",paths_array_strings[path_i]]
+        i+=1            
+
+    return paths_array_strings
+
 def build_instances_vrppl():
     instance_list = open('..\\..\\instances\\instances_vrppl.txt',"r")
 
@@ -248,7 +258,7 @@ def is_locker_line(line):
 def is_param(line):
     return line[1]['StringID'] == 'param'
 
-
+    
 def find_k_customer(nodes, k):
     c = 0
     for node in nodes:

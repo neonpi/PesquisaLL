@@ -19,7 +19,7 @@ show_locker_edges = st.sidebar.toggle("Show locker edges")
 show_path_edges = st.sidebar.toggle("Show patch edges")
 show_path_string = st.sidebar.toggle("Show path string")
 node_size = st.sidebar.slider(label="Node size", min_value=1, max_value=50, value=15)
-st.sidebar.write("Instance data:")
+
 
 #Graph
 G = nx.MultiGraph()
@@ -35,7 +35,10 @@ for index_i, node_i in enumerate(selected_instance.nodes):
 node_trace = gph.build_nodes(G,node_size)
 all_edge_trace = gph.build_all_edges(G,show_all_edges)
 locker_edge_trace = gph.build_locker_edges(G,selected_instance,show_locker_edges)
-paths_array_strings = dt.build_path_strings(selected_instance,in_debug_mode)
+paths_array_strings_runs = dt.build_path_strings(selected_instance,in_debug_mode)
+
+run_selection = st.sidebar.selectbox(label="Run", options=[i for i in range(len(paths_array_strings_runs))])
+paths_array_strings = paths_array_strings_runs[run_selection]
 
 path_edges_to_show = []
 if show_path_edges:

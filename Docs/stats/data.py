@@ -34,14 +34,20 @@ def build_paths(instance_name, debug):
         file = None
 
         if debug:
-            file = pd.read_csv(f'..\\..\\cmake-build-debug\\Output\\{instance_name}')
+            file = pd.read_csv(f'..\\..\\cmake-build-debug\\Output\\{instance_name}_routes')
         else:
-            file = pd.read_csv(f'..\\..\\Output\\{instance_name}')
+            file = pd.read_csv(f'..\\..\\Output\\{instance_name}_routes')
 
         file = list(file['route'])
-        
+
+        run = []
+
         for route in file:
-            routes.append(route.split(" "))
+            if route == "---":
+               routes.append(run)
+               run = []
+            else: 
+                run.append(route.split(" "))
     
     except FileNotFoundError as error:
         print(f"File {instance_name} not Found")  
@@ -52,11 +58,11 @@ def build_paths(instance_name, debug):
 def build_path_strings(selected_instance,in_debug_mode):
     paths_array_strings = build_paths(selected_instance.name,in_debug_mode)
 
-    i = 0
-    for path_i in range(len(paths_array_strings)):
-        paths_array_strings[path_i] = [f"V{i}",paths_array_strings[path_i]]
-        i+=1            
-
+    for run in paths_array_strings:
+        i = 0
+        for path_i in range(len(run)):
+            run[path_i] = [f"V{i}",run[path_i]]
+            i+=1            
     return paths_array_strings
 
 def build_instances_vrppl():

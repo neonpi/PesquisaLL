@@ -6,8 +6,9 @@
 
 #include "Utils.h"
 
-Search::Search(Instance *instance) {
+Search::Search(Instance *instance, Config* config) {
     this->instance = instance;
+    this->config = config;
     this->n_vehicles = instance->max_vehicle;
     this->customer_served = 0;
     this->total_cost = 0.0;

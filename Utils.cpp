@@ -34,13 +34,17 @@ vector<Instance *> Utils::buildInstances(string problem) {
     return instances;
 }
 
-void Utils::print_output_file(Search *search) {
+void Utils::print_route_file(Search *search, bool reset) {
     ofstream file;
-    file.open("Output/"+search->instance->inst_name, ofstream::out);
-    if (!file.is_open()) {
-        cout<<"File not opened"<<endl;
+    if(reset) {
+        file.open("Output/"+search->instance->inst_name+"_routes", ofstream::out);
+        file<<"route"<<endl;
+    }else {
+        file.open("Output/"+search->instance->inst_name+"_routes", ofstream::app);
     }
-    file<<"route"<<endl;
+    if (!file.is_open()) {
+        cout<<"Output file not opened"<<endl;
+    }
 
     for (vector<Sequence> route: search->routes) {
         if(route.size()>2) {
@@ -56,10 +60,23 @@ void Utils::print_output_file(Search *search) {
         }
 
     }
+    file<<"---"<<endl;
 
     file.close();
 }
 
+void Utils::print_stats_file(Stats *stats) {
+    ofstream file;
+    file.open("Output/"+stats->instance->inst_name+"_stats", ofstream::out);
+
+    file<<"COST,TIME"<<endl;
+    for(int i=0;i<stats->config->runs;i++) {
+        file<<to_string(stats->costs.at(i))<<","<<to_string(stats->costs.at(i))<<endl;
+    }
+
+    file.close();
+
+}
 
 
 vector<string> Utils::tookenize(string str, string symbol) {

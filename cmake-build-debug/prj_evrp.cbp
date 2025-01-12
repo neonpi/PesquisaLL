@@ -82,6 +82,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Config.cpp">
+			<Option target="prj_evrp"/>
+		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Config.h">
+			<Option target="prj_evrp"/>
+		</Unit>
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Instance.cpp">
 			<Option target="prj_evrp"/>
 		</Unit>
@@ -104,6 +110,12 @@
 			<Option target="prj_evrp"/>
 		</Unit>
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Sequence.h">
+			<Option target="prj_evrp"/>
+		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Stats.cpp">
+			<Option target="prj_evrp"/>
+		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Stats.h">
 			<Option target="prj_evrp"/>
 		</Unit>
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Utils.cpp">

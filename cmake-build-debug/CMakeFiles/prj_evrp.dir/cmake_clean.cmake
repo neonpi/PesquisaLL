@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/prj_evrp.dir/Config.cpp.obj"
+  "CMakeFiles/prj_evrp.dir/Config.cpp.obj.d"
   "CMakeFiles/prj_evrp.dir/Instance.cpp.obj"
   "CMakeFiles/prj_evrp.dir/Instance.cpp.obj.d"
   "CMakeFiles/prj_evrp.dir/Node.cpp.obj"
@@ -7,6 +9,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/prj_evrp.dir/Search.cpp.obj.d"
   "CMakeFiles/prj_evrp.dir/Sequence.cpp.obj"
   "CMakeFiles/prj_evrp.dir/Sequence.cpp.obj.d"
+  "CMakeFiles/prj_evrp.dir/Stats.cpp.obj"
+  "CMakeFiles/prj_evrp.dir/Stats.cpp.obj.d"
   "CMakeFiles/prj_evrp.dir/Utils.cpp.obj"
   "CMakeFiles/prj_evrp.dir/Utils.cpp.obj.d"
   "CMakeFiles/prj_evrp.dir/instance_factory/Evrptwprpl.cpp.obj"

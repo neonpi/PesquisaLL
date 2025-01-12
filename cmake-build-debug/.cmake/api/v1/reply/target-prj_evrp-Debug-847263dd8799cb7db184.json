@@ -60,7 +60,9 @@
 				9,
 				11,
 				13,
-				15
+				15,
+				17,
+				19
 			]
 		}
 	],
@@ -105,7 +107,9 @@
 				9,
 				11,
 				13,
-				15
+				15,
+				17,
+				19
 			]
 		},
 		{
@@ -119,7 +123,9 @@
 				10,
 				12,
 				14,
-				16
+				16,
+				18,
+				20
 			]
 		}
 	],
@@ -217,6 +223,28 @@
 		{
 			"backtrace" : 1,
 			"path" : "Sequence.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Config.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Config.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Stats.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Stats.h",
 			"sourceGroupIndex" : 1
 		}
 	],

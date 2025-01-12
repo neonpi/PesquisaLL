@@ -128,6 +128,30 @@ prj_evrp/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/build
 .PHONY : prj_evrp/fast
 
+Config.obj: Config.cpp.obj
+.PHONY : Config.obj
+
+# target to build an object file
+Config.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Config.cpp.obj
+.PHONY : Config.cpp.obj
+
+Config.i: Config.cpp.i
+.PHONY : Config.i
+
+# target to preprocess a source file
+Config.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Config.cpp.i
+.PHONY : Config.cpp.i
+
+Config.s: Config.cpp.s
+.PHONY : Config.s
+
+# target to generate assembly for a file
+Config.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Config.cpp.s
+.PHONY : Config.cpp.s
+
 Instance.obj: Instance.cpp.obj
 .PHONY : Instance.obj
 
@@ -223,6 +247,30 @@ Sequence.s: Sequence.cpp.s
 Sequence.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Sequence.cpp.s
 .PHONY : Sequence.cpp.s
+
+Stats.obj: Stats.cpp.obj
+.PHONY : Stats.obj
+
+# target to build an object file
+Stats.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Stats.cpp.obj
+.PHONY : Stats.cpp.obj
+
+Stats.i: Stats.cpp.i
+.PHONY : Stats.i
+
+# target to preprocess a source file
+Stats.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Stats.cpp.i
+.PHONY : Stats.cpp.i
+
+Stats.s: Stats.cpp.s
+.PHONY : Stats.s
+
+# target to generate assembly for a file
+Stats.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Stats.cpp.s
+.PHONY : Stats.cpp.s
 
 Utils.obj: Utils.cpp.obj
 .PHONY : Utils.obj
@@ -353,6 +401,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... prj_evrp
+	@echo ... Config.obj
+	@echo ... Config.i
+	@echo ... Config.s
 	@echo ... Instance.obj
 	@echo ... Instance.i
 	@echo ... Instance.s
@@ -365,6 +416,9 @@ help:
 	@echo ... Sequence.obj
 	@echo ... Sequence.i
 	@echo ... Sequence.s
+	@echo ... Stats.obj
+	@echo ... Stats.i
+	@echo ... Stats.s
 	@echo ... Utils.obj
 	@echo ... Utils.i
 	@echo ... Utils.s

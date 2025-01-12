@@ -14,11 +14,13 @@
 #include <algorithm>
 #include <tuple>
 #include <vector>
+
+#include "Config.h"
 using namespace std;
 
 class Search {
 public:
-    Search(Instance* instance);
+    Search(Instance* instance, Config* config);
     ~Search();
 
     void initialize_routes();
@@ -63,6 +65,8 @@ public:
     int customer_served;
     double total_cost;
     Search* best;
+
+    Config* config;
 
 
 };

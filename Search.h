@@ -24,10 +24,13 @@ public:
     ~Search();
 
     void initialize_routes();
-
+    void run();
     //Construtivo
     void construct();
     void insertion_heuristic();
+
+    //Busca local
+    void local_search();
 
     vector<tuple<int, int, Sequence, double>> build_candidate_list();
     void insert_sequency(tuple<int, int, Sequence, double> candidate);
@@ -57,6 +60,8 @@ public:
     void print();
     void print_candidate_list(vector<tuple<int, int, Sequence, double>> *cand_list);
 
+    void clone(Search*);
+
     Instance* instance;
     vector<vector<Sequence>> routes;
     Sequence* virtual_sequence;
@@ -70,7 +75,6 @@ public:
 
 
 };
-
 
 
 #endif //SEARCH_H

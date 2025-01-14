@@ -54,6 +54,11 @@ void Search::initialize_routes() {
     }
 }
 
+void Search::run() {
+    this->construct();
+    this->local_search();
+}
+
 void Search::construct() {
     this->insertion_heuristic();
 }
@@ -108,6 +113,35 @@ void Search::insertion_heuristic() {
     for (vector<Sequence> route : this->routes) {
         this->total_cost += (route.end()-1)->current_distance;
     }
+}
+
+void Search::local_search() {
+    this->print();
+    double best_cost = this->total_cost;
+
+
+    for(int i_route_a=0;i_route_a<this->n_vehicles;i_route_a++) {
+        vector<Sequence>* route_a = &this->routes.at(i_route_a);
+        if(route_a->size()>2) {
+            for(int i_seq_a=1;i_seq_a<(route_a->size()-1);i_seq_a++) {
+                Sequence * seq_a = &route_a->at(i_seq_a);
+                for(int i_route_b=i_route_a;i_route_b<this->n_vehicles;i_route_b++) {
+                    vector<Sequence>* route_b = &this->routes.at(i_route_b);
+                    if(route_b->size()>2) {
+                        for(int i_seq_b = route_a == route_b? i_seq_a+1: 1; i_seq_b<(route_b->size()-1); i_seq_b++) {
+                            Sequence * seq_b = &route_b->at(i_seq_b);
+                            cout<<endl;
+
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+    }
+
 }
 
 vector<tuple<int, int, Sequence, double>> Search::build_candidate_list() {

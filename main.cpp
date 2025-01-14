@@ -27,10 +27,11 @@ int main()
             for(int i=0;i<config->runs;i++) {
 
                 srand(config->seeds.at(i));
+                srand(0);
 
                 Search* search = new Search(instance,config);
                 clock_t time = clock();
-                search->construct();
+                search->run();
                 time = clock() - time;
 
                 stats->set_result(search->total_cost,((double) time / CLOCKS_PER_SEC));

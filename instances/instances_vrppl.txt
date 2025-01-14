@@ -129,7 +129,6 @@ instances\vrppl\100\C207_co_100.txt
 instances\vrppl\100\C208_co_100.txt
 instances\vrppl\100\R101_co_100.txt
 instances\vrppl\100\R102_co_100.txt
-instances\vrppl\100\R103_co_100.txt
 instances\vrppl\100\R104_co_100.txt
 instances\vrppl\100\R105_co_100.txt
 instances\vrppl\100\R106_co_100.txt

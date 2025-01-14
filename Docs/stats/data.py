@@ -43,7 +43,7 @@ def build_paths(instance_name, debug):
         run = []
 
         for route in file:
-            if route == "---":
+            if "---" in route:
                routes.append(run)
                run = []
             else: 
@@ -54,6 +54,23 @@ def build_paths(instance_name, debug):
 
     finally:
         return routes    
+    
+def build_stats(instance_name, debug):
+
+    try:
+
+        stats = None
+
+        if debug:
+            stats = pd.read_csv(f'..\\..\\cmake-build-debug\\Output\\{instance_name}_stats',index_col="run")
+        else:
+            stats = pd.read_csv(f'..\\..\\Output\\{instance_name}_stats',index_col="run")
+    
+    except FileNotFoundError as error:
+        print(f"File {instance_name}_stats not Found")  
+
+    finally:
+        return stats    
 
 def build_path_strings(selected_instance,in_debug_mode):
     paths_array_strings = build_paths(selected_instance.name,in_debug_mode)

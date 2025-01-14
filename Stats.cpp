@@ -17,8 +17,8 @@ void Stats::set_result(double cost, double time) {
         this->best_cost = cost;
     }
 
-    if(this->best_time == -1.0 || cost < this->best_time) {
-        this->best_time = cost;
+    if(this->best_time == -1.0 || time < this->best_time) {
+        this->best_time = time;
     }
 
     this->avg_cost+=cost;

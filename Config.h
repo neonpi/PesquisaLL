@@ -14,8 +14,9 @@ public:
     Config(int runs, double alpha) {
         this->runs = runs;
         this->alpha = alpha;
+        srand(clock());
         for(int i=0;i<runs;i++) {
-            this->seeds.push_back(clock());
+            this->seeds.push_back(rand());
         }
     };
     int runs;

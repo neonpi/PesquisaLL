@@ -62,27 +62,19 @@ void Search::insertion_heuristic() {
 
     vector<tuple<int,int,Sequence,double>> cand_list = build_candidate_list(); //(rota,antecessor,cliente destino)
     vector<tuple<int,int,Sequence,double>>::iterator it;
-    double alpha = 0.05;
 
     while(!cand_list.empty()) {
 
-        int cand_index = 0;
-        /*if(this->routes.at(0).size()==2) {
-            while(get<0>(cand_list.at(cand_index))!= 0 || get<2>(cand_list.at(cand_index)).node->id!="C3") {
-                cand_index++;
-            }
-        }*/
-        tuple<int,int,Sequence,double> candidate = cand_list.at(cand_index);
         //tuple<int,int,Sequence,double> candidate = cand_list.at(0); //GULOSO
 
         //Randomizado
-        /*int candidates = int(cand_list.size()*alpha);
+        int candidates = int(cand_list.size()*this->config->alpha);
 
         int rand_index = 0;
         if(candidates>0) {
             rand_index = rand()%candidates;
         }
-        tuple<int,int,Sequence,double> candidate = cand_list.at(rand_index);*/
+        tuple<int,int,Sequence,double> candidate = cand_list.at(rand_index);
         //TODO TESTE
         /*if( this->routes.at(0).size()==2 ) {
             while(get<2>(candidate).node->id!="C35") {

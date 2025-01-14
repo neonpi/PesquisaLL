@@ -34,7 +34,7 @@ vector<Instance *> Utils::buildInstances(string problem) {
     return instances;
 }
 
-void Utils::print_route_file(Search *search, bool reset) {
+void Utils::print_route_file(Search *search, bool reset, long seed) {
     ofstream file;
     if(reset) {
         file.open("Output/"+search->instance->inst_name+"_routes", ofstream::out);
@@ -60,7 +60,7 @@ void Utils::print_route_file(Search *search, bool reset) {
         }
 
     }
-    file<<"---"<<endl;
+    file<<"--- "<<to_string(seed)<<endl;
 
     file.close();
 }
@@ -69,9 +69,9 @@ void Utils::print_stats_file(Stats *stats) {
     ofstream file;
     file.open("Output/"+stats->instance->inst_name+"_stats", ofstream::out);
 
-    file<<"COST,TIME"<<endl;
+    file<<"run,cost,time"<<endl;
     for(int i=0;i<stats->config->runs;i++) {
-        file<<to_string(stats->costs.at(i))<<","<<to_string(stats->costs.at(i))<<endl;
+        file<<to_string(i)<<","<<to_string(stats->costs.at(i))<<","<<to_string(stats->times.at(i))<<endl;
     }
 
     file.close();

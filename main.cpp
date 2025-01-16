@@ -27,7 +27,8 @@ int main()
             for(int i=0;i<config->runs;i++) {
 
                 srand(config->seeds.at(i));
-                srand(0);
+                //cout<<config->seeds.at(i)<<endl;
+                //srand(0);
 
                 Search* search = new Search(instance,config);
                 clock_t time = clock();

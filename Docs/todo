@@ -81,3 +81,14 @@ TODO: considerar tambem a segunda estação mais proxima entre 2 nós. A estaç�
 
 CONSIDERAR TIMEOFF PARA DEPOIS E TIMEOFF PARA ANTES
 é IMPOSSIVEL CONSEGUIR VIABILIDADE NA INSTANCIA C101C5_PL POR CONTA DA JANELA DE TEMPO DO CLIENTE C85
+
+Experimentar o randomizado reativo
+ILS
+
+Busca local: olhar tese do Allan sobramanian. VND é bom
+PG68
+
+Intra: redistribuindo clientes da rota, Universo da rota
+Inter: Troca cliente de uma rota pra outra
+
+Memorizar a aba aberta para atualizar a pagina

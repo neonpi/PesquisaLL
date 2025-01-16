@@ -31,6 +31,8 @@ public:
 
     //Busca local
     void local_search();
+    void swap_sequence(int route_a_index, int seq_a_index, int route_b_index, int seq_b_index);
+    bool is_viable();
 
     vector<tuple<int, int, Sequence, double>> build_candidate_list();
     void insert_sequency(tuple<int, int, Sequence, double> candidate);

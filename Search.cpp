@@ -187,6 +187,11 @@ void Search::ls_intra_2opt() {
 
            }
 
+            if(best_delta<0.0) {
+                //fazer a inversão
+                cout<<endl;
+            }
+
     }
 
 }

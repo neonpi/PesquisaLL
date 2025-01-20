@@ -19,7 +19,7 @@ public:
     static vector<string> tookenize(string str, string symbol);
 
     static bool differs(double a, double b, double epsilon = 0.001);
-    static bool improves(double best, double current, double epsilon = 0.001);
+    static bool improves(double best, double current);
     static void print_final_stats(Stats* stats);
 
 };

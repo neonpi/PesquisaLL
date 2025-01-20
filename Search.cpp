@@ -155,12 +155,15 @@ void Search::ls_intra_exchange() {
 }
 
 void Search::ls_intra_2opt() {
-    double best_cost = this->total_cost;
+
     this->print();
     for (int i_route = 0;i_route<(int)this->routes.size();i_route++) {
+
+        double best_delta = 0.0;
+        int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
+
         vector<Sequence>* route = &this->routes.at(i_route);
            for(int i_seq_a = 0; i_seq_a<((int)(route->size())-3);i_seq_a++) {
-           //for(int i_seq_a = 1; i_seq_a<(route->size()-4);i_seq_a++) {
                Sequence* seq_a = &route->at(i_seq_a);
 
                for(int i_seq_b = i_seq_a+3; i_seq_b<(int)route->size();i_seq_b++) {
@@ -171,14 +174,17 @@ void Search::ls_intra_2opt() {
 
                    double delta = calculate_delta(route,i_seq_a, i_seq_b);
 
-                   if(delta<0 && Utils::differs(delta,0.0)) {
-                       cout<<"Vai melhorar"<<endl;
+                   if(Utils::improves(0.0,delta) &&
+                       Utils::improves(best_delta,delta)) {
+                        //Testar viabilidade
+                       best_delta = delta;
+                       coordinates[0] = i_seq_a;
+                       coordinates[1] = i_seq_b;
                    }
 
                }
 
-            /*route.at(route.size()-1).clone(this->virtual_sequence);
-            this->virtual_sequence->reset_values();*/
+
            }
 
     }

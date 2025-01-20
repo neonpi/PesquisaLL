@@ -102,6 +102,10 @@ bool Utils::differs(double a, double b, double epsilon) {
     return abs(a-b) > epsilon;
 }
 
+bool Utils::improves(double best, double current) {
+    return current < best && differs(best,current);
+}
+
 void Utils::print_final_stats(Stats *stats) {
     ofstream file;
 

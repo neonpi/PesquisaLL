@@ -111,10 +111,7 @@ void Search::insertion_heuristic() {
         cand_list = build_candidate_list();
     }
 
-    this->total_cost = 0.0;
-    for (vector<Sequence> route : this->routes) {
-        this->total_cost += (route.end()-1)->current_distance;
-    }
+    calculate_total_cost();
 }
 
 void Search::ls_intra_exchange() {
@@ -156,7 +153,7 @@ void Search::ls_intra_exchange() {
 
 void Search::ls_intra_2opt() {
 
-    this->print();
+    //this->print();
     for (int i_route = 0;i_route<(int)this->routes.size();i_route++) {
 
         double best_delta = 0.0;
@@ -190,8 +187,10 @@ void Search::ls_intra_2opt() {
            }
 
             if(best_delta<0.0) {
-                //fazer a inversão
-                cout<<endl;
+                reverse(route->begin()+coordinates[0]+1,route->begin()+coordinates[1]);
+                propagate(i_route,coordinates[0]);
+                calculate_total_cost();
+                i_route--;
             }
 
     }
@@ -213,7 +212,7 @@ double Search::calculate_delta(vector<Sequence>* route, int i_seq_a, int i_seq_b
 }
 
 void Search::local_search() {
-    this->print();
+    //this->print();
     double best_cost = this->total_cost;
 
 
@@ -601,8 +600,8 @@ void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
 
 void Search::calculate_total_cost() {
     this->total_cost = 0.0;
-    for (vector<Sequence> route: this->routes) {
-        this->total_cost+=route.end()->current_distance;
+    for (vector<Sequence> route : this->routes) {
+        this->total_cost += (route.end()-1)->current_distance;
     }
 }
 

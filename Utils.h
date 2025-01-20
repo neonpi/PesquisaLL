@@ -18,6 +18,9 @@ public:
     static void print_stats_file(Stats* stats);
     static vector<string> tookenize(string str, string symbol);
 
+    static bool differs(double a, double b, double epsilon = 0.001);
+    static bool improves(double best, double current, double epsilon = 0.001);
+    static void print_final_stats(Stats* stats);
 
 };
 

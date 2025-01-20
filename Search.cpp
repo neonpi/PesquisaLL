@@ -56,6 +56,7 @@ void Search::initialize_routes() {
 
 void Search::run() {
     this->construct();
+    this->ls_intra_exchange();
     //this->local_search();
 }
 
@@ -70,16 +71,16 @@ void Search::insertion_heuristic() {
 
     while(!cand_list.empty()) {
 
-        tuple<int,int,Sequence,double> candidate = cand_list.at(0); //GULOSO
+        //tuple<int,int,Sequence,double> candidate = cand_list.at(0); //GULOSO
 
         //Randomizado
-        /*int candidates = int(cand_list.size()*this->config->alpha);
+        int candidates = int(cand_list.size()*this->config->alpha);
 
         int rand_index = 0;
         if(candidates>0) {
             rand_index = rand()%candidates;
         }
-        tuple<int,int,Sequence,double> candidate = cand_list.at(rand_index);*/
+        tuple<int,int,Sequence,double> candidate = cand_list.at(rand_index);
         //TODO TESTE
         /*if( this->routes.at(0).size()==2 ) {
             while(get<2>(candidate).node->id!="C35") {
@@ -113,6 +114,48 @@ void Search::insertion_heuristic() {
     for (vector<Sequence> route : this->routes) {
         this->total_cost += (route.end()-1)->current_distance;
     }
+}
+
+void Search::ls_intra_exchange() {
+    double best_cost = this->total_cost;
+    //this->print();
+    for(int i_route=0; i_route<this->routes.size();i_route++) {
+        vector<Sequence>* route = &this->routes.at(i_route);
+        if(route->size()>4) {
+            for(int i_seq_a=2;i_seq_a<(route->size()-2);i_seq_a++) {
+
+                Sequence* s_a = &route->at(i_seq_a-1);
+
+                for(int i_seq_b = i_seq_a+1; i_seq_b<(route->size()-2);i_seq_b++) {
+                    Sequence* s_b = &route->at(i_seq_b);
+
+                    if(s_a->node->id != s_b->node->id) {
+                        swap_sequence_intraroute(i_route,i_seq_a,i_seq_b);
+                        //test_cost();
+                        if(this->total_cost<best_cost && Utils::differs(this->total_cost,best_cost) && is_viable()) {
+                            best_cost = this->total_cost;
+                            i_seq_a = 1;
+
+                            break;
+                        }
+
+                        swap_sequence_intraroute(i_route,i_seq_a,i_seq_b);
+                        //test_cost();
+
+                    }
+
+                }
+
+
+
+            }
+        }
+    }
+}
+
+void Search::ls_intra_reverse() {
+    double best_cost = this->total_cost;
+
 }
 
 void Search::local_search() {
@@ -161,7 +204,6 @@ void Search::swap_sequence(int route_a_index, int seq_a_index, int route_b_index
 
     this->total_cost-= this->routes.at(route_a_index).at(this->routes.at(route_a_index).size()-1).current_distance;
     this->total_cost-= this->routes.at(route_b_index).at(this->routes.at(route_b_index).size()-1).current_distance;
-
     Node* node_a = sequence_a->node;
     Node* customer_a = sequence_a->customer;
 
@@ -179,6 +221,29 @@ void Search::swap_sequence(int route_a_index, int seq_a_index, int route_b_index
     this->total_cost+= this->routes.at(route_a_index).at(this->routes.at(route_a_index).size()-1).current_distance;
     this->total_cost+= this->routes.at(route_b_index).at(this->routes.at(route_b_index).size()-1).current_distance;
 
+}
+
+void Search::swap_sequence_intraroute(int route_index, int seq_a_index, int seq_b_index) {
+    Sequence* sequence_a = &this->routes.at(route_index).at(seq_a_index);
+    Sequence* sequence_b = &this->routes.at(route_index).at(seq_b_index);
+
+    this->total_cost-= this->routes.at(route_index).at(this->routes.at(route_index).size()-1).current_distance;
+
+    Node* node_a = sequence_a->node;
+    Node* customer_a = sequence_a->customer;
+
+    Node* node_b = sequence_b->node;
+    Node* customer_b = sequence_b->customer;
+
+    sequence_b->node = node_a;
+    sequence_b->customer = customer_a;
+
+    sequence_a->node = node_b;
+    sequence_a->customer = customer_b;
+
+    propagate(route_index,seq_a_index<seq_b_index?(seq_a_index-1):(seq_b_index-1));
+
+    this->total_cost+= this->routes.at(route_index).at(this->routes.at(route_index).size()-1).current_distance;
 }
 
 bool Search::is_viable() {
@@ -570,5 +635,17 @@ void Search::print_candidate_list(vector<tuple<int, int, Sequence, double>> *can
         cout<<cand_route<<" - "<<cand_index<<" - "<<cand_sequence->node->id<<" - "<<get<3>(cand)<<endl;;
     }
     cout<<endl;
+}
+
+void Search::test_cost() {
+    double cost = 0.0;
+    for(vector<Sequence> vs: this->routes) {
+        cost+= vs.at(vs.size()-1).current_distance;
+    }
+
+    if( Utils::differs(cost,this->total_cost)) {
+        cout<<"Erro de custo (E:"<<cost<<" G:"<<this->total_cost<<")"<< endl;
+        exit(8);
+    }
 }
 

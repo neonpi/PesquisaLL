@@ -30,8 +30,11 @@ public:
     void insertion_heuristic();
 
     //Busca local
+    void ls_intra_exchange();
+    void ls_intra_reverse();
     void local_search();
     void swap_sequence(int route_a_index, int seq_a_index, int route_b_index, int seq_b_index);
+    void swap_sequence_intraroute(int route_index, int seq_a_index, int seq_b_index);
     bool is_viable();
 
     vector<tuple<int, int, Sequence, double>> build_candidate_list();
@@ -63,6 +66,8 @@ public:
     void print_candidate_list(vector<tuple<int, int, Sequence, double>> *cand_list);
 
     void clone(Search*);
+
+    void test_cost();
 
     Instance* instance;
     vector<vector<Sequence>> routes;

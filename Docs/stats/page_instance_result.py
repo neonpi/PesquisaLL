@@ -11,6 +11,8 @@ instances = dt.build_instances_vrppl()
 #Controllers
 st.sidebar.header("Parameters")
 
+
+
 instance_selection = st.sidebar.selectbox(label="Instance", options = [instance.name for instance in instances])
 selected_instance = [instance for instance in instances if instance.name == instance_selection][0]
 in_debug_mode = st.sidebar.toggle("Debug mode")
@@ -64,6 +66,9 @@ distances_formatted = distances.map(lambda x: f"{x:.2f}" if isinstance(x, (int, 
 
 tab_inst, tab_stats = st.tabs(["Instance data", "Stats"])
 with tab_inst:
+    node_a = st.selectbox("Node a", [node.id for node in selected_instance.nodes])
+    node_b = st.selectbox("Node b", [node.id for node in selected_instance.nodes])
+    st.write(f"Distance: {distances.loc[node_a,node_b]}")
     st.write("Distance Matrix")
     st.table(distances_formatted)
     load_demands = pd.DataFrame([[node.demand for node in selected_instance.nodes]], columns=[node.id for node in selected_instance.nodes])

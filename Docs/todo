@@ -92,3 +92,7 @@ Intra: redistribuindo clientes da rota, Universo da rota
 Inter: Troca cliente de uma rota pra outra
 
 Memorizar a aba aberta para atualizar a pagina
+
+V_1: D0 -> C14 -> C15 -> Dt -> 
+V_12: D0 -> C12 -> C6 -> C10 -> C8 -> C11 -> C17(P0) -> C13(P0) -> C16(P0) -> C1(P0) -> C21(P1) -> Dt -> 
+V_13: D0 -> C19 -> C18 -> C9(P1) -> C4(P1) -> C22(P1) -> C3(P1) -> C24(P1) -> C5(P1) -> C7(P1) -> C2(P1) -> C0(P1) -> C23(P1) -> C20 -> Dt ->

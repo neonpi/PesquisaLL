@@ -52,7 +52,11 @@ void Utils::print_route_file(Search *search, bool reset, long seed) {
 
             for (Sequence sequence: route) {
                 route_string+=sequence.node->id;
+
                 if (sequence.node->id != "Dt") {
+                    if(sequence.node->type == "p") {
+                        route_string+= "("+sequence.customer->id+")";
+                    }
                     route_string+=" ";
                 }
             }
@@ -69,9 +73,9 @@ void Utils::print_stats_file(Stats *stats) {
     ofstream file;
     file.open("Output/"+stats->instance->inst_name+"_stats", ofstream::out);
 
-    file<<"run,cost,time"<<endl;
+    file<<"run,cost,time,seed"<<endl;
     for(int i=0;i<stats->config->runs;i++) {
-        file<<to_string(i)<<","<<to_string(stats->costs.at(i))<<","<<to_string(stats->times.at(i))<<endl;
+        file<<to_string(i)<<","<<to_string(stats->costs.at(i))<<","<<to_string(stats->times.at(i))<<","<<to_string(stats->config->seeds.at(i))<<endl;
     }
 
     file.close();
@@ -93,3 +97,24 @@ vector<string> Utils::tookenize(string str, string symbol) {
     return tokens;
 
 }
+
+bool Utils::differs(double a, double b, double epsilon) {
+    return abs(a-b) > epsilon;
+}
+
+void Utils::print_final_stats(Stats *stats) {
+    ofstream file;
+
+    if(stats->instance->inst_name == "C101_co_25.txt") {
+        file.open("Output/0_final",ios::out);
+        file<<"instance,avg_time,avg_cost,best_cost"<<endl;
+        file.close();
+    }
+
+    file.open("Output/0_final",ios::app);
+
+    file<<stats->instance->inst_name<<","<<to_string(stats->avg_time)<<","<<to_string(stats->avg_cost)<<","<<to_string(stats->best_cost)<<endl;
+
+    file.close();
+}
+

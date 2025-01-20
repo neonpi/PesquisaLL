@@ -31,7 +31,7 @@ public:
 
     //Busca local
     void ls_intra_exchange();
-    void ls_intra_reverse();
+    void ls_intra_2opt();
     void local_search();
     void swap_sequence(int route_a_index, int seq_a_index, int route_b_index, int seq_b_index);
     void swap_sequence_intraroute(int route_index, int seq_a_index, int seq_b_index);

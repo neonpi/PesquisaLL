@@ -47,6 +47,7 @@ public:
 
     void propagate(int route_index, int previous_sequence_index);
     bool propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence);
+    bool propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b);
 
     void fill_forward_virtual(Sequence *previous_sequence, Sequence* current_sequence);
     void fill_forward(Sequence *previous_sequence, Sequence* current_sequence);

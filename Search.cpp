@@ -177,9 +177,11 @@ void Search::ls_intra_2opt() {
                    if(Utils::improves(0.0,delta) &&
                        Utils::improves(best_delta,delta)) {
                         //Testar viabilidade
-                       best_delta = delta;
-                       coordinates[0] = i_seq_a;
-                       coordinates[1] = i_seq_b;
+                       if(propagate_virtual_2opt(i_route,i_seq_a,i_seq_b)) {
+                           best_delta = delta;
+                           coordinates[0] = i_seq_a;
+                           coordinates[1] = i_seq_b;
+                       }
                    }
 
                }
@@ -471,7 +473,7 @@ void Search::propagate(int route_index, int previous_sequence_index) {
     }
 
 }
-
+//Retorna false se não for viável
 bool Search::propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
     vector<Sequence>* route = &this->routes.at(route_index);
 
@@ -484,7 +486,7 @@ bool Search::propagate_virtual(int route_index, int previous_sequence_index, Seq
         return false;
     }
 
-    for(int i=previous_sequence_index+1; i<route->size(); i++) {
+    for(int i=previous_sequence_index+1; i<(int)route->size(); i++) {
 
         previous_sequence = current_sequence;
         current_sequence = &route->at(i);
@@ -495,6 +497,45 @@ bool Search::propagate_virtual(int route_index, int previous_sequence_index, Seq
         }
 
     }
+
+    return true;
+}
+
+bool Search::propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b) {
+    vector<Sequence>* route = &this->routes.at(route_index);
+
+    route->at(i_seq_a).clone(this->virtual_sequence);
+
+    //Trocando o proximo cliente de i_seq_a pelo último do intervalo (i_seq_b)
+    Sequence* previous_sequence = &route->at(i_seq_a);
+    Sequence* current_sequence = &route->at(i_seq_b-1);
+    fill_forward_virtual(previous_sequence,current_sequence);
+    if(broke_time_window()) {
+        return false;
+    }
+
+    //Calculando o propagate para o intervalo de forma inversa
+    for(int i = i_seq_b-2;i>i_seq_a;i--) {
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
+        fill_forward_virtual(previous_sequence, current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
+    }
+
+    //Calculando de i_seq_b em diante
+    for(int i=i_seq_b;i<(int)route->size();i++) {
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
+        fill_forward_virtual(previous_sequence, current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
+
+    }
+
+
 
     return true;
 }

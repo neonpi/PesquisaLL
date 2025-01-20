@@ -166,13 +166,15 @@ void Search::ls_intra_2opt() {
                for(int i_seq_b = i_seq_a+3; i_seq_b<(int)route->size();i_seq_b++) {
                    Sequence* seq_b = &route->at(i_seq_b);
 
-                    //Inverter a rota inteira não faz efeito algum
-                    if(seq_a->node->id =="D0" && seq_b->node->id == "Dt") {break;}
+                   //Inverter a rota inteira não faz efeito algum
+                   if(seq_a->node->id =="D0" && seq_b->node->id == "Dt") {break;}
 
-                    //Trocar locker com locker não faz efeito algum
-                    if(seq_b->node->id != seq_a->node->id) {
-                        cout<<endl;
-                    }
+                   double delta = calculate_delta(route,i_seq_a, i_seq_b);
+
+                   if(delta<0 && Utils::differs(delta,0.0)) {
+                       cout<<"Vai melhorar"<<endl;
+                   }
+
                }
 
             /*route.at(route.size()-1).clone(this->virtual_sequence);
@@ -181,6 +183,20 @@ void Search::ls_intra_2opt() {
 
     }
 
+}
+
+double Search::calculate_delta(vector<Sequence>* route, int i_seq_a, int i_seq_b) {
+    Sequence* seq_a = &route->at(i_seq_a);
+    Sequence* slice_first = &route->at(i_seq_a+1);
+    Sequence* seq_b = &route->at(i_seq_b);
+    Sequence* slice_last = &route->at(i_seq_b-1);
+    double delta = 0.0;
+    delta += this->instance->distances[seq_a->node->index][slice_last->node->index];
+    delta += this->instance->distances[slice_first->node->index][seq_b->node->index];
+    delta -= this->instance->distances[seq_a->node->index][slice_first->node->index];
+    delta -= this->instance->distances[slice_last->node->index][seq_b->node->index];
+
+    return delta;
 }
 
 void Search::local_search() {

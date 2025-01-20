@@ -32,6 +32,8 @@ public:
     //Busca local
     void ls_intra_exchange();
     void ls_intra_2opt();
+    double calculate_delta(vector<Sequence>* route, int i_seq_a, int i_seq_b);
+
     void local_search();
     void swap_sequence(int route_a_index, int seq_a_index, int route_b_index, int seq_b_index);
     void swap_sequence_intraroute(int route_index, int seq_a_index, int seq_b_index);

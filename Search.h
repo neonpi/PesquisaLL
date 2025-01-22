@@ -35,7 +35,9 @@ public:
     void ls_intra_2opt();
 
     void ls_inter_shift_1_0();
-    double calculate_delta(vector<Sequence>* route, int i_seq_a, int i_seq_b);
+
+    double calculate_delta_2opt(vector<Sequence>* route, int i_seq_a, int i_seq_b);
+    double calculate_delta_shift_1_0(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);
 
     void local_search();
     void swap_sequence(int route_a_index, int seq_a_index, int route_b_index, int seq_b_index);

@@ -179,7 +179,7 @@ void Search::ls_intra_2opt() {
                    //Inverter a rota inteira não faz efeito algum
                    if(seq_a->node->id =="D0" && seq_b->node->id == "Dt") {break;}
 
-                   double delta = calculate_delta(route,i_seq_a, i_seq_b);
+                   double delta = calculate_delta_2opt(route,i_seq_a, i_seq_b);
 
                    if(Utils::improves(0.0,delta) &&
                        Utils::improves(best_delta,delta)) {
@@ -219,8 +219,23 @@ void Search::ls_inter_shift_1_0() {
 
                     //Verificando se pelo menos um cliente da rota A cabe na rota B
                     if((int)route_b->size() > 2 && ((route_b->end()-1)->current_load + (route_a->end()-1)->minimun_route_load) <= this->instance->load_capacity) {
+                        //Aponta pro nó de A que vai
+                        for(int i_seq_a = 1; i_seq_a<((int)route_a->size()-1);i_seq_a++) {
+                            Sequence* seq_a = &route_a->at(i_seq_a);
 
-                        for(int i_seq_a = 0; i_seq_a<((int)route_a->size()-1);i_seq_a++) {
+                            //Verificando se o nó da seq A cabe na rota B
+                            if((route_b->end()-1)->current_load + seq_a->customer->load_demand <= this->instance->load_capacity) {
+
+                                //Aponta pro nó de B que vai vir antes
+                                for(int i_seq_b = 0; i_seq_b<((int)route_b->size()-1);i_seq_a++) {
+                                    this->print();
+                                    Sequence* seq_b = &route_a->at(i_seq_b);
+                                    double delta = calculate_delta_shift_1_0(route_a,i_seq_a,route_b,i_seq_b);
+                                }
+
+
+                            }
+
 
                         }
 
@@ -232,7 +247,7 @@ void Search::ls_inter_shift_1_0() {
     }
 }
 
-double Search::calculate_delta(vector<Sequence>* route, int i_seq_a, int i_seq_b) {
+double Search::calculate_delta_2opt(vector<Sequence>* route, int i_seq_a, int i_seq_b) {
     Sequence* seq_a = &route->at(i_seq_a);
     Sequence* slice_first = &route->at(i_seq_a+1);
     Sequence* seq_b = &route->at(i_seq_b);
@@ -244,6 +259,31 @@ double Search::calculate_delta(vector<Sequence>* route, int i_seq_a, int i_seq_b
     delta -= this->instance->distances[slice_last->node->index][seq_b->node->index];
 
     return delta;
+}
+
+double Search::calculate_delta_shift_1_0(vector<Sequence> *route_a, int i_seq_a, vector<Sequence> *route_b, int i_seq_b) {
+    Sequence* seq_a_previous = &route_a->at(i_seq_a-1);
+    Sequence* seq_a = &route_a->at(i_seq_a);
+    Sequence* seq_a_next = &route_a->at(i_seq_a+1);
+
+    Sequence* seq_b = &route_b->at(i_seq_b);
+    Sequence* seq_b_next = &route_b->at(i_seq_b+1);
+
+    double delta = 0.0;
+
+    //Retirando a seq a da rota a
+    delta+= this->instance->distances[seq_a_previous->node->index][seq_a_next->node->index];
+    delta-= this->instance->distances[seq_a_previous->node->index][seq_a->node->index];
+    delta-= this->instance->distances[seq_a->node->index][seq_a_next->node->index];
+
+    //Retirando a seq a na rota b
+    delta+= this->instance->distances[seq_b->node->index][seq_a->node->index];
+    delta+= this->instance->distances[seq_a->node->index][seq_b_next->node->index];
+    delta-= this->instance->distances[seq_b->node->index][seq_b_next->node->index];
+
+
+    return delta;
+
 }
 
 void Search::local_search() {

@@ -17,6 +17,7 @@ public:
     double current_distance = 0.0;
     double current_time = 0.0;
     double current_load = 0.0;
+    double minimun_route_load = 0.0;
 
     void clone(Sequence* clone) {
         clone->node = this->node;
@@ -26,6 +27,7 @@ public:
         clone->current_distance = this->current_distance;
         clone->current_time = this->current_time;
         clone->current_load = this->current_load;
+        clone->minimun_route_load = this->minimun_route_load;
     }
 
     void reset_values() {
@@ -34,6 +36,7 @@ public:
         this->current_distance = 0.0;
         this->current_time = 0.0;
         this->current_load = 0.0;
+        this->minimun_route_load = 0.0;
     }
 };
 

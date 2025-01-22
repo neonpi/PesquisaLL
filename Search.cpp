@@ -82,29 +82,10 @@ void Search::insertion_heuristic() {
         if(candidates>0) {
             rand_index = rand()%candidates;
         }
+
         tuple<int,int,Sequence,double> candidate = cand_list.at(rand_index);
-        //TODO TESTE
-        /*if( this->routes.at(0).size()==2 ) {
-            while(get<2>(candidate).node->id!="C35") {
-                candidate = cand_list.at(list_index++);
-            }
-        }*/
-
-        //Evitar colocar um nó entre lockers
-        /*int list_index = 0;
-        tuple<int,int,Sequence> candidate = cand_list.at(list_index++);
-        Sequence *previous_sequence = &this->routes.at(get<0>(candidate)).at(get<1>(candidate));
-        Sequence *next_sequence = &this->routes.at(get<0>(candidate)).at(get<1>(candidate)+1);
-
-        while(previous_sequence->node->id == next_sequence->node->id) {
-            candidate = cand_list.at(list_index++);
-            previous_sequence = &this->routes.at(get<0>(candidate)).at(get<1>(candidate));
-            next_sequence = &this->routes.at(get<0>(candidate)).at(get<1>(candidate)+1);
-        }*/
-
 
         insert_sequency(candidate);
-        //Utils::print_output_file(this);
 
 
         cand_list.erase(cand_list.begin(),cand_list.end());
@@ -227,15 +208,22 @@ void Search::ls_intra_2opt() {
 }
 
 void Search::ls_inter_shift_1_0() {
-    for (int i_route = 0;i_route<(int)this->routes.size();i_route++) {
-        vector<Sequence> * route_1 = &this->routes.at(i_route);
+    for (int i_route_a = 0;i_route_a<(int)this->routes.size();i_route_a++) {
+        vector<Sequence> * route_a = &this->routes.at(i_route_a);
 
-        if((int)route_1->size() > 2) {
-            for (int j_route = 0;j_route<(int)this->routes.size();j_route++) {
-                if(i_route!=j_route) {
-                    vector<Sequence> * route_2 = &this->routes.at(j_route);
-                    if((int)route_2->size() > 2) {
-                        cout<<endl;
+        if((int)route_a->size() > 2) {
+            for (int i_route_b = 0;i_route_b<(int)this->routes.size();i_route_b++) {
+
+                if(i_route_a!=i_route_b) {
+                    vector<Sequence> * route_b = &this->routes.at(i_route_b);
+
+                    //Verificando se pelo menos um cliente da rota A cabe na rota B
+                    if((int)route_b->size() > 2 && ((route_b->end()-1)->current_load + (route_a->end()-1)->minimun_route_load) <= this->instance->load_capacity) {
+
+                        for(int i_seq_a = 0; i_seq_a<((int)route_a->size()-1);i_seq_a++) {
+
+                        }
+
                     }
 
                 }
@@ -629,16 +617,17 @@ void Search::calculate_delta_distance(tuple<int, int, Sequence, double> *cus) {
 }
 
 void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
-    int route_index = get<0>(candidate);
+    vector<Sequence>* route = &this->routes.at(get<0>(candidate));
     int previous_sequence_index = get<1>(candidate);
     Sequence* candidate_sequence = &get<2>(candidate);
 
+    if(route->size() == 2 || candidate_sequence->customer->load_demand < (route->end()-1)->minimun_route_load) {
+        (route->end()-1)->minimun_route_load = candidate_sequence->customer->load_demand;
+    }
 
-    this->routes.at(route_index).insert(this->routes.at(route_index).begin()+previous_sequence_index+1,
-        1,
-        *candidate_sequence);
+    route->insert(route->begin()+previous_sequence_index+1,1, *candidate_sequence);
 
-    propagate(route_index, previous_sequence_index);
+    propagate(get<0>(candidate), previous_sequence_index);
 
     this->visited[candidate_sequence->customer->index] = true;
 

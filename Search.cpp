@@ -163,7 +163,7 @@ void Search::ls_intra_exchange() {
 
 void Search::ls_intra_2opt() {
 
-    //this->print();
+
     for (int i_route = 0;i_route<(int)this->routes.size();i_route++) {
 
         double best_delta = 0.0;
@@ -272,7 +272,7 @@ void Search::ls_inter_shift_1_0() {
 
         route_b->insert(route_b->begin()+coordinates[3]+1,1,*seq_a);
         //print();
-        propagate(coordinates[2],coordinates[3]-1);
+        propagate(coordinates[2],coordinates[3]);
 
         route_a->erase(route_a->begin()+coordinates[1],route_a->begin()+coordinates[1]+1);
         //print();

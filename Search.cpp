@@ -56,7 +56,8 @@ void Search::initialize_routes() {
 
 void Search::run() {
     this->construct();
-    this->ls_intra_2opt();
+    this->ls_inter_shift_1_0();
+    //rvnd_intra();
     //this->ls_intra_exchange();
     //this->local_search();
 }
@@ -112,6 +113,34 @@ void Search::insertion_heuristic() {
     }
 
     calculate_total_cost();
+}
+
+void Search::rvnd_intra() {
+
+    vector<int> neighb = {0,1};
+    int last_improved_neighb = -1;
+    random_shuffle(neighb.begin(),neighb.end());
+    double cost_backup = this->total_cost;
+
+    for(int i=0;i<2;i++) {
+        if(neighb[i] != last_improved_neighb) {
+            switch (neighb[i]) {
+                case 0:
+                    this->ls_intra_2opt();
+                break;
+                case 1:
+                    this->ls_intra_exchange();
+                break;
+                default:
+                    cout<<"Unknown LS"<<endl;
+            }
+            if(this->total_cost < cost_backup) {
+                cost_backup = this->total_cost;
+                last_improved_neighb = neighb[i];
+                i=-1;
+            }
+        }
+    }
 }
 
 void Search::ls_intra_exchange() {
@@ -195,6 +224,24 @@ void Search::ls_intra_2opt() {
 
     }
 
+}
+
+void Search::ls_inter_shift_1_0() {
+    for (int i_route = 0;i_route<(int)this->routes.size();i_route++) {
+        vector<Sequence> * route_1 = &this->routes.at(i_route);
+
+        if((int)route_1->size() > 2) {
+            for (int j_route = 0;j_route<(int)this->routes.size();j_route++) {
+                if(i_route!=j_route) {
+                    vector<Sequence> * route_2 = &this->routes.at(j_route);
+                    if((int)route_2->size() > 2) {
+                        cout<<endl;
+                    }
+
+                }
+            }
+        }
+    }
 }
 
 double Search::calculate_delta(vector<Sequence>* route, int i_seq_a, int i_seq_b) {

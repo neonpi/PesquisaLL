@@ -30,8 +30,11 @@ public:
     void insertion_heuristic();
 
     //Busca local
+    void rvnd_intra();
     void ls_intra_exchange();
     void ls_intra_2opt();
+
+    void ls_inter_shift_1_0();
     double calculate_delta(vector<Sequence>* route, int i_seq_a, int i_seq_b);
 
     void local_search();

@@ -35,9 +35,11 @@ public:
     void ls_intra_2opt();
 
     void ls_inter_shift_1_0();
+    void ls_inter_shift_2_0();
 
     double calculate_delta_2opt(vector<Sequence>* route, int i_seq_a, int i_seq_b);
     double calculate_delta_shift_1_0(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);
+    double calculate_delta_shift_2_0(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);
 
     void local_search();
     void swap_sequence(int route_a_index, int seq_a_index, int route_b_index, int seq_b_index);
@@ -52,6 +54,7 @@ public:
 
     void propagate(int route_index, int previous_sequence_index);
     bool propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence);
+    bool propagate_virtual_segment(int route_index, int previous_sequence_index, Sequence *cand_sequence_1, Sequence *cand_sequence_2);
     bool propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b);
 
     void fill_forward_virtual(Sequence *previous_sequence, Sequence* current_sequence);

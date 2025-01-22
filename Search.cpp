@@ -56,8 +56,9 @@ void Search::initialize_routes() {
 
 void Search::run() {
     this->construct();
+    this->rvnd_inter();
     //this->ls_inter_shift_1_0();
-    this->ls_inter_shift_2_0();
+    //this->ls_inter_shift_2_0();
     //rvnd_intra();
     //this->ls_intra_exchange();
     //this->local_search();
@@ -206,6 +207,34 @@ void Search::ls_intra_2opt() {
 
     }
 
+}
+
+void Search::rvnd_inter() {
+    vector<int> neighb = {0,1};
+    int last_improved_neighb = -1;
+    random_shuffle(neighb.begin(),neighb.end());
+    double cost_backup = this->total_cost;
+
+    for(int i=0;i<2;i++) {
+        if(neighb[i] != last_improved_neighb) {
+            switch (neighb[i]) {
+                case 0:
+                    this->ls_inter_shift_1_0();
+                break;
+                case 1:
+                    this->ls_inter_shift_2_0();
+                break;
+                default:
+                    cout<<"Unknown LS"<<endl;
+            }
+            if(this->total_cost < cost_backup) {
+                this->rvnd_intra();
+                cost_backup = this->total_cost;
+                last_improved_neighb = neighb[i];
+                i=-1;
+            }
+        }
+    }
 }
 
 void Search::ls_inter_shift_1_0() {
@@ -361,8 +390,8 @@ void Search::ls_inter_shift_2_0() {
         route_b = &this->routes.at(coordinates[2]);
         seq_b = &route_b->at(coordinates[3]);
 
-        //TODO testar
-        route_b->insert(route_b->begin()+coordinates[3]+1,route_a->begin()+coordinates[1]+1,route_a->begin()+coordinates[1]+3);
+
+        route_b->insert(route_b->begin()+coordinates[3]+1,route_a->begin()+coordinates[1],route_a->begin()+coordinates[1]+2);
         //print();
         propagate(coordinates[2],coordinates[3]);
 

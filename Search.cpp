@@ -56,13 +56,7 @@ void Search::initialize_routes() {
 
 void Search::run() {
     this->construct();
-    //this->rvnd_inter();
-    this->ls_inter_swap_2_1()();
-    //this->ls_inter_shift_1_0();
-    //this->ls_inter_shift_2_0();
-    //rvnd_intra();
-    //this->ls_intra_exchange();
-    //this->local_search();
+    this->rvnd_inter();
 }
 
 void Search::construct() {
@@ -211,12 +205,12 @@ void Search::ls_intra_2opt() {
 }
 
 void Search::rvnd_inter() {
-    vector<int> neighb = {0,1,2};
+    vector<int> neighb = {0,1,2,3};
     int last_improved_neighb = -1;
     random_shuffle(neighb.begin(),neighb.end());
     double cost_backup = this->total_cost;
 
-    for(int i=0;i<3;i++) {
+    for(int i=0;i<4;i++) {
         if(neighb[i] != last_improved_neighb) {
             switch (neighb[i]) {
                 case 0:
@@ -227,6 +221,9 @@ void Search::rvnd_inter() {
                 break;
                 case 2:
                     this->ls_inter_swap_1_1();
+                break;
+                case 3:
+                    this->ls_inter_swap_2_1();
                 break;
                 default:
                     cout<<"Unknown LS"<<endl;
@@ -396,7 +393,6 @@ void Search::ls_inter_shift_2_0() {
 
 
         route_b->insert(route_b->begin()+coordinates[3]+1,route_a->begin()+coordinates[1],route_a->begin()+coordinates[1]+2);
-        //print();
         propagate(coordinates[2],coordinates[3]);
 
         //Verificando se o load minimo da rota B vai ser atualizado
@@ -406,7 +402,6 @@ void Search::ls_inter_shift_2_0() {
         }
 
         route_a->erase(route_a->begin()+coordinates[1],route_a->begin()+coordinates[1]+2);
-        //print();
         propagate(coordinates[0],coordinates[1]-1);
 
         //Reajustando a demanda mínima da rota que foi reduzida
@@ -486,7 +481,6 @@ void Search::ls_inter_swap_1_1() {
         seq_b = &route_b->at(coordinates[3]);
 
         route_b->insert(route_b->begin()+coordinates[3]+1,1,*seq_a);
-        propagate(coordinates[2],coordinates[3]);
 
 
         //Verificando se o load minimo da rota B vai ser atualizado
@@ -495,7 +489,6 @@ void Search::ls_inter_swap_1_1() {
         }
 
         route_a->insert(route_a->begin()+coordinates[1]+1,1,*seq_b);
-        propagate(coordinates[0],coordinates[1]);
 
 
         //Verificando se o load minimo da rota B vai ser atualizado
@@ -565,9 +558,7 @@ void Search::ls_inter_swap_2_1() {
                             for(int i_seq_b = 1; i_seq_b<((int)route_b->size()-1);i_seq_b++) {
                                 seq_b = &route_b->at(i_seq_b);
 
-                                //Trocar locker com locker não faz efeito
-                                if(seq_a_1->node->id != seq_b->node->id && seq_a_2->node->id != seq_b->node->id) {
-
+                                //Trocar locker com locker não faz efeito TODO testar depois
                                     if(!swap_2_1_broke_load(route_a,seq_a_1,seq_a_2,route_b,seq_b)) {
                                         double delta = calculate_delta_swap_2_1(route_a,i_seq_a,route_b,i_seq_b);
                                         if(Utils::improves(0.0,delta) &&
@@ -583,8 +574,6 @@ void Search::ls_inter_swap_2_1() {
                                             }
 
                                     }
-
-                                }
 
                             }
                         }
@@ -618,7 +607,6 @@ void Search::ls_inter_swap_2_1() {
         route_a->erase(route_a->begin()+coordinates[1],route_a->begin()+coordinates[1]+2);
         propagate(coordinates[0],coordinates[1]-1);
 
-
         //Reajustando a demanda mínima da rota que foi reduzida
         if((seq_a_1->customer->load_demand == (route_a->end()-1)->minimun_route_load || seq_a_2->customer->load_demand == (route_a->end()-1)->minimun_route_load) && seq_b->customer->load_demand != (route_a->end()-1)->minimun_route_load) {
             (route_a->end()-1)->minimun_route_load = route_a->at(1).customer->load_demand;
@@ -632,7 +620,6 @@ void Search::ls_inter_swap_2_1() {
         route_b->erase(route_b->begin()+coordinates[3],route_b->begin()+coordinates[3]+1);
         propagate(coordinates[2],coordinates[3]-1);
 
-        //TODO TESTAR AS ALTERAÇÔES DA ROTA
         //Reajustando a demanda mínima da rota que foi reduzida
         if(seq_b->customer->load_demand == (route_a->end()-1)->minimun_route_load && (seq_a_1->customer->load_demand != (route_b->end()-1)->minimun_route_load || seq_a_1->customer->load_demand != (route_b->end()-1)->minimun_route_load)) {
             (route_b->end()-1)->minimun_route_load = route_b->at(1).customer->load_demand;

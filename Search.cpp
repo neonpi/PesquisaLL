@@ -56,8 +56,7 @@ void Search::initialize_routes() {
 
 void Search::run() {
     this->construct();
-    this->ls_inter_swap_1_1();
-    //this->rvnd_inter();
+    this->rvnd_inter();
     //this->ls_inter_shift_1_0();
     //this->ls_inter_shift_2_0();
     //rvnd_intra();
@@ -211,12 +210,12 @@ void Search::ls_intra_2opt() {
 }
 
 void Search::rvnd_inter() {
-    vector<int> neighb = {0,1};
+    vector<int> neighb = {0,1,2};
     int last_improved_neighb = -1;
     random_shuffle(neighb.begin(),neighb.end());
     double cost_backup = this->total_cost;
 
-    for(int i=0;i<2;i++) {
+    for(int i=0;i<3;i++) {
         if(neighb[i] != last_improved_neighb) {
             switch (neighb[i]) {
                 case 0:
@@ -224,6 +223,9 @@ void Search::rvnd_inter() {
                 break;
                 case 1:
                     this->ls_inter_shift_2_0();
+                break;
+                case 2:
+                    this->ls_inter_swap_1_1();
                 break;
                 default:
                     cout<<"Unknown LS"<<endl;

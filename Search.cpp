@@ -56,7 +56,8 @@ void Search::initialize_routes() {
 
 void Search::run() {
     this->construct();
-    this->rvnd_inter();
+    this->ls_inter_swap_2_2();
+    //this->rvnd_inter();
 }
 
 void Search::construct() {
@@ -265,7 +266,7 @@ void Search::ls_inter_shift_1_0() {
 
                                 //Aponta pro nó de B que vai vir antes
                                 for(int i_seq_b = 0; i_seq_b<((int)route_b->size()-1);i_seq_b++) {
-                                    //this->print();
+
                                     seq_b = &route_b->at(i_seq_b); //TODO depois remover
                                     double delta = calculate_delta_shift_1_0(route_a,i_seq_a,route_b,i_seq_b);
                                     if(Utils::improves(0.0,delta) &&
@@ -354,7 +355,7 @@ void Search::ls_inter_shift_2_0() {
 
                                 //Aponta pro nó de B que vai vir antes
                                 for(int i_seq_b = 0; i_seq_b<((int)route_b->size()-1);i_seq_b++) {
-                                    //this->print();
+
                                     seq_b = &route_b->at(i_seq_b); //TODO depois remover
                                     double delta = calculate_delta_shift_2_0(route_a,i_seq_a,route_b,i_seq_b);
                                     if(Utils::improves(0.0,delta) &&
@@ -534,6 +535,14 @@ bool Search::swap_2_1_broke_load(vector<Sequence>* route_a, Sequence* seq_a_1, S
     return broke_a || broke_b;
 
 }
+
+bool Search::swap_2_2_broke_load(vector<Sequence> *route_a, Sequence *seq_a_1, Sequence *seq_a_2,
+    vector<Sequence> *route_b, Sequence *seq_b_1, Sequence *seq_b_2) {
+    bool broke_a = (route_a->end()-1)->current_load  - seq_a_1->customer->load_demand - seq_a_2->customer->load_demand + seq_b_1->customer->load_demand + seq_b_2->customer->load_demand > this->instance->load_capacity;
+    bool broke_b = (route_b->end()-1)->current_load  - seq_b_1->customer->load_demand  - seq_b_2->customer->load_demand + seq_a_1->customer->load_demand + seq_a_2->customer->load_demand > this->instance->load_capacity;
+    return broke_a || broke_b;
+}
+
 void Search::ls_inter_swap_2_1() {
     double best_delta = 0.0;
     int coordinates[4] = {-1,-1,-1,-1}; //i_route_a,i_seq_a,i_route_b,i_seq_b
@@ -632,6 +641,110 @@ void Search::ls_inter_swap_2_1() {
 
         this->calculate_total_cost();
     }
+}
+
+void Search::ls_inter_swap_2_2() {
+    double best_delta = 0.0;
+    int coordinates[4] = {-1,-1,-1,-1}; //i_route_a,i_seq_a,i_route_b,i_seq_b
+    vector<Sequence> * route_a = nullptr;
+    vector<Sequence> * route_b = nullptr;
+    Sequence * seq_a_1 = nullptr;
+    Sequence * seq_a_2 = nullptr;
+    Sequence * seq_b_1 = nullptr;
+    Sequence * seq_b_2 = nullptr;
+
+    for (int i_route_a = 0;i_route_a<(int)this->routes.size();i_route_a++) {
+        route_a = &this->routes.at(i_route_a);
+        if(route_a->size()>3) {
+            for (int i_route_b = i_route_a + 1;i_route_b<(int)this->routes.size();i_route_b++) {
+
+                if(i_route_b != i_route_a) {
+                    route_b = &this->routes.at(i_route_b);
+                    if(route_b->size()>3) {
+                        for(int i_seq_a=1; i_seq_a<((int)route_a->size()-2);i_seq_a++) {
+                            seq_a_1 = &route_a->at(i_seq_a);
+                            seq_a_2 = &route_a->at(i_seq_a+1);
+
+                            for(int i_seq_b = 1; i_seq_b<((int)route_b->size()-2);i_seq_b++) {
+                                seq_b_1 = &route_b->at(i_seq_b);
+                                seq_b_2 = &route_b->at(i_seq_b+1);
+
+                                //Trocar locker com locker não faz efeito TODO testar depois
+                                    if(!swap_2_2_broke_load(route_a,seq_a_1,seq_a_2,route_b,seq_b_1,seq_b_2)) {
+                                        double delta = calculate_delta_swap_2_2(route_a,i_seq_a,route_b,i_seq_b);
+                                        if(Utils::improves(0.0,delta) &&
+                                            Utils::improves(best_delta,delta)) {
+                                            if(propagate_virtual_swap_2_2(i_route_a,i_seq_a-1,seq_b_1,seq_b_2) &&
+                                                propagate_virtual_swap_2_2(i_route_b,i_seq_b-1,seq_a_1,seq_a_2)) {
+                                                best_delta = delta;
+                                                coordinates[0] = i_route_a;
+                                                coordinates[1] = i_seq_a;
+                                                coordinates[2] = i_route_b;
+                                                coordinates[3] = i_seq_b;
+                                                }
+                                            }
+
+                                    }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if(best_delta<0.0) {
+
+            route_a = &this->routes.at(coordinates[0]);
+            seq_a_1 = &route_a->at(coordinates[1]);
+            seq_a_2 = &route_a->at(coordinates[1]+1);
+            route_b = &this->routes.at(coordinates[2]);
+            seq_b_1 = &route_b->at(coordinates[3]);
+            seq_b_2 = &route_b->at(coordinates[3]+1);
+
+            route_b->insert(route_b->begin()+coordinates[3]+2,route_a->begin()+coordinates[1],route_a->begin()+coordinates[1]+2);
+
+            //Verificando se o load minimo da rota B vai ser atualizado
+            if(seq_a_1->customer->load_demand < (route_b->end()-1)->minimun_route_load || seq_a_2->customer->load_demand < (route_b->end()-1)->minimun_route_load) {
+                (route_b->end()-1)->minimun_route_load = min(seq_a_1->customer->load_demand,seq_a_2->customer->load_demand);
+            }
+
+            route_a->insert(route_a->begin()+coordinates[1]+2,route_b->begin()+coordinates[3],route_b->begin()+coordinates[3]+2);
+
+            //Verificando se o load minimo da rota B vai ser atualizado
+            if(seq_b_1->customer->load_demand < (route_a->end()-1)->minimun_route_load || seq_b_2->customer->load_demand < (route_a->end()-1)->minimun_route_load) {
+                (route_a->end()-1)->minimun_route_load = min(seq_b_1->customer->load_demand,seq_b_2->customer->load_demand);
+            }
+
+            route_a->erase(route_a->begin()+coordinates[1],route_a->begin()+coordinates[1]+2);
+            propagate(coordinates[0],coordinates[1]-1);
+
+            //Reajustando a demanda mínima da rota
+            if((seq_a_1->customer->load_demand == (route_a->end()-1)->minimun_route_load || seq_a_2->customer->load_demand == (route_a->end()-1)->minimun_route_load) && (seq_b_1 ->customer->load_demand != (route_a->end()-1)->minimun_route_load && seq_b_2 ->customer->load_demand != (route_a->end()-1)->minimun_route_load)) {
+                (route_a->end()-1)->minimun_route_load = route_a->at(1).customer->load_demand;
+                for(int i=2;i<((int)route_a->size()-1);i++) {
+                    if(route_a->at(0).customer->load_demand < (route_a->end()-1)->minimun_route_load) {
+                        (route_a->end()-1)->minimun_route_load = route_a->at(0).customer->load_demand;
+                    }
+                }
+            }
+
+            route_b->erase(route_b->begin()+coordinates[1],route_b->begin()+coordinates[1]+2);
+            propagate(coordinates[0],coordinates[1]-1);
+
+            //Reajustando a demanda mínima da rota
+            if((seq_b_1->customer->load_demand == (route_b->end()-1)->minimun_route_load || seq_b_2->customer->load_demand == (route_b->end()-1)->minimun_route_load) && (seq_a_1 ->customer->load_demand != (route_b->end()-1)->minimun_route_load && seq_a_2 ->customer->load_demand != (route_b->end()-1)->minimun_route_load)) {
+                (route_b->end()-1)->minimun_route_load = route_b->at(1).customer->load_demand;
+                for(int i=2;i<((int)route_b->size()-1);i++) {
+                    if(route_b->at(0).customer->load_demand < (route_b->end()-1)->minimun_route_load) {
+                        (route_b->end()-1)->minimun_route_load = route_b->at(0).customer->load_demand;
+                    }
+                }
+            }
+
+            this->calculate_total_cost();
+        }
+
 }
 
 double Search::calculate_delta_2opt(vector<Sequence>* route, int i_seq_a, int i_seq_b) {
@@ -753,9 +866,38 @@ double Search::calculate_delta_swap_2_1(vector<Sequence> *route_a, int i_seq_a, 
     return delta;
 
 }
+double Search::calculate_delta_swap_2_2(vector<Sequence> *route_a, int i_seq_a, vector<Sequence> *route_b,
+    int i_seq_b) {
 
+    Sequence* seq_a_previous = &route_a->at(i_seq_a-1);
+    Sequence* seq_a_1 = &route_a->at(i_seq_a);
+    Sequence* seq_a_2 = &route_a->at(i_seq_a+1);
+    Sequence* seq_a_next = &route_a->at(i_seq_a+2);
+
+    Sequence* seq_b_previous = &route_b->at(i_seq_b-1);
+    Sequence* seq_b_1 = &route_b->at(i_seq_b);
+    Sequence* seq_b_2 = &route_b->at(i_seq_b+1);
+    Sequence* seq_b_next = &route_b->at(i_seq_b+2);
+
+    double delta = 0.0;
+
+    //Contabilizando alteração da rota_a
+    delta+=this->instance->distances[seq_a_previous->node->index][seq_b_1->node->index];
+    delta+=this->instance->distances[seq_b_2->node->index][seq_a_next->node->index];
+    delta-=this->instance->distances[seq_a_previous->node->index][seq_a_1->node->index];
+    delta-=this->instance->distances[seq_a_2->node->index][seq_a_next->node->index];
+
+    //Contabilizando alteração da rota_b
+    delta+=this->instance->distances[seq_b_previous->node->index][seq_a_1->node->index];
+    delta+=this->instance->distances[seq_a_2->node->index][seq_b_next->node->index];
+    delta-=this->instance->distances[seq_b_previous->node->index][seq_b_1->node->index];
+    delta-=this->instance->distances[seq_b_2->node->index][seq_b_next->node->index];
+
+    return delta;
+
+}
 void Search::local_search() {
-    //this->print();
+
     double best_cost = this->total_cost;
 
 
@@ -876,10 +1018,8 @@ vector<tuple<int, int, Sequence, double>> Search::build_candidate_list() {
     }
 
     //funcao lambda
-    //print_candidate_list(&cand_list);
-    sort(cand_list.begin(),cand_list.end(),[this](const tuple<int,int,Sequence, double> cus_a, const tuple<int,int,Sequence, double> cus_b){return get<3>(cus_a) < get<3>(cus_b);});
 
-    //print_candidate_list(&cand_list);
+    sort(cand_list.begin(),cand_list.end(),[this](const tuple<int,int,Sequence, double> cus_a, const tuple<int,int,Sequence, double> cus_b){return get<3>(cus_a) < get<3>(cus_b);});
 
     return cand_list;
 }
@@ -1196,6 +1336,43 @@ bool Search::propagate_virtual_swap_2_1(int route_index, int previous_sequence_i
     }
     //TODO testar
     for(int i=previous_sequence_index+2; i<(int)route->size(); i++) {
+
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
+
+        fill_forward_virtual(previous_sequence, current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
+
+    }
+
+    return true;
+}
+
+bool Search::propagate_virtual_swap_2_2(int route_index, int previous_sequence_index, Sequence *cand_sequence_1,
+    Sequence *cand_sequence_2) {
+    vector<Sequence>* route = &this->routes.at(route_index);
+
+    route->at(previous_sequence_index).clone(this->virtual_sequence);
+
+    //Propagando primeiro nó
+    Sequence* previous_sequence = &route->at(previous_sequence_index);
+    Sequence* current_sequence = cand_sequence_1;
+    fill_forward_virtual(previous_sequence, current_sequence);
+    if(broke_time_window()) {
+        return false;
+    }
+
+    //Propagando segundo nó
+    previous_sequence = current_sequence;
+    current_sequence = cand_sequence_2;
+    fill_forward_virtual(previous_sequence, current_sequence);
+    if(broke_time_window()) {
+        return false;
+    }
+    //TODO testar
+    for(int i=previous_sequence_index+3; i<(int)route->size(); i++) {
 
         previous_sequence = current_sequence;
         current_sequence = &route->at(i);

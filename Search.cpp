@@ -56,7 +56,8 @@ void Search::initialize_routes() {
 
 void Search::run() {
     this->construct();
-    this->rvnd_inter();
+    this->ls_inter_swap_1_1();
+    //this->rvnd_inter();
     //this->ls_inter_shift_1_0();
     //this->ls_inter_shift_2_0();
     //rvnd_intra();
@@ -445,19 +446,23 @@ void Search::ls_inter_swap_1_1() {
                     for(int i_seq_b = 1; i_seq_b<((int)route_b->size()-1);i_seq_b++) {
                         seq_b = &route_b->at(i_seq_b);
 
-                        if(!swap_1_1_broke_load(route_a,seq_a,route_b,seq_b)) {
+                        //Trocar locker com locker não faz efeito
+                        if(seq_a->node->id != seq_b->node->id) {
 
-                            double delta = calculate_delta_swap_1_1(route_a,i_seq_a,route_b,i_seq_b);
-                            if(Utils::improves(0.0,delta) &&
-                                Utils::improves(best_delta,delta)) {
-                                if(propagate_virtual(i_route_b,i_seq_b-1,seq_a) &&
-                                    propagate_virtual(i_route_a,i_seq_a-1,seq_b)) {
-                                    best_delta = delta;
-                                    coordinates[0] = i_route_a;
-                                    coordinates[1] = i_seq_a;
-                                    coordinates[2] = i_route_b;
-                                    coordinates[3] = i_seq_b;
+                            if(!swap_1_1_broke_load(route_a,seq_a,route_b,seq_b)) {
+                                double delta = calculate_delta_swap_1_1(route_a,i_seq_a,route_b,i_seq_b);
+                                if(Utils::improves(0.0,delta) &&
+                                    Utils::improves(best_delta,delta)) {
+                                    if(propagate_virtual_swap_1_1(i_route_b,i_seq_b-1,seq_a) &&
+                                        propagate_virtual_swap_1_1(i_route_a,i_seq_a-1,seq_b)) {
+                                        best_delta = delta;
+                                        coordinates[0] = i_route_a;
+                                        coordinates[1] = i_seq_a;
+                                        coordinates[2] = i_route_b;
+                                        coordinates[3] = i_seq_b;
+                                    }
                                 }
+
                             }
 
                         }
@@ -478,6 +483,7 @@ void Search::ls_inter_swap_1_1() {
         route_b->insert(route_b->begin()+coordinates[3]+1,1,*seq_a);
         propagate(coordinates[2],coordinates[3]);
 
+
         //Verificando se o load minimo da rota B vai ser atualizado
         if(seq_a->customer->load_demand < (route_a->end()-1)->minimun_route_load) {
             (route_a->end()-1)->minimun_route_load = seq_a->customer->load_demand;
@@ -486,6 +492,7 @@ void Search::ls_inter_swap_1_1() {
         route_a->insert(route_a->begin()+coordinates[1]+1,1,*seq_b);
         propagate(coordinates[0],coordinates[1]);
 
+
         //Verificando se o load minimo da rota B vai ser atualizado
         if(seq_b->customer->load_demand < (route_b->end()-1)->minimun_route_load) {
             (route_b->end()-1)->minimun_route_load = seq_b->customer->load_demand;
@@ -493,6 +500,7 @@ void Search::ls_inter_swap_1_1() {
 
         route_a->erase(route_a->begin()+coordinates[1],route_a->begin()+coordinates[1]+1);
         propagate(coordinates[0],coordinates[1]-1);
+
 
         //Reajustando a demanda mínima da rota que foi reduzida
         if(seq_a->customer->load_demand == (route_a->end()-1)->minimun_route_load && seq_b->customer->load_demand != (route_a->end()-1)->minimun_route_load) {
@@ -504,9 +512,10 @@ void Search::ls_inter_swap_1_1() {
             }
         }
 
-        route_b->erase(route_b->begin()+coordinates[1],route_b->begin()+coordinates[1]+1);
+        route_b->erase(route_b->begin()+coordinates[3],route_b->begin()+coordinates[3]+1);
         propagate(coordinates[2],coordinates[3]-1);
 
+        //TODO TESTAR AS ALTERAÇÔES DA ROTA
         //Reajustando a demanda mínima da rota que foi reduzida
         if(seq_b->customer->load_demand == (route_a->end()-1)->minimun_route_load && seq_a->customer->load_demand != (route_b->end()-1)->minimun_route_load) {
             (route_b->end()-1)->minimun_route_load = route_b->at(1).customer->load_demand;
@@ -973,7 +982,32 @@ bool Search::propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b) {
 
     }
 
+    return true;
+}
 
+bool Search::propagate_virtual_swap_1_1(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
+    vector<Sequence>* route = &this->routes.at(route_index);
+
+    route->at(previous_sequence_index).clone(this->virtual_sequence);
+
+    Sequence* previous_sequence = &route->at(previous_sequence_index);
+    Sequence* current_sequence = cand_sequence;
+    fill_forward_virtual(previous_sequence, current_sequence);
+    if(broke_time_window()) {
+        return false;
+    }
+
+    for(int i=previous_sequence_index+2; i<(int)route->size(); i++) {
+
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
+
+        fill_forward_virtual(previous_sequence, current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
+
+    }
 
     return true;
 }

@@ -38,13 +38,16 @@ public:
     void ls_inter_shift_1_0();
     void ls_inter_shift_2_0();
     void ls_inter_swap_1_1();
+    void ls_inter_swap_2_1();
 
 
     bool swap_1_1_broke_load(vector<Sequence>* route_a, Sequence* seq_a , vector<Sequence>* route_b, Sequence* seq_b);
+    bool swap_2_1_broke_load(vector<Sequence>* route_a, Sequence* seq_a_1, Sequence *seq_a_2, vector<Sequence>* route_b, Sequence* seq_b);
     double calculate_delta_2opt(vector<Sequence>* route, int i_seq_a, int i_seq_b);
     double calculate_delta_shift_1_0(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);
     double calculate_delta_shift_2_0(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);
     double calculate_delta_swap_1_1(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);
+    double calculate_delta_swap_2_1(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);
 
     void local_search();
     void swap_sequence(int route_a_index, int seq_a_index, int route_b_index, int seq_b_index);
@@ -62,6 +65,8 @@ public:
     bool propagate_virtual_segment(int route_index, int previous_sequence_index, Sequence *cand_sequence_1, Sequence *cand_sequence_2);
     bool propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b);
     bool propagate_virtual_swap_1_1(int route_index, int previous_sequence_index, Sequence *cand_sequence);
+    bool propagate_virtual_swap_1_2(int route_index, int previous_sequence_index, Sequence *cand_sequence);
+    bool propagate_virtual_swap_2_1(int route_index, int previous_sequence_index, Sequence *cand_sequence_1,Sequence *cand_sequence_2);
 
     void fill_forward_virtual(Sequence *previous_sequence, Sequence* current_sequence);
     void fill_forward(Sequence *previous_sequence, Sequence* current_sequence);

@@ -29,7 +29,7 @@ int main()
 
             srand(config->seeds.at(i));
             //cout<<config->seeds.at(i)<<endl;
-            //srand(26142);
+            srand(26142);
 
             Search* search = new Search(instance,config);
             clock_t time = clock();

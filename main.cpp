@@ -29,7 +29,8 @@ int main()
 
             srand(config->seeds.at(i));
             //cout<<config->seeds.at(i)<<endl;
-            srand(26142);
+            //srand(26142);
+            //srand(23688);
 
             Search* search = new Search(instance,config);
             clock_t time = clock();
@@ -38,7 +39,7 @@ int main()
 
             stats->set_result(search->total_cost,((double) time / CLOCKS_PER_SEC));
             Utils::print_route_file(search,i==0, config->seeds.at(i));
-            search->print_is_viable();
+            search->print_is_viable(config->seeds.at(i));
             delete search;
 
 

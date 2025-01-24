@@ -80,7 +80,7 @@ public:
 
 
     void calculate_total_cost();
-    void print_is_viable();
+    void print_is_viable(long seed);
 
     bool is_customer(int node_index);
     bool is_locker(int node_index);

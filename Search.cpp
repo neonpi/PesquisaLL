@@ -56,8 +56,8 @@ void Search::initialize_routes() {
 
 void Search::run() {
     this->construct();
-    this->ls_inter_swap_2_2();
-    //this->rvnd_inter();
+    //this->ls_inter_swap_2_2();
+    this->rvnd_inter();
 }
 
 void Search::construct() {
@@ -206,12 +206,12 @@ void Search::ls_intra_2opt() {
 }
 
 void Search::rvnd_inter() {
-    vector<int> neighb = {0,1,2,3};
+    vector<int> neighb = {0,1,2,3,4};
     int last_improved_neighb = -1;
     random_shuffle(neighb.begin(),neighb.end());
     double cost_backup = this->total_cost;
 
-    for(int i=0;i<4;i++) {
+    for(int i=0;i<5;i++) {
         if(neighb[i] != last_improved_neighb) {
             switch (neighb[i]) {
                 case 0:
@@ -225,6 +225,9 @@ void Search::rvnd_inter() {
                 break;
                 case 3:
                     this->ls_inter_swap_2_1();
+                break;
+                case 4:
+                    this->ls_inter_swap_2_2();
                 break;
                 default:
                     cout<<"Unknown LS"<<endl;
@@ -695,55 +698,55 @@ void Search::ls_inter_swap_2_2() {
     }
     if(best_delta<0.0) {
 
-            route_a = &this->routes.at(coordinates[0]);
-            seq_a_1 = &route_a->at(coordinates[1]);
-            seq_a_2 = &route_a->at(coordinates[1]+1);
-            route_b = &this->routes.at(coordinates[2]);
-            seq_b_1 = &route_b->at(coordinates[3]);
-            seq_b_2 = &route_b->at(coordinates[3]+1);
+        route_a = &this->routes.at(coordinates[0]);
+        seq_a_1 = &route_a->at(coordinates[1]);
+        seq_a_2 = &route_a->at(coordinates[1]+1);
+        route_b = &this->routes.at(coordinates[2]);
+        seq_b_1 = &route_b->at(coordinates[3]);
+        seq_b_2 = &route_b->at(coordinates[3]+1);
 
-            route_b->insert(route_b->begin()+coordinates[3]+2,route_a->begin()+coordinates[1],route_a->begin()+coordinates[1]+2);
+        route_b->insert(route_b->begin()+coordinates[3]+2,route_a->begin()+coordinates[1],route_a->begin()+coordinates[1]+2);
 
-            //Verificando se o load minimo da rota B vai ser atualizado
-            if(seq_a_1->customer->load_demand < (route_b->end()-1)->minimun_route_load || seq_a_2->customer->load_demand < (route_b->end()-1)->minimun_route_load) {
-                (route_b->end()-1)->minimun_route_load = min(seq_a_1->customer->load_demand,seq_a_2->customer->load_demand);
-            }
-
-            route_a->insert(route_a->begin()+coordinates[1]+2,route_b->begin()+coordinates[3],route_b->begin()+coordinates[3]+2);
-
-            //Verificando se o load minimo da rota B vai ser atualizado
-            if(seq_b_1->customer->load_demand < (route_a->end()-1)->minimun_route_load || seq_b_2->customer->load_demand < (route_a->end()-1)->minimun_route_load) {
-                (route_a->end()-1)->minimun_route_load = min(seq_b_1->customer->load_demand,seq_b_2->customer->load_demand);
-            }
-
-            route_a->erase(route_a->begin()+coordinates[1],route_a->begin()+coordinates[1]+2);
-            propagate(coordinates[0],coordinates[1]-1);
-
-            //Reajustando a demanda mínima da rota
-            if((seq_a_1->customer->load_demand == (route_a->end()-1)->minimun_route_load || seq_a_2->customer->load_demand == (route_a->end()-1)->minimun_route_load) && (seq_b_1 ->customer->load_demand != (route_a->end()-1)->minimun_route_load && seq_b_2 ->customer->load_demand != (route_a->end()-1)->minimun_route_load)) {
-                (route_a->end()-1)->minimun_route_load = route_a->at(1).customer->load_demand;
-                for(int i=2;i<((int)route_a->size()-1);i++) {
-                    if(route_a->at(0).customer->load_demand < (route_a->end()-1)->minimun_route_load) {
-                        (route_a->end()-1)->minimun_route_load = route_a->at(0).customer->load_demand;
-                    }
-                }
-            }
-
-            route_b->erase(route_b->begin()+coordinates[1],route_b->begin()+coordinates[1]+2);
-            propagate(coordinates[0],coordinates[1]-1);
-
-            //Reajustando a demanda mínima da rota
-            if((seq_b_1->customer->load_demand == (route_b->end()-1)->minimun_route_load || seq_b_2->customer->load_demand == (route_b->end()-1)->minimun_route_load) && (seq_a_1 ->customer->load_demand != (route_b->end()-1)->minimun_route_load && seq_a_2 ->customer->load_demand != (route_b->end()-1)->minimun_route_load)) {
-                (route_b->end()-1)->minimun_route_load = route_b->at(1).customer->load_demand;
-                for(int i=2;i<((int)route_b->size()-1);i++) {
-                    if(route_b->at(0).customer->load_demand < (route_b->end()-1)->minimun_route_load) {
-                        (route_b->end()-1)->minimun_route_load = route_b->at(0).customer->load_demand;
-                    }
-                }
-            }
-
-            this->calculate_total_cost();
+        //Verificando se o load minimo da rota B vai ser atualizado
+        if(seq_a_1->customer->load_demand < (route_b->end()-1)->minimun_route_load || seq_a_2->customer->load_demand < (route_b->end()-1)->minimun_route_load) {
+            (route_b->end()-1)->minimun_route_load = min(seq_a_1->customer->load_demand,seq_a_2->customer->load_demand);
         }
+
+        route_a->insert(route_a->begin()+coordinates[1]+2,route_b->begin()+coordinates[3],route_b->begin()+coordinates[3]+2);
+
+
+        //Verificando se o load minimo da rota B vai ser atualizado
+        if(seq_b_1->customer->load_demand < (route_a->end()-1)->minimun_route_load || seq_b_2->customer->load_demand < (route_a->end()-1)->minimun_route_load) {
+            (route_a->end()-1)->minimun_route_load = min(seq_b_1->customer->load_demand,seq_b_2->customer->load_demand);
+        }
+        route_a->erase(route_a->begin()+coordinates[1],route_a->begin()+coordinates[1]+2);
+        propagate(coordinates[0],coordinates[1]-1);
+
+        //Reajustando a demanda mínima da rota
+        if((seq_a_1->customer->load_demand == (route_a->end()-1)->minimun_route_load || seq_a_2->customer->load_demand == (route_a->end()-1)->minimun_route_load) && (seq_b_1 ->customer->load_demand != (route_a->end()-1)->minimun_route_load && seq_b_2 ->customer->load_demand != (route_a->end()-1)->minimun_route_load)) {
+            (route_a->end()-1)->minimun_route_load = route_a->at(1).customer->load_demand;
+            for(int i=2;i<((int)route_a->size()-1);i++) {
+                if(route_a->at(0).customer->load_demand < (route_a->end()-1)->minimun_route_load) {
+                    (route_a->end()-1)->minimun_route_load = route_a->at(0).customer->load_demand;
+                }
+            }
+        }
+
+        route_b->erase(route_b->begin()+coordinates[3],route_b->begin()+coordinates[3]+2);
+        propagate(coordinates[2],coordinates[3]-1);
+
+        //Reajustando a demanda mínima da rota
+        if((seq_b_1->customer->load_demand == (route_b->end()-1)->minimun_route_load || seq_b_2->customer->load_demand == (route_b->end()-1)->minimun_route_load) && (seq_a_1 ->customer->load_demand != (route_b->end()-1)->minimun_route_load && seq_a_2 ->customer->load_demand != (route_b->end()-1)->minimun_route_load)) {
+            (route_b->end()-1)->minimun_route_load = route_b->at(1).customer->load_demand;
+            for(int i=2;i<((int)route_b->size()-1);i++) {
+                if(route_b->at(0).customer->load_demand < (route_b->end()-1)->minimun_route_load) {
+                    (route_b->end()-1)->minimun_route_load = route_b->at(0).customer->load_demand;
+                }
+            }
+        }
+
+        this->calculate_total_cost();
+    }
 
 }
 
@@ -1135,6 +1138,8 @@ void Search::fill_forward(Sequence *previous_sequence, Sequence *current_sequenc
     if(current_sequence->current_time < current_sequence->node->time_window[0]) {
         previous_sequence->time_off = current_sequence->node->time_window[0] - current_sequence->current_time;
         current_sequence->current_time += previous_sequence->time_off;
+    }else {
+        previous_sequence->time_off = 0.0;
     }
 
 
@@ -1454,7 +1459,7 @@ void Search::calculate_total_cost() {
     }
 }
 
-void Search::print_is_viable() {
+void Search::print_is_viable(long seed) {
     bool customer_viable = true;
 
     vector<string> customers = {};
@@ -1497,13 +1502,13 @@ void Search::print_is_viable() {
 
 
     if (!load_viable) {
-        cout<<"Load inviability"<<endl;
-        //exit(10);
+        cout<<"Load inviability, seed="<<to_string(seed)<<endl;
+        exit(10);
     }
 
     if (!sp_visit_viable) {
-        cout<<"Self pickup inviability"<<endl;
-        //exit(10);
+        cout<<"Self pickup inviability, seed="<<to_string(seed)<<endl;
+        exit(10);
     }
 
     if (!customer_viable) {
@@ -1511,8 +1516,8 @@ void Search::print_is_viable() {
         for(string customer: customers) {
             cout<< customer<<", ";
         }
-        cout<<")"<<endl;
-        //exit(2);
+        cout<<"), seed="<<to_string(seed)<<endl;
+        exit(10);
     }
 
     if(!time_window_viable) {
@@ -1523,9 +1528,10 @@ void Search::print_is_viable() {
                 cout<<", ";
             }
         }
-        cout<<")"<<endl;
+        cout<<"), seed="<<to_string(seed)<<endl;
         cout<<this->instance->inst_name<<endl;
-        //exit(10);
+        print();
+        exit(10);
 
     }
 

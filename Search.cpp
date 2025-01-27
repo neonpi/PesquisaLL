@@ -30,6 +30,7 @@ Search::~Search() {
 void Search::run() {
     this->construct();
     this->rvnd_inter();
+    this->iterated_greedy();
 }
 
 void Search::construct() {
@@ -722,6 +723,10 @@ void Search::ls_inter_swap_2_2() {
 
 }
 
+void Search::iterated_greedy() {
+    Solution* bestSolution = this->solution->clone();
+}
+
 double Search::calculate_delta_2opt(vector<Sequence>* route, int i_seq_a, int i_seq_b) {
     Sequence* seq_a = &route->at(i_seq_a);
     Sequence* slice_first = &route->at(i_seq_a+1);
@@ -1000,7 +1005,7 @@ vector<tuple<int, int, Sequence, double>> Search::build_candidate_list() {
 }
 
 void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node *cand_node) {
-    if(!this->solution->visited[cand_node->index]) {
+    if(!this->solution->visited.at(cand_node->index)) {
 
         int route_index = 0;
         for (vector<Sequence> route : this->solution->routes) {
@@ -1047,7 +1052,7 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *can
         Sequence* last_sequence = &(*(route.end()-1));
         //Pra cada cliente
         for (Node* customer_node: cand_node->designated_customers) {
-            if (!this->solution->visited[customer_node->index]) {
+            if (!this->solution->visited.at(customer_node->index)) {
 
                 //O load fica viável??
                 if (is_load_viable(route_index,customer_node)) {
@@ -1419,7 +1424,7 @@ void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
 
     propagate(get<0>(candidate), previous_sequence_index);
 
-    this->solution->visited[candidate_sequence->customer->index] = true;
+    this->solution->visited.at(candidate_sequence->customer->index) = true;
 
 }
 

@@ -42,6 +42,9 @@ public:
     void ls_inter_swap_2_1();
     void ls_inter_swap_2_2();
 
+    //IG
+    void iterated_greedy();
+
 
     bool swap_1_1_broke_load(vector<Sequence>* route_a, Sequence* seq_a , vector<Sequence>* route_b, Sequence* seq_b);
     bool swap_2_1_broke_load(vector<Sequence>* route_a, Sequence* seq_a_1, Sequence *seq_a_2, vector<Sequence>* route_b, Sequence* seq_b);

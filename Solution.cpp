@@ -6,9 +6,8 @@
 
 Solution::Solution(Instance* instance) {
     this->total_cost = 0.0;
-    this->visited = new bool[instance->n_node];
     for (int i=0;i<instance->n_node;i++) {
-        this->visited[i] = false;
+        this->visited.push_back(false);
     }
     this->instance = instance;
     this->initialize_routes();
@@ -16,7 +15,6 @@ Solution::Solution(Instance* instance) {
 }
 
 Solution::~Solution() {
-    delete[] this->visited;
 }
 
 
@@ -83,7 +81,7 @@ void Solution::print_is_viable(long seed) {
     vector<string> customers = {};
     for (int i = this->instance->customer_indexes[0];
         i < this->instance->customer_indexes[1] ;i++) {
-        if (!this->visited[i]) {
+        if (!this->visited.at(i)) {
             customer_viable = false;
             customers.push_back(this->instance->nodes.at(i).id);
 
@@ -154,4 +152,14 @@ void Solution::print_is_viable(long seed) {
     }
 
 
+}
+
+Solution * Solution::clone() {
+
+    Solution *s = new Solution(this->instance);
+    s->routes = this->routes;
+    s->visited = this->visited;
+    s->total_cost = this->total_cost;
+
+    return s;
 }

@@ -744,7 +744,8 @@ void Search::iterated_greedy() {
     vector<Node*> dec_list;
     while(dec_size<dec_size_limit) {
 
-        deconstruct(dec_size);
+        deconstruct(dec_size, &dec_list);
+
         dec_size++;
     }
 
@@ -753,7 +754,25 @@ void Search::iterated_greedy() {
     this->solution = bestSolution;
 }
 
-void Search::deconstruct(int dec_size) {
+void Search::deconstruct(int dec_size, vector<Node *> *dec_list) {
+
+    for(int i=0;i<dec_size;i++) {
+
+        int i_route = rand()%this->solution->used_routes;
+        vector<Sequence>* route = &this->solution->routes.at(i_route);
+
+        int i_seq = 1 + rand()%((int)route->size()-1);
+        Sequence* seq = &route->at(i_seq);
+
+        dec_list->push_back(seq->customer);
+        this->solution->visited.at(seq->customer->index) = false;
+
+        route->erase(route->begin()+i_seq,route->begin()+i_seq+1);
+
+    }
+
+
+
 }
 
 double Search::calculate_delta_2opt(vector<Sequence>* route, int i_seq_a, int i_seq_b) {

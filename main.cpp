@@ -26,16 +26,17 @@ int main()
     cout<<"RUNNING EXPERIMENTS"<<endl;
     for(Instance* instance: instances) {
 
-        cout<<"Instance "<< instance->inst_name<<endl;
-        Stats* stats = new Stats(instance, config);
+        //if(instance->inst_name == "C206_co_25.txt") {
+            cout<<"Instance "<< instance->inst_name<<endl;
+            Stats* stats = new Stats(instance, config);
+            default_run(instance, config, stats);
 
-        default_run(instance, config, stats);
-
-        stats->finish_stats();
-        cout<<"AVG_COST: "<<stats->avg_cost<<" - AVG_TIME: "<<stats->avg_time<<" - BEST_COST: "<<stats->best_cost<<" - BEST_TIME: "<<stats->best_time<<endl;
-        Utils::print_stats_file(stats);
-        Utils::print_final_stats(stats);
-        delete stats;
+            stats->finish_stats();
+            cout<<"AVG_COST: "<<stats->avg_cost<<" - AVG_TIME: "<<stats->avg_time<<" - BEST_COST: "<<stats->best_cost<<" - BEST_TIME: "<<stats->best_time<<endl;
+            Utils::print_stats_file(stats);
+            Utils::print_final_stats(stats);
+            delete stats;
+        //}
 
     }
     delete config;
@@ -46,10 +47,11 @@ int main()
 void default_run(Instance *instance, Config* config, Stats* stats) {
     for(int i=0;i<config->runs;i++) {
 
-        //srand(config->seeds.at(i));
+        srand(config->seeds.at(i));
+        //cout<<config->seeds.at(i)<<endl;
         //cout<<config->seeds.at(i)<<endl;
         //srand(26142);
-        srand(23688);
+       // srand(10822);
 
         Search* search = new Search(instance,config);
         clock_t time = clock();

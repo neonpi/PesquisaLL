@@ -745,13 +745,22 @@ void Search::iterated_greedy() {
     while(dec_size<dec_size_limit) {
 
         deconstruct(dec_size, &dec_list);
+        insertion_heuristic();
 
-        dec_size++;
+        this->rvnd_inter();
+
+        if(this->solution->total_cost < bestSolution->total_cost) {
+            delete bestSolution;
+            bestSolution = this->solution->clone();
+            dec_size = 1;
+        }else {
+            delete this->solution;
+            this->solution = bestSolution->clone();
+            dec_size++;
+        }
+
     }
 
-
-    delete this->solution;
-    this->solution = bestSolution;
 }
 
 void Search::deconstruct(int dec_size, vector<Node *> *dec_list) {
@@ -763,19 +772,22 @@ void Search::deconstruct(int dec_size, vector<Node *> *dec_list) {
         i_routes.push_back(i_route);
         vector<Sequence>* route = &this->solution->routes.at(i_route);
 
-        int i_seq = 1 + rand()%((int)route->size()-1);
+        int i_seq = 1 + rand()%((int)route->size()-2);
         Sequence* seq = &route->at(i_seq);
-
         dec_list->push_back(seq->customer);
         this->solution->visited.at(seq->customer->index) = false;
 
         route->erase(route->begin()+i_seq,route->begin()+i_seq+1);
 
+        if(route->size() == 2) {
+            this->solution->used_routes--;
+            this->solution->sort_routes();
+        }
 
     }
     //TODO pensar em um traamento quando a rota fica vazia na desconstrução
     //Propagando remoções
-    sort(i_routes.begin(), i_routes.end(), [this](int a, int b){ return a>b; });
+    sort(i_routes.begin(), i_routes.end(), [this](int a, int b){ return a > b; });
 
     propagate(i_routes.at(0),0);
     for(int i=1;i<i_routes.size();i++) {
@@ -1488,6 +1500,8 @@ void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
     propagate(get<0>(candidate), previous_sequence_index);
 
     this->solution->visited.at(candidate_sequence->customer->index) = true;
+
+    this->solution->sort_routes();
 
 }
 

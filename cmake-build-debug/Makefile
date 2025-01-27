@@ -248,6 +248,30 @@ Sequence.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Sequence.cpp.s
 .PHONY : Sequence.cpp.s
 
+Solution.obj: Solution.cpp.obj
+.PHONY : Solution.obj
+
+# target to build an object file
+Solution.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Solution.cpp.obj
+.PHONY : Solution.cpp.obj
+
+Solution.i: Solution.cpp.i
+.PHONY : Solution.i
+
+# target to preprocess a source file
+Solution.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Solution.cpp.i
+.PHONY : Solution.cpp.i
+
+Solution.s: Solution.cpp.s
+.PHONY : Solution.s
+
+# target to generate assembly for a file
+Solution.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Solution.cpp.s
+.PHONY : Solution.cpp.s
+
 Stats.obj: Stats.cpp.obj
 .PHONY : Stats.obj
 
@@ -416,6 +440,9 @@ help:
 	@echo ... Sequence.obj
 	@echo ... Sequence.i
 	@echo ... Sequence.s
+	@echo ... Solution.obj
+	@echo ... Solution.i
+	@echo ... Solution.s
 	@echo ... Stats.obj
 	@echo ... Stats.i
 	@echo ... Stats.s

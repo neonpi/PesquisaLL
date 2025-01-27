@@ -112,6 +112,12 @@
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Sequence.h">
 			<Option target="prj_evrp"/>
 		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Solution.cpp">
+			<Option target="prj_evrp"/>
+		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Solution.h">
+			<Option target="prj_evrp"/>
+		</Unit>
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Stats.cpp">
 			<Option target="prj_evrp"/>
 		</Unit>

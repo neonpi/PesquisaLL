@@ -9,18 +9,10 @@
 Search::Search(Instance *instance, Config* config) {
     this->instance = instance;
     this->config = config;
-    this->n_vehicles = instance->max_vehicle;
     this->customer_served = 0;
-    this->total_cost = 0.0;
     this->best = nullptr;
-
-    this->initialize_routes();
-
-    this->visited = new bool[instance->n_node];
-    for (int i=0;i<instance->n_node;i++) {
-        this->visited[i] = false;
-    }
-
+    
+    this->solution = new Solution(instance);
     this->virtual_sequence = new Sequence();
 
 }
@@ -32,31 +24,11 @@ Search::~Search() {
     }
 
     delete this->virtual_sequence;
-    delete[] this->visited;
 }
 
-void Search::initialize_routes() {
-
-    this->routes.reserve(this->n_vehicles);
-
-    for (int i=0; i < this->n_vehicles; i++) {
-
-        Sequence depot_0, depot_t;
-        depot_0.node = &this->instance->nodes.at(0);
-        depot_0.customer = &this->instance->nodes.at(0);
-        depot_t.node = &this->instance->nodes.at(1);
-        depot_t.customer = &this->instance->nodes.at(1);
-        depot_0.current_load = 0;
-        depot_t.current_load = 0;
-        vector<Sequence> route ={depot_0, depot_t};
-        this->routes.push_back(route);
-        this->routes.at(i).reserve(this->instance->n_node);
-    }
-}
 
 void Search::run() {
     this->construct();
-    //this->ls_inter_swap_2_2();
     this->rvnd_inter();
 }
 
@@ -91,7 +63,7 @@ void Search::insertion_heuristic() {
         cand_list = build_candidate_list();
     }
 
-    calculate_total_cost();
+    this->solution->calculate_total_cost();
 }
 
 void Search::rvnd_intra() {
@@ -99,7 +71,7 @@ void Search::rvnd_intra() {
     vector<int> neighb = {0,1};
     int last_improved_neighb = -1;
     random_shuffle(neighb.begin(),neighb.end());
-    double cost_backup = this->total_cost;
+    double cost_backup = this->solution->total_cost;
 
     for(int i=0;i<2;i++) {
         if(neighb[i] != last_improved_neighb) {
@@ -113,8 +85,8 @@ void Search::rvnd_intra() {
                 default:
                     cout<<"Unknown LS"<<endl;
             }
-            if(this->total_cost < cost_backup) {
-                cost_backup = this->total_cost;
+            if(this->solution->total_cost < cost_backup) {
+                cost_backup = this->solution->total_cost;
                 last_improved_neighb = neighb[i];
                 i=-1;
             }
@@ -123,10 +95,10 @@ void Search::rvnd_intra() {
 }
 
 void Search::ls_intra_exchange() {
-    double best_cost = this->total_cost;
+    double best_cost = this->solution->total_cost;
 
-    for(int i_route=0; i_route<(int)this->routes.size();i_route++) {
-        vector<Sequence>* route = &this->routes.at(i_route);
+    for(int i_route=0; i_route<(int)this->solution->routes.size();i_route++) {
+        vector<Sequence>* route = &this->solution->routes.at(i_route);
         if(route->size()>4) {
             for(int i_seq_a=2;i_seq_a<(route->size()-2);i_seq_a++) {
 
@@ -138,8 +110,8 @@ void Search::ls_intra_exchange() {
                     if(s_a->node->id != s_b->node->id) {
                         swap_sequence_intraroute(i_route,i_seq_a,i_seq_b);
                         //test_cost();
-                        if(this->total_cost<best_cost && Utils::differs(this->total_cost,best_cost) && is_viable()) {
-                            best_cost = this->total_cost;
+                        if(this->solution->total_cost<best_cost && Utils::differs(this->solution->total_cost,best_cost) && is_viable()) {
+                            best_cost = this->solution->total_cost;
                             i_seq_a = 1;
 
                             break;
@@ -162,12 +134,12 @@ void Search::ls_intra_exchange() {
 void Search::ls_intra_2opt() {
 
 
-    for (int i_route = 0;i_route<(int)this->routes.size();i_route++) {
+    for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
 
         double best_delta = 0.0;
         int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
 
-        vector<Sequence>* route = &this->routes.at(i_route);
+        vector<Sequence>* route = &this->solution->routes.at(i_route);
            for(int i_seq_a = 0; i_seq_a<((int)(route->size())-3);i_seq_a++) {
                Sequence* seq_a = &route->at(i_seq_a);
 
@@ -197,7 +169,7 @@ void Search::ls_intra_2opt() {
             if(best_delta<0.0) {
                 reverse(route->begin()+coordinates[0]+1,route->begin()+coordinates[1]);
                 propagate(i_route,coordinates[0]);
-                calculate_total_cost();
+                this->solution->calculate_total_cost();
                 i_route--;
             }
 
@@ -209,7 +181,7 @@ void Search::rvnd_inter() {
     vector<int> neighb = {0,1,2,3,4};
     int last_improved_neighb = -1;
     random_shuffle(neighb.begin(),neighb.end());
-    double cost_backup = this->total_cost;
+    double cost_backup = this->solution->total_cost;
 
     for(int i=0;i<5;i++) {
         if(neighb[i] != last_improved_neighb) {
@@ -232,9 +204,9 @@ void Search::rvnd_inter() {
                 default:
                     cout<<"Unknown LS"<<endl;
             }
-            if(this->total_cost < cost_backup) {
+            if(this->solution->total_cost < cost_backup) {
                 this->rvnd_intra();
-                cost_backup = this->total_cost;
+                cost_backup = this->solution->total_cost;
                 last_improved_neighb = neighb[i];
                 i=-1;
             }
@@ -249,14 +221,14 @@ void Search::ls_inter_shift_1_0() {
     vector<Sequence> * route_b = nullptr;
     Sequence * seq_a = nullptr;
     Sequence * seq_b = nullptr;
-    for (int i_route_a = 0;i_route_a<(int)this->routes.size();i_route_a++) {
-        route_a = &this->routes.at(i_route_a);
+    for (int i_route_a = 0;i_route_a<(int)this->solution->routes.size();i_route_a++) {
+        route_a = &this->solution->routes.at(i_route_a);
 
         if((int)route_a->size() > 2) {
-            for (int i_route_b = 0;i_route_b<(int)this->routes.size();i_route_b++) {
+            for (int i_route_b = 0;i_route_b<(int)this->solution->routes.size();i_route_b++) {
 
                 if(i_route_a!=i_route_b) {
-                    route_b = &this->routes.at(i_route_b);
+                    route_b = &this->solution->routes.at(i_route_b);
 
                     //Verificando se pelo menos um cliente da rota A cabe na rota B
                     if((int)route_b->size() > 2 && ((route_b->end()-1)->current_load + (route_a->end()-1)->minimun_route_load) <= this->instance->load_capacity) {
@@ -300,9 +272,9 @@ void Search::ls_inter_shift_1_0() {
     }
 
     if(best_delta<0.0) {
-        route_a = &this->routes.at(coordinates[0]);
+        route_a = &this->solution->routes.at(coordinates[0]);
         seq_a = &route_a->at(coordinates[1]);
-        route_b = &this->routes.at(coordinates[2]);
+        route_b = &this->solution->routes.at(coordinates[2]);
         seq_b = &route_b->at(coordinates[3]);
 
         route_b->insert(route_b->begin()+coordinates[3]+1,1,*seq_a);
@@ -325,7 +297,7 @@ void Search::ls_inter_shift_1_0() {
             }
         }
 
-        this->calculate_total_cost();
+        this->solution->calculate_total_cost();
     }
 }
 
@@ -337,14 +309,14 @@ void Search::ls_inter_shift_2_0() {
     Sequence * seq_a_1 = nullptr;
     Sequence * seq_a_2 = nullptr;
     Sequence * seq_b = nullptr;
-    for (int i_route_a = 0;i_route_a<(int)this->routes.size();i_route_a++) {
-        route_a = &this->routes.at(i_route_a);
+    for (int i_route_a = 0;i_route_a<(int)this->solution->routes.size();i_route_a++) {
+        route_a = &this->solution->routes.at(i_route_a);
 
         if((int)route_a->size() > 3) {
-            for (int i_route_b = 0;i_route_b<(int)this->routes.size();i_route_b++) {
+            for (int i_route_b = 0;i_route_b<(int)this->solution->routes.size();i_route_b++) {
 
                 if(i_route_a!=i_route_b) {
-                    route_b = &this->routes.at(i_route_b);
+                    route_b = &this->solution->routes.at(i_route_b);
 
                     //Verificando se pelo menos um cliente da rota A cabe na rota B
                     if((int)route_b->size() > 2) {
@@ -389,10 +361,10 @@ void Search::ls_inter_shift_2_0() {
     }
 
     if(best_delta<0.0) {
-        route_a = &this->routes.at(coordinates[0]);
+        route_a = &this->solution->routes.at(coordinates[0]);
         seq_a_1 = &route_a->at(coordinates[1]);
         seq_a_2 = &route_a->at(coordinates[1]+1);
-        route_b = &this->routes.at(coordinates[2]);
+        route_b = &this->solution->routes.at(coordinates[2]);
         seq_b = &route_b->at(coordinates[3]);
 
 
@@ -418,7 +390,7 @@ void Search::ls_inter_shift_2_0() {
             }
         }
 
-        this->calculate_total_cost();
+        this->solution->calculate_total_cost();
     }
 }
 bool Search::swap_1_1_broke_load(vector<Sequence>* route_a, Sequence* seq_a , vector<Sequence>* route_b, Sequence* seq_b) {
@@ -436,11 +408,11 @@ void Search::ls_inter_swap_1_1() {
     Sequence * seq_a = nullptr;
     Sequence * seq_b = nullptr;
 
-    for (int i_route_a = 0;i_route_a<((int)this->routes.size()-1);i_route_a++) {
-        route_a = &this->routes.at(i_route_a);
+    for (int i_route_a = 0;i_route_a<((int)this->solution->routes.size()-1);i_route_a++) {
+        route_a = &this->solution->routes.at(i_route_a);
         if(route_a->size()>2) {
-            for (int i_route_b = i_route_a+1;i_route_b<(int)this->routes.size();i_route_b++) {
-                route_b = &this->routes.at(i_route_b);
+            for (int i_route_b = i_route_a+1;i_route_b<(int)this->solution->routes.size();i_route_b++) {
+                route_b = &this->solution->routes.at(i_route_b);
 
                 if(route_b->size()>2) {
 
@@ -479,9 +451,9 @@ void Search::ls_inter_swap_1_1() {
     }
 
     if(best_delta<0.0) {
-        route_a = &this->routes.at(coordinates[0]);
+        route_a = &this->solution->routes.at(coordinates[0]);
         seq_a = &route_a->at(coordinates[1]);
-        route_b = &this->routes.at(coordinates[2]);
+        route_b = &this->solution->routes.at(coordinates[2]);
         seq_b = &route_b->at(coordinates[3]);
 
         route_b->insert(route_b->begin()+coordinates[3]+1,1,*seq_a);
@@ -527,7 +499,7 @@ void Search::ls_inter_swap_1_1() {
             }
         }
 
-        this->calculate_total_cost();
+        this->solution->calculate_total_cost();
     }
 
 }
@@ -555,13 +527,13 @@ void Search::ls_inter_swap_2_1() {
     Sequence * seq_a_2 = nullptr;
     Sequence * seq_b = nullptr;
 
-    for (int i_route_a = 0;i_route_a<(int)this->routes.size();i_route_a++) {
-        route_a = &this->routes.at(i_route_a);
+    for (int i_route_a = 0;i_route_a<(int)this->solution->routes.size();i_route_a++) {
+        route_a = &this->solution->routes.at(i_route_a);
         if(route_a->size()>3) {
-            for (int i_route_b = 0;i_route_b<(int)this->routes.size();i_route_b++) {
+            for (int i_route_b = 0;i_route_b<(int)this->solution->routes.size();i_route_b++) {
 
                 if(i_route_b != i_route_a) {
-                    route_b = &this->routes.at(i_route_b);
+                    route_b = &this->solution->routes.at(i_route_b);
                     if(route_b->size()>2) {
                         for(int i_seq_a=1; i_seq_a<((int)route_a->size()-2);i_seq_a++) {
                             seq_a_1 = &route_a->at(i_seq_a);
@@ -596,10 +568,10 @@ void Search::ls_inter_swap_2_1() {
     }
 
     if(best_delta<0.0) {
-        route_a = &this->routes.at(coordinates[0]);
+        route_a = &this->solution->routes.at(coordinates[0]);
         seq_a_1 = &route_a->at(coordinates[1]);
         seq_a_2 = &route_a->at(coordinates[1]+1);
-        route_b = &this->routes.at(coordinates[2]);
+        route_b = &this->solution->routes.at(coordinates[2]);
         seq_b = &route_b->at(coordinates[3]);
 
         route_b->insert(route_b->begin()+coordinates[3]+1,route_a->begin()+coordinates[1],route_a->begin()+coordinates[1]+2);
@@ -642,7 +614,7 @@ void Search::ls_inter_swap_2_1() {
             }
         }
 
-        this->calculate_total_cost();
+        this->solution->calculate_total_cost();
     }
 }
 
@@ -656,13 +628,13 @@ void Search::ls_inter_swap_2_2() {
     Sequence * seq_b_1 = nullptr;
     Sequence * seq_b_2 = nullptr;
 
-    for (int i_route_a = 0;i_route_a<(int)this->routes.size();i_route_a++) {
-        route_a = &this->routes.at(i_route_a);
+    for (int i_route_a = 0;i_route_a<(int)this->solution->routes.size();i_route_a++) {
+        route_a = &this->solution->routes.at(i_route_a);
         if(route_a->size()>3) {
-            for (int i_route_b = i_route_a + 1;i_route_b<(int)this->routes.size();i_route_b++) {
+            for (int i_route_b = i_route_a + 1;i_route_b<(int)this->solution->routes.size();i_route_b++) {
 
                 if(i_route_b != i_route_a) {
-                    route_b = &this->routes.at(i_route_b);
+                    route_b = &this->solution->routes.at(i_route_b);
                     if(route_b->size()>3) {
                         for(int i_seq_a=1; i_seq_a<((int)route_a->size()-2);i_seq_a++) {
                             seq_a_1 = &route_a->at(i_seq_a);
@@ -698,10 +670,10 @@ void Search::ls_inter_swap_2_2() {
     }
     if(best_delta<0.0) {
 
-        route_a = &this->routes.at(coordinates[0]);
+        route_a = &this->solution->routes.at(coordinates[0]);
         seq_a_1 = &route_a->at(coordinates[1]);
         seq_a_2 = &route_a->at(coordinates[1]+1);
-        route_b = &this->routes.at(coordinates[2]);
+        route_b = &this->solution->routes.at(coordinates[2]);
         seq_b_1 = &route_b->at(coordinates[3]);
         seq_b_2 = &route_b->at(coordinates[3]+1);
 
@@ -745,7 +717,7 @@ void Search::ls_inter_swap_2_2() {
             }
         }
 
-        this->calculate_total_cost();
+        this->solution->calculate_total_cost();
     }
 
 }
@@ -901,25 +873,25 @@ double Search::calculate_delta_swap_2_2(vector<Sequence> *route_a, int i_seq_a, 
 }
 void Search::local_search() {
 
-    double best_cost = this->total_cost;
+    double best_cost = this->solution->total_cost;
 
 
-    for(int i_route_a=0;i_route_a<this->n_vehicles;i_route_a++) {
-        vector<Sequence>* route_a = &this->routes.at(i_route_a);
+    for(int i_route_a=0;i_route_a<this->instance->max_vehicle;i_route_a++) {
+        vector<Sequence>* route_a = &this->solution->routes.at(i_route_a);
         if(route_a->size()>2) {
             for(int i_seq_a=1;i_seq_a<(route_a->size()-1);i_seq_a++) {
                 Sequence * seq_a = &route_a->at(i_seq_a);
-                for(int i_route_b=i_route_a;i_route_b<this->n_vehicles;i_route_b++) {
-                    vector<Sequence>* route_b = &this->routes.at(i_route_b);
+                for(int i_route_b=i_route_a;i_route_b<this->instance->max_vehicle;i_route_b++) {
+                    vector<Sequence>* route_b = &this->solution->routes.at(i_route_b);
                     if(route_b->size()>2) {
                         for(int i_seq_b = route_a == route_b? i_seq_a+1: 1; i_seq_b<(route_b->size()-1); i_seq_b++) {
                             Sequence * seq_b = &route_b->at(i_seq_b);
                             swap_sequence(i_route_a,i_seq_a,i_route_b,i_seq_b);
 
-                            if(is_viable() && this->total_cost<best_cost) {
-                                best_cost = this->total_cost;
+                            if(is_viable() && this->solution->total_cost<best_cost) {
+                                best_cost = this->solution->total_cost;
                                 i_seq_b = (route_b->size()-1);
-                                i_route_b = this->n_vehicles;
+                                i_route_b = this->instance->max_vehicle;
                                 i_seq_a = (route_a->size()-1);
                                 i_route_a = -1;
 
@@ -940,11 +912,11 @@ void Search::local_search() {
 }
 
 void Search::swap_sequence(int route_a_index, int seq_a_index, int route_b_index, int seq_b_index) {
-    Sequence* sequence_a = &this->routes.at(route_a_index).at(seq_a_index);
-    Sequence* sequence_b = &this->routes.at(route_b_index).at(seq_b_index);
+    Sequence* sequence_a = &this->solution->routes.at(route_a_index).at(seq_a_index);
+    Sequence* sequence_b = &this->solution->routes.at(route_b_index).at(seq_b_index);
 
-    this->total_cost-= this->routes.at(route_a_index).at((int)this->routes.at(route_a_index).size()-1).current_distance;
-    this->total_cost-= this->routes.at(route_b_index).at((int)this->routes.at(route_b_index).size()-1).current_distance;
+    this->solution->total_cost-= this->solution->routes.at(route_a_index).at((int)this->solution->routes.at(route_a_index).size()-1).current_distance;
+    this->solution->total_cost-= this->solution->routes.at(route_b_index).at((int)this->solution->routes.at(route_b_index).size()-1).current_distance;
     Node* node_a = sequence_a->node;
     Node* customer_a = sequence_a->customer;
 
@@ -959,16 +931,16 @@ void Search::swap_sequence(int route_a_index, int seq_a_index, int route_b_index
     sequence_a->customer = customer_b;
     propagate(route_a_index,seq_a_index-1);
 
-    this->total_cost+= this->routes.at(route_a_index).at((int)this->routes.at(route_a_index).size()-1).current_distance;
-    this->total_cost+= this->routes.at(route_b_index).at((int)this->routes.at(route_b_index).size()-1).current_distance;
+    this->solution->total_cost+= this->solution->routes.at(route_a_index).at((int)this->solution->routes.at(route_a_index).size()-1).current_distance;
+    this->solution->total_cost+= this->solution->routes.at(route_b_index).at((int)this->solution->routes.at(route_b_index).size()-1).current_distance;
 
 }
 
 void Search::swap_sequence_intraroute(int route_index, int seq_a_index, int seq_b_index) {
-    Sequence* sequence_a = &this->routes.at(route_index).at(seq_a_index);
-    Sequence* sequence_b = &this->routes.at(route_index).at(seq_b_index);
+    Sequence* sequence_a = &this->solution->routes.at(route_index).at(seq_a_index);
+    Sequence* sequence_b = &this->solution->routes.at(route_index).at(seq_b_index);
 
-    this->total_cost-= this->routes.at(route_index).at((int)this->routes.at(route_index).size()-1).current_distance;
+    this->solution->total_cost-= this->solution->routes.at(route_index).at((int)this->solution->routes.at(route_index).size()-1).current_distance;
 
     Node* node_a = sequence_a->node;
     Node* customer_a = sequence_a->customer;
@@ -984,11 +956,11 @@ void Search::swap_sequence_intraroute(int route_index, int seq_a_index, int seq_
 
     propagate(route_index,seq_a_index<seq_b_index?(seq_a_index-1):(seq_b_index-1));
 
-    this->total_cost+= this->routes.at(route_index).at((int)this->routes.at(route_index).size()-1).current_distance;
+    this->solution->total_cost+= this->solution->routes.at(route_index).at((int)this->solution->routes.at(route_index).size()-1).current_distance;
 }
 
 bool Search::is_viable() {
-    for(vector<Sequence> seq: this->routes) {
+    for(vector<Sequence> seq: this->solution->routes) {
         //Load
         if(seq.at((int)seq.size()-1).current_load > this->instance->load_capacity) {
             return false;
@@ -1028,10 +1000,10 @@ vector<tuple<int, int, Sequence, double>> Search::build_candidate_list() {
 }
 
 void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node *cand_node) {
-    if(!this->visited[cand_node->index]) {
+    if(!this->solution->visited[cand_node->index]) {
 
         int route_index = 0;
-        for (vector<Sequence> route : this->routes) {
+        for (vector<Sequence> route : this->solution->routes) {
 
             //O Load é viável?
             if (is_load_viable(route_index,cand_node)) {
@@ -1070,12 +1042,12 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *c
 void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node* cand_node) {
 
     int route_index = 0;
-    for (vector<Sequence> route : this->routes) {
+    for (vector<Sequence> route : this->solution->routes) {
 
         Sequence* last_sequence = &(*(route.end()-1));
         //Pra cada cliente
         for (Node* customer_node: cand_node->designated_customers) {
-            if (!this->visited[customer_node->index]) {
+            if (!this->solution->visited[customer_node->index]) {
 
                 //O load fica viável??
                 if (is_load_viable(route_index,customer_node)) {
@@ -1146,7 +1118,7 @@ void Search::fill_forward(Sequence *previous_sequence, Sequence *current_sequenc
 }
 
 void Search::propagate(int route_index, int previous_sequence_index) {
-    vector<Sequence>* route = &this->routes.at(route_index);
+    vector<Sequence>* route = &this->solution->routes.at(route_index);
 
     Sequence* previous_sequence = nullptr;
     Sequence* current_sequence = &route->at(previous_sequence_index);
@@ -1162,7 +1134,7 @@ void Search::propagate(int route_index, int previous_sequence_index) {
 }
 //Retorna false se não for viável
 bool Search::propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
-    vector<Sequence>* route = &this->routes.at(route_index);
+    vector<Sequence>* route = &this->solution->routes.at(route_index);
 
     route->at(previous_sequence_index).clone(this->virtual_sequence);
 
@@ -1189,7 +1161,7 @@ bool Search::propagate_virtual(int route_index, int previous_sequence_index, Seq
 }
 
 bool Search::propagate_virtual_segment(int route_index, int previous_sequence_index, Sequence* cand_sequence_1, Sequence* cand_sequence_2) {
-    vector<Sequence>* route = &this->routes.at(route_index);
+    vector<Sequence>* route = &this->solution->routes.at(route_index);
 
     route->at(previous_sequence_index).clone(this->virtual_sequence);
     //Propagando primeiro nó
@@ -1226,7 +1198,7 @@ bool Search::propagate_virtual_segment(int route_index, int previous_sequence_in
 }
 
 bool Search::propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b) {
-    vector<Sequence>* route = &this->routes.at(route_index);
+    vector<Sequence>* route = &this->solution->routes.at(route_index);
 
     route->at(i_seq_a).clone(this->virtual_sequence);
 
@@ -1263,7 +1235,7 @@ bool Search::propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b) {
 }
 
 bool Search::propagate_virtual_swap_1_1(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
-    vector<Sequence>* route = &this->routes.at(route_index);
+    vector<Sequence>* route = &this->solution->routes.at(route_index);
 
     route->at(previous_sequence_index).clone(this->virtual_sequence);
 
@@ -1290,7 +1262,7 @@ bool Search::propagate_virtual_swap_1_1(int route_index, int previous_sequence_i
 }
 
 bool Search::propagate_virtual_swap_1_2(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
-    vector<Sequence>* route = &this->routes.at(route_index);
+    vector<Sequence>* route = &this->solution->routes.at(route_index);
 
     route->at(previous_sequence_index).clone(this->virtual_sequence);
 
@@ -1320,7 +1292,7 @@ bool Search::propagate_virtual_swap_1_2(int route_index, int previous_sequence_i
 
 bool Search::propagate_virtual_swap_2_1(int route_index, int previous_sequence_index, Sequence *cand_sequence_1,
                                         Sequence *cand_sequence_2) {
-    vector<Sequence>* route = &this->routes.at(route_index);
+    vector<Sequence>* route = &this->solution->routes.at(route_index);
 
     route->at(previous_sequence_index).clone(this->virtual_sequence);
 
@@ -1357,7 +1329,7 @@ bool Search::propagate_virtual_swap_2_1(int route_index, int previous_sequence_i
 
 bool Search::propagate_virtual_swap_2_2(int route_index, int previous_sequence_index, Sequence *cand_sequence_1,
     Sequence *cand_sequence_2) {
-    vector<Sequence>* route = &this->routes.at(route_index);
+    vector<Sequence>* route = &this->solution->routes.at(route_index);
 
     route->at(previous_sequence_index).clone(this->virtual_sequence);
 
@@ -1399,8 +1371,8 @@ bool Search::broke_time_window() {
 }
 
 bool Search::sort_function(const tuple<int, int, Sequence> cus_a, const tuple<int, int, Sequence> cus_b) {
-    Sequence a_previous_sequence = this->routes.at(get<0>(cus_a)).at(get<1>(cus_a));
-    Sequence a_next_sequence = this->routes.at(get<0>(cus_a)).at(get<1>(cus_a)+1);
+    Sequence a_previous_sequence = this->solution->routes.at(get<0>(cus_a)).at(get<1>(cus_a));
+    Sequence a_next_sequence = this->solution->routes.at(get<0>(cus_a)).at(get<1>(cus_a)+1);
 
     double distance_prev_next = this->instance->distances[a_previous_sequence.node->index][a_next_sequence.node->index];
     double distance_prev_cus = this->instance->distances[a_previous_sequence.node->index][get<2>(cus_a).node->index];
@@ -1410,8 +1382,8 @@ bool Search::sort_function(const tuple<int, int, Sequence> cus_a, const tuple<in
     double delta_cus_a = distance_prev_cus + distance_cus_next - distance_prev_next;
 
 
-    Sequence b_previous_sequence = this->routes.at(get<0>(cus_b)).at(get<1>(cus_b));
-    Sequence b_next_sequence = this->routes.at(get<0>(cus_b)).at(get<1>(cus_b)+1);
+    Sequence b_previous_sequence = this->solution->routes.at(get<0>(cus_b)).at(get<1>(cus_b));
+    Sequence b_next_sequence = this->solution->routes.at(get<0>(cus_b)).at(get<1>(cus_b)+1);
 
     distance_prev_next = this->instance->distances[b_previous_sequence.node->index][b_next_sequence.node->index];
     distance_prev_cus = this->instance->distances[b_previous_sequence.node->index][get<2>(cus_b).node->index];
@@ -1423,8 +1395,8 @@ bool Search::sort_function(const tuple<int, int, Sequence> cus_a, const tuple<in
 }
 
 void Search::calculate_delta_distance(tuple<int, int, Sequence, double> *cus) {
-    Sequence a_previous_sequence = this->routes.at(get<0>(*cus)).at(get<1>(*cus));
-    Sequence a_next_sequence = this->routes.at(get<0>(*cus)).at(get<1>(*cus)+1);
+    Sequence a_previous_sequence = this->solution->routes.at(get<0>(*cus)).at(get<1>(*cus));
+    Sequence a_next_sequence = this->solution->routes.at(get<0>(*cus)).at(get<1>(*cus)+1);
 
     double distance_prev_next = this->instance->distances[a_previous_sequence.node->index][a_next_sequence.node->index];
     double distance_prev_cus = this->instance->distances[a_previous_sequence.node->index][get<2>(*cus).node->index];
@@ -1435,7 +1407,7 @@ void Search::calculate_delta_distance(tuple<int, int, Sequence, double> *cus) {
 }
 
 void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
-    vector<Sequence>* route = &this->routes.at(get<0>(candidate));
+    vector<Sequence>* route = &this->solution->routes.at(get<0>(candidate));
     int previous_sequence_index = get<1>(candidate);
     Sequence* candidate_sequence = &get<2>(candidate);
 
@@ -1447,94 +1419,7 @@ void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
 
     propagate(get<0>(candidate), previous_sequence_index);
 
-    this->visited[candidate_sequence->customer->index] = true;
-
-}
-
-
-void Search::calculate_total_cost() {
-    this->total_cost = 0.0;
-    for (vector<Sequence> route : this->routes) {
-        this->total_cost += (route.end()-1)->current_distance;
-    }
-}
-
-void Search::print_is_viable(long seed) {
-    bool customer_viable = true;
-
-    vector<string> customers = {};
-    for (int i = this->instance->customer_indexes[0];
-        i < this->instance->customer_indexes[1] ;i++) {
-        if (!this->visited[i]) {
-            customer_viable = false;
-            customers.push_back(this->instance->nodes.at(i).id);
-
-        }
-    }
-
-    int sp_visit=0;
-    bool sp_visit_viable = true;
-
-    bool time_window_viable = true;
-    vector<string> time_window={};
-
-    bool load_viable = true;
-
-    for (vector<Sequence> route: this->routes) {
-        Sequence* seq = &*(route.end()-1);
-        if (seq->node->type == "c2") {
-            sp_visit_viable = false;
-            sp_visit++;
-        }
-
-        if (seq->current_load > this->instance->load_capacity) {
-            load_viable = false;
-        }
-
-        for (Sequence sequence: route) {
-            if (sequence.current_time < sequence.node->time_window[0] || sequence.current_time > sequence.node->time_window[1]) {
-                time_window_viable = false;
-                time_window.push_back(sequence.node->id);
-            }
-        }
-    }
-
-
-
-    if (!load_viable) {
-        cout<<"Load inviability, seed="<<to_string(seed)<<endl;
-        exit(10);
-    }
-
-    if (!sp_visit_viable) {
-        cout<<"Self pickup inviability, seed="<<to_string(seed)<<endl;
-        exit(10);
-    }
-
-    if (!customer_viable) {
-        cout<<"Customer inviability ("<<(int)customers.size()<<"): (";
-        for(string customer: customers) {
-            cout<< customer<<", ";
-        }
-        cout<<"), seed="<<to_string(seed)<<endl;
-        exit(10);
-    }
-
-    if(!time_window_viable) {
-        cout<<"Time window inviability ("<<(int)time_window.size()<<"): (";
-        for(string time: time_window) {
-            cout<< time;
-            if(time != *(time_window.end()-1)) {
-                cout<<", ";
-            }
-        }
-        cout<<"), seed="<<to_string(seed)<<endl;
-        cout<<this->instance->inst_name<<endl;
-        print();
-        exit(10);
-
-    }
-
+    this->solution->visited[candidate_sequence->customer->index] = true;
 
 }
 
@@ -1543,35 +1428,6 @@ bool Search::is_customer(int node_index) {
 }
 bool Search::is_locker(int node_index) {
     return this->instance->nodes.at(node_index).type[0] == 'p';
-}
-
-void Search::print() {
-    int used_vehicles = 0;
-    vector<string> routes_string;
-
-    for (int i=0; i<this->n_vehicles; i++) {
-        if((int)this->routes.at(i).size()>2) {
-            string s= "V_"+to_string(i)+": ";
-            for (Sequence sequence: this->routes.at(i)) {
-                s+=sequence.customer->id;
-                if (sequence.node->type == "p") {
-                    s+="("+sequence.node->id+")";
-                }
-                s+=" -> ";
-            }
-            routes_string.push_back(s);
-            used_vehicles++;
-        }
-    }
-
-    cout<<"TOTAL COST: "<<this->total_cost<<endl;
-    cout<<"MAX_V: "<<this->instance->max_vehicle<<endl;
-    cout<<"USED_V: "<<used_vehicles<<endl;
-    cout<<"PATHS: "<<endl;
-
-    for(string s: routes_string) {
-        cout<<s<<endl;
-    }
 }
 
 void Search::print_candidate_list(vector<tuple<int, int, Sequence, double>> *cand_list) {
@@ -1586,12 +1442,12 @@ void Search::print_candidate_list(vector<tuple<int, int, Sequence, double>> *can
 
 void Search::test_cost() {
     double cost = 0.0;
-    for(vector<Sequence> vs: this->routes) {
+    for(vector<Sequence> vs: this->solution->routes) {
         cost+= vs.at((int)vs.size()-1).current_distance;
     }
 
-    if( Utils::differs(cost,this->total_cost)) {
-        cout<<"Erro de custo (E:"<<cost<<" G:"<<this->total_cost<<")"<< endl;
+    if( Utils::differs(cost,this->solution->total_cost)) {
+        cout<<"Erro de custo (E:"<<cost<<" G:"<<this->solution->total_cost<<")"<< endl;
         exit(8);
     }
 }

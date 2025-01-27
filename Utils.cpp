@@ -46,7 +46,7 @@ void Utils::print_route_file(Search *search, bool reset, long seed) {
         cout<<"Output file not opened"<<endl;
     }
 
-    for (vector<Sequence> route: search->routes) {
+    for (vector<Sequence> route: search->solution->routes) {
         if(route.size()>2) {
             string route_string = "";
 

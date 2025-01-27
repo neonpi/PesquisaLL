@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "Config.h"
+#include "Solution.h"
 using namespace std;
 
 class Search {
@@ -79,28 +80,24 @@ public:
     bool sort_function(const tuple<int, int, Sequence> cus_a, const tuple<int, int, Sequence> cus_b);
 
 
-    void calculate_total_cost();
-    void print_is_viable(long seed);
+
+
 
     bool is_customer(int node_index);
     bool is_locker(int node_index);
 
-    bool is_load_viable(int route_index, Node* cand_node){return this->instance->load_capacity > (this->routes.at(route_index).end()-1)->current_load + cand_node->load_demand;}
+    bool is_load_viable(int route_index, Node* cand_node){return this->instance->load_capacity > (this->solution->routes.at(route_index).end()-1)->current_load + cand_node->load_demand;}
 
     void calculate_delta_distance(tuple<int, int, Sequence, double> *cus);
-    void print();
     void print_candidate_list(vector<tuple<int, int, Sequence, double>> *cand_list);
 
 
     void test_cost();
 
     Instance* instance;
-    vector<vector<Sequence>> routes;
+    Solution* solution;
     Sequence* virtual_sequence;
-    bool* visited;
-    int n_vehicles;
     int customer_served;
-    double total_cost;
     Search* best;
 
     Config* config;

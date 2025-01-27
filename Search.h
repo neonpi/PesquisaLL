@@ -24,7 +24,6 @@ public:
     Search(Instance* instance, Config* config);
     ~Search();
 
-    void initialize_routes();
     void run();
     //Construtivo
     void construct();
@@ -44,6 +43,7 @@ public:
 
     //IG
     void iterated_greedy();
+    void deconstruct(int dec_size);
 
 
     bool swap_1_1_broke_load(vector<Sequence>* route_a, Sequence* seq_a , vector<Sequence>* route_b, Sequence* seq_b);

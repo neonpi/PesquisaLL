@@ -4,12 +4,15 @@
 
 #include "Solution.h"
 
+#include <algorithm>
+
 Solution::Solution(Instance* instance) {
     this->total_cost = 0.0;
     for (int i=0;i<instance->n_node;i++) {
         this->visited.push_back(false);
     }
     this->instance = instance;
+    this->used_routes = 0;
     this->initialize_routes();
 
 }
@@ -154,12 +157,17 @@ void Solution::print_is_viable(long seed) {
 
 }
 
+void Solution::sort_routes() {
+    sort(this->routes.begin(), this->routes.end(), [this](vector<Sequence> seq_a, vector<Sequence> seq_b){return seq_a.size() > seq_b.size();});
+}
+
 Solution * Solution::clone() {
 
     Solution *s = new Solution(this->instance);
     s->routes = this->routes;
     s->visited = this->visited;
     s->total_cost = this->total_cost;
+    s->used_routes = this->used_routes;
 
     return s;
 }

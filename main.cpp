@@ -46,10 +46,10 @@ int main()
 void default_run(Instance *instance, Config* config, Stats* stats) {
     for(int i=0;i<config->runs;i++) {
 
-        srand(config->seeds.at(i));
+        //srand(config->seeds.at(i));
         //cout<<config->seeds.at(i)<<endl;
         //srand(26142);
-        //srand(23688);
+        srand(23688);
 
         Search* search = new Search(instance,config);
         clock_t time = clock();

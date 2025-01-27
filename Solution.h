@@ -17,12 +17,14 @@ public:
     void calculate_total_cost();
     void print();
     void print_is_viable(long seed);
+    void sort_routes();
     Solution* clone();
 
     Instance* instance;
     vector<vector<Sequence>> routes;
     vector<bool> visited;
     double total_cost;
+    int used_routes;
 };
 
 

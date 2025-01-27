@@ -756,9 +756,11 @@ void Search::iterated_greedy() {
 
 void Search::deconstruct(int dec_size, vector<Node *> *dec_list) {
 
+    vector<int> i_routes;
     for(int i=0;i<dec_size;i++) {
 
         int i_route = rand()%this->solution->used_routes;
+        i_routes.push_back(i_route);
         vector<Sequence>* route = &this->solution->routes.at(i_route);
 
         int i_seq = 1 + rand()%((int)route->size()-1);
@@ -769,6 +771,17 @@ void Search::deconstruct(int dec_size, vector<Node *> *dec_list) {
 
         route->erase(route->begin()+i_seq,route->begin()+i_seq+1);
 
+
+    }
+    //TODO pensar em um traamento quando a rota fica vazia na desconstrução
+    //Propagando remoções
+    sort(i_routes.begin(), i_routes.end(), [this](int a, int b){ return a>b; });
+
+    propagate(i_routes.at(0),0);
+    for(int i=1;i<i_routes.size();i++) {
+        if(i_routes.at(i)!= i_routes.at(i-1)) {
+            propagate(i_routes.at(i),0);
+        }
     }
 
 

@@ -51,7 +51,7 @@ void default_run(Instance *instance, Config* config, Stats* stats) {
         //cout<<config->seeds.at(i)<<endl;
         //cout<<config->seeds.at(i)<<endl;
         //srand(26142);
-        //srand(10822);
+        srand(10822);
 
         Search* search = new Search(instance,config);
         clock_t time = clock();

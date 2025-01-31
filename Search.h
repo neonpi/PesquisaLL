@@ -33,6 +33,7 @@ public:
     void rvnd_intra();
     void ls_intra_exchange();
     void ls_intra_2opt();
+    void ls_intra_or_opt_1();
 
     void rvnd_inter();
     void ls_inter_shift_1_0();

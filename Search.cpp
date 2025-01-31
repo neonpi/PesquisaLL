@@ -29,8 +29,9 @@ Search::~Search() {
 
 void Search::run() {
     this->construct();
-    this->rvnd_inter();
-    this->iterated_greedy();
+    this->ls_intra_or_opt_1();
+    /*this->rvnd_inter();
+    this->iterated_greedy();*/
 }
 
 void Search::construct() {
@@ -95,7 +96,7 @@ void Search::rvnd_intra() {
     }
 }
 
-//TODO tornar melhor aprimorante
+
 void Search::ls_intra_exchange() {
 
     for(int i_route=0; i_route<(int)this->solution->routes.size();i_route++) {
@@ -185,6 +186,39 @@ void Search::ls_intra_2opt() {
 
     }
 
+}
+
+void Search::ls_intra_or_opt_1() {
+    this->solution->print();
+    for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
+
+        double best_delta = 0.0;
+        int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
+
+        vector<Sequence>* route = &this->solution->routes.at(i_route);
+        for(int i_seq_a = 1; i_seq_a<((int)(route->size())-2);i_seq_a++) {
+            Sequence* seq_a = &route->at(i_seq_a);
+            Sequence* seq_b = nullptr;
+            //Seq_b é o indice do cara que vem depois do novo destino do seq_a. Seq_b eh empurrado
+
+            //Pra frente
+            for(int i_seq_b = i_seq_a + 2; i_seq_b<(int)(route->size());i_seq_b++) {
+                seq_b = &route->at(i_seq_b);
+                cout<<endl;
+            }
+
+            //Pra tras
+            for(int i_seq_b = i_seq_a -2; i_seq_b>0;i_seq_b--) {
+                seq_b = &route->at(i_seq_b);
+                cout<<endl;
+            }
+
+
+
+        }
+        cout<<endl;
+
+    }
 }
 
 void Search::rvnd_inter() {
@@ -748,7 +782,7 @@ void Search::ls_inter_swap_2_2() {
 void Search::iterated_greedy() {
     Solution* bestSolution = this->solution->clone();
     int dec_size = 1;
-    int dec_size_limit = this->instance->customers_qty * 0.8;
+    int dec_size_limit = this->instance->customers_qty * 0.4;
     vector<Node*> dec_list;
     while(dec_size<dec_size_limit) {
 

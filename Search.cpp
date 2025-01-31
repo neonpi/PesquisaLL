@@ -42,7 +42,6 @@ void Search::construct() {
 void Search::insertion_heuristic() {
 
     vector<tuple<int,int,Sequence,double>> cand_list = build_candidate_list(); //(rota,antecessor,cliente destino)
-    vector<tuple<int,int,Sequence,double>>::iterator it;
 
     while(!cand_list.empty()) {
 
@@ -120,6 +119,16 @@ void Search::ls_intra_exchange() {
                         this->solution->print();
                         double delta = calculate_delta_exchange(route, i_seq_a,i_seq_b);
 
+                        if(Utils::improves(0.0,delta) &&
+                        Utils::improves(best_delta,delta)) {
+                            //Testar viabilidade
+                            if(propagate_virtual_exchange(i_route,i_seq_a,i_seq_b)) {
+                                best_delta = delta;
+                                coordinates[0] = i_seq_a;
+                                coordinates[1] = i_seq_b;
+                            }
+
+                        }
                         /*swap_sequence_intraroute(i_route,i_seq_a,i_seq_b);
                         //test_cost();
                         if(this->solution->total_cost<best_cost && Utils::differs(this->solution->total_cost,best_cost) && is_viable()) {
@@ -832,24 +841,43 @@ double Search::calculate_delta_2opt(vector<Sequence>* route, int i_seq_a, int i_
 
 double Search::calculate_delta_exchange(vector<Sequence> *route, int i_seq_a, int i_seq_b) {
 
-    Sequence* seq_a_previous = &route->at(i_seq_a-1);
-    Sequence* seq_a = &route->at(i_seq_a);
-    Sequence* seq_a_next = &route->at(i_seq_a+1);
-
-    Sequence* seq_b_previous = &route->at(i_seq_b-1);
-    Sequence* seq_b = &route->at(i_seq_b);
-    Sequence* seq_b_next = &route->at(i_seq_b+1);
-
     double delta = 0.0;
-    delta+= this->instance->distances[seq_a_previous->node->index][seq_b->node->index];
-    delta+= this->instance->distances[seq_b->node->index][seq_a_next->node->index];
-    delta-= this->instance->distances[seq_a_previous->node->index][seq_a->node->index];
-    delta-= this->instance->distances[seq_a->node->index][seq_a_next->node->index];
 
-    delta+= this->instance->distances[seq_b_previous->node->index][seq_a->node->index];
-    delta+= this->instance->distances[seq_a->node->index][seq_b_next->node->index];
-    delta-= this->instance->distances[seq_b_previous->node->index][seq_b->node->index];
-    delta-= this->instance->distances[seq_b->node->index][seq_b_next->node->index];
+    if (i_seq_b == i_seq_a+1) {
+        Sequence* seq_a_previous = &route->at(i_seq_a-1);
+        Sequence* seq_a = &route->at(i_seq_a);
+
+        Sequence* seq_b = &route->at(i_seq_b);
+        Sequence* seq_b_next = &route->at(i_seq_b+1);
+
+        delta+= this->instance->distances[seq_a_previous->node->index][seq_b->node->index];
+        delta-= this->instance->distances[seq_a_previous->node->index][seq_a->node->index];
+
+        delta+= this->instance->distances[seq_a->node->index][seq_b_next->node->index];
+        delta-= this->instance->distances[seq_b->node->index][seq_b_next->node->index];
+
+    }else {
+
+        Sequence* seq_a_previous = &route->at(i_seq_a-1);
+        Sequence* seq_a = &route->at(i_seq_a);
+        Sequence* seq_a_next = &route->at(i_seq_a+1);
+
+        Sequence* seq_b_previous = &route->at(i_seq_b-1);
+        Sequence* seq_b = &route->at(i_seq_b);
+        Sequence* seq_b_next = &route->at(i_seq_b+1);
+
+
+        delta+= this->instance->distances[seq_a_previous->node->index][seq_b->node->index];
+        delta+= this->instance->distances[seq_b->node->index][seq_a_next->node->index];
+        delta-= this->instance->distances[seq_a_previous->node->index][seq_a->node->index];
+        delta-= this->instance->distances[seq_a->node->index][seq_a_next->node->index];
+
+        delta+= this->instance->distances[seq_b_previous->node->index][seq_a->node->index];
+        delta+= this->instance->distances[seq_a->node->index][seq_b_next->node->index];
+        delta-= this->instance->distances[seq_b_previous->node->index][seq_b->node->index];
+        delta-= this->instance->distances[seq_b->node->index][seq_b_next->node->index];
+
+    }
 
     return delta;
 
@@ -1274,6 +1302,50 @@ bool Search::propagate_virtual(int route_index, int previous_sequence_index, Seq
             return false;
         }
 
+    }
+
+    return true;
+}
+
+bool Search::propagate_virtual_exchange(int route_index, int i_seq_a, int i_seq_b) {
+    vector<Sequence>* route = &this->solution->routes.at(route_index);
+
+    route->at(i_seq_a-1).clone_this_to(this->virtual_sequence);
+
+    Sequence* previous_sequence = &route->at(i_seq_a-1);
+    Sequence* current_sequence = &route->at(i_seq_b);
+    fill_forward_virtual(previous_sequence,current_sequence);
+    if(broke_time_window()) {
+        return false;
+    }
+
+    //Propagando até o i_seq_b
+    for (int i = i_seq_a + 1; i < i_seq_b; i++) {
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
+        fill_forward_virtual(previous_sequence,current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
+    }
+
+    //propagando de seq_b_previous pra seq_a
+    previous_sequence = current_sequence;
+    current_sequence = &route->at(i_seq_a);
+    fill_forward_virtual(previous_sequence,current_sequence);
+    if(broke_time_window()) {
+        return false;
+    }
+    //TODO Da pra inferir que: Se o tw aqui no virtual, for menor que o real, não vai quebrar a janela de tempo da solução. Não precisa verificar novamente cada tw
+
+    //Propagando de i_seq_a até o resto
+    for (int i = i_seq_b + 1; i < (int)route->size(); i++) {
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
+        fill_forward_virtual(previous_sequence,current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
     }
 
     return true;

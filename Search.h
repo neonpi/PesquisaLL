@@ -70,6 +70,7 @@ public:
 
     void propagate(int route_index, int previous_sequence_index);
     bool propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence);
+    bool propagate_virtual_exchange(int route_index, int i_seq_a, int i_seq_b);
     bool propagate_virtual_segment(int route_index, int previous_sequence_index, Sequence *cand_sequence_1, Sequence *cand_sequence_2);
     bool propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b);
     bool propagate_virtual_swap_1_1(int route_index, int previous_sequence_index, Sequence *cand_sequence);

@@ -1516,6 +1516,46 @@ bool Search::propagate_virtual_or_opt_1_up(int route_index, int i_seq_a, int i_s
 }
 
 bool Search::propagate_virtual_or_opt_1_down(int route_index, int i_seq_a, int i_seq_b) {
+    vector<Sequence>* route = &this->solution->routes.at(route_index);
+
+    route->at(i_seq_b-1).clone_this_to(this->virtual_sequence);
+
+    Sequence* previous_sequence = &route->at(i_seq_b-1);
+    Sequence* current_sequence = &route->at(i_seq_a);
+    fill_forward_virtual(previous_sequence,current_sequence);
+    if(broke_time_window()) {
+        return false;
+    }
+
+    for (int i = i_seq_b; i<i_seq_a; i++) {
+
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
+        fill_forward_virtual(previous_sequence,current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
+
+    }
+
+    previous_sequence = current_sequence;
+    current_sequence = &route->at(i_seq_a + 1);
+    fill_forward_virtual(previous_sequence,current_sequence);
+    if(broke_time_window()) {
+        return false;
+    }
+
+    for (int i = i_seq_a+2; i<(int)route->size(); i++) {
+
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
+        fill_forward_virtual(previous_sequence,current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 bool Search::propagate_virtual_swap_1_1(int route_index, int previous_sequence_index, Sequence *cand_sequence) {

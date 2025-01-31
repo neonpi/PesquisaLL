@@ -29,9 +29,9 @@ Search::~Search() {
 
 void Search::run() {
     this->construct();
-    this->ls_intra_or_opt_1();
-    /*this->rvnd_inter();
-    this->iterated_greedy();*/
+    //this->ls_intra_or_opt_1();
+    this->rvnd_inter();
+    this->iterated_greedy();
 }
 
 void Search::construct() {
@@ -70,12 +70,12 @@ void Search::insertion_heuristic() {
 
 void Search::rvnd_intra() {
 
-    vector<int> neighb = {0,1};
+    vector<int> neighb = {0,1,2};
     int last_improved_neighb = -1;
     random_shuffle(neighb.begin(),neighb.end());
     double cost_backup = this->solution->total_cost;
 
-    for(int i=0;i<2;i++) {
+    for(int i=0;i<3;i++) {
         if(neighb[i] != last_improved_neighb) {
             switch (neighb[i]) {
                 case 0:
@@ -83,6 +83,9 @@ void Search::rvnd_intra() {
                 break;
                 case 1:
                     this->ls_intra_exchange();
+                break;
+                case 2:
+                    this->ls_intra_or_opt_1();
                 break;
                 default:
                     cout<<"Unknown LS"<<endl;

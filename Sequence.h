@@ -19,7 +19,7 @@ public:
     double current_load = 0.0;
     double minimun_route_load = 0.0;
 
-    void clone(Sequence* clone) {
+    void clone_this_to(Sequence* clone) {
         clone->node = this->node;
         clone->customer = this->customer;
         clone->method = this->method;

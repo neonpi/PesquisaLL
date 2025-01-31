@@ -96,25 +96,28 @@ void Search::rvnd_intra() {
     }
 }
 
+//TODO tornar melhor aprimorante
 void Search::ls_intra_exchange() {
     double best_cost = this->solution->total_cost;
 
     for(int i_route=0; i_route<(int)this->solution->routes.size();i_route++) {
         vector<Sequence>* route = &this->solution->routes.at(i_route);
+        this->solution->print();
         if(route->size()>4) {
-            for(int i_seq_a=2;i_seq_a<(route->size()-2);i_seq_a++) {
+            for(int i_seq_a=1;i_seq_a<(route->size()-2);i_seq_a++) {
 
-                Sequence* s_a = &route->at(i_seq_a-1);
+                Sequence* s_a = &route->at(i_seq_a);
 
-                for(int i_seq_b = i_seq_a+1; i_seq_b<(route->size()-2);i_seq_b++) {
+                for(int i_seq_b = i_seq_a+1; i_seq_b<(route->size()-1);i_seq_b++) {
                     Sequence* s_b = &route->at(i_seq_b);
 
                     if(s_a->node->id != s_b->node->id) {
+
                         swap_sequence_intraroute(i_route,i_seq_a,i_seq_b);
                         //test_cost();
                         if(this->solution->total_cost<best_cost && Utils::differs(this->solution->total_cost,best_cost) && is_viable()) {
                             best_cost = this->solution->total_cost;
-                            i_seq_a = 1;
+                            i_seq_a = 0;
 
                             break;
                         }
@@ -739,9 +742,10 @@ void Search::ls_inter_swap_2_2() {
 
 void Search::iterated_greedy() {
     Solution* bestSolution = this->solution->clone();
-    int dec_size = 1;
-    int dec_size_limit = this->instance->customers_qty * 0.4;
+    int dec_size = 3;
+    int dec_size_limit = this->instance->customers_qty * 0.8;
     vector<Node*> dec_list;
+    int iter=0;
     while(dec_size<dec_size_limit) {
 
         deconstruct(dec_size, &dec_list);
@@ -753,10 +757,15 @@ void Search::iterated_greedy() {
             delete bestSolution;
             bestSolution = this->solution->clone();
             dec_size = 1;
+            iter = 0;
         }else {
             delete this->solution;
             this->solution = bestSolution->clone();
-            dec_size++;
+            if (iter<10) {
+                iter++;
+            }else {
+                dec_size++;
+            }
         }
 
     }
@@ -1214,7 +1223,7 @@ void Search::propagate(int route_index, int previous_sequence_index) {
 bool Search::propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
     vector<Sequence>* route = &this->solution->routes.at(route_index);
 
-    route->at(previous_sequence_index).clone(this->virtual_sequence);
+    route->at(previous_sequence_index).clone_this_to(this->virtual_sequence);
 
     Sequence* previous_sequence = &route->at(previous_sequence_index);
     Sequence* current_sequence = cand_sequence;
@@ -1241,7 +1250,7 @@ bool Search::propagate_virtual(int route_index, int previous_sequence_index, Seq
 bool Search::propagate_virtual_segment(int route_index, int previous_sequence_index, Sequence* cand_sequence_1, Sequence* cand_sequence_2) {
     vector<Sequence>* route = &this->solution->routes.at(route_index);
 
-    route->at(previous_sequence_index).clone(this->virtual_sequence);
+    route->at(previous_sequence_index).clone_this_to(this->virtual_sequence);
     //Propagando primeiro nó
     Sequence* previous_sequence = &route->at(previous_sequence_index);
     Sequence* current_sequence = cand_sequence_1;
@@ -1278,7 +1287,7 @@ bool Search::propagate_virtual_segment(int route_index, int previous_sequence_in
 bool Search::propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b) {
     vector<Sequence>* route = &this->solution->routes.at(route_index);
 
-    route->at(i_seq_a).clone(this->virtual_sequence);
+    route->at(i_seq_a).clone_this_to(this->virtual_sequence);
 
     //Trocando o proximo cliente de i_seq_a pelo último do intervalo (i_seq_b)
     Sequence* previous_sequence = &route->at(i_seq_a);
@@ -1315,7 +1324,7 @@ bool Search::propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b) {
 bool Search::propagate_virtual_swap_1_1(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
     vector<Sequence>* route = &this->solution->routes.at(route_index);
 
-    route->at(previous_sequence_index).clone(this->virtual_sequence);
+    route->at(previous_sequence_index).clone_this_to(this->virtual_sequence);
 
     Sequence* previous_sequence = &route->at(previous_sequence_index);
     Sequence* current_sequence = cand_sequence;
@@ -1342,7 +1351,7 @@ bool Search::propagate_virtual_swap_1_1(int route_index, int previous_sequence_i
 bool Search::propagate_virtual_swap_1_2(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
     vector<Sequence>* route = &this->solution->routes.at(route_index);
 
-    route->at(previous_sequence_index).clone(this->virtual_sequence);
+    route->at(previous_sequence_index).clone_this_to(this->virtual_sequence);
 
     //Propagando nó de a
     Sequence* previous_sequence = &route->at(previous_sequence_index);
@@ -1372,7 +1381,7 @@ bool Search::propagate_virtual_swap_2_1(int route_index, int previous_sequence_i
                                         Sequence *cand_sequence_2) {
     vector<Sequence>* route = &this->solution->routes.at(route_index);
 
-    route->at(previous_sequence_index).clone(this->virtual_sequence);
+    route->at(previous_sequence_index).clone_this_to(this->virtual_sequence);
 
     //Propagando primeiro nó
     Sequence* previous_sequence = &route->at(previous_sequence_index);
@@ -1409,7 +1418,7 @@ bool Search::propagate_virtual_swap_2_2(int route_index, int previous_sequence_i
     Sequence *cand_sequence_2) {
     vector<Sequence>* route = &this->solution->routes.at(route_index);
 
-    route->at(previous_sequence_index).clone(this->virtual_sequence);
+    route->at(previous_sequence_index).clone_this_to(this->virtual_sequence);
 
     //Propagando primeiro nó
     Sequence* previous_sequence = &route->at(previous_sequence_index);

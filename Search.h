@@ -44,7 +44,6 @@ public:
     //IG
     void iterated_greedy();
     void deconstruct(int dec_size, vector<Node *> *dec_list);
-    void reconstruct();
 
 
     bool swap_1_1_broke_load(vector<Sequence>* route_a, Sequence* seq_a , vector<Sequence>* route_b, Sequence* seq_b);

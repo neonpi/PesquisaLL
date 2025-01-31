@@ -211,12 +211,16 @@ void Search::ls_intra_or_opt_1() {
 
                         if (i_seq_a<i_seq_b) {
                             if (propagate_virtual_or_opt_1_up(i_route,i_seq_a,i_seq_b)) {
-                                cout<<endl;
-                            }else {
-                                cout<<"not propagate_virtual_or_opt_1_up"<<endl;
+                                best_delta = delta;
+                                coordinates[0] = i_seq_a;
+                                coordinates[1] = i_seq_b;
                             }
                         }else {
-                            cout<<endl;
+                            if (propagate_virtual_or_opt_1_down(i_route,i_seq_a,i_seq_b)) {
+                                best_delta = delta;
+                                coordinates[0] = i_seq_a;
+                                coordinates[1] = i_seq_b;
+                            }
                         }
 
                     }
@@ -1509,6 +1513,9 @@ bool Search::propagate_virtual_or_opt_1_up(int route_index, int i_seq_a, int i_s
 
     return true;
 
+}
+
+bool Search::propagate_virtual_or_opt_1_down(int route_index, int i_seq_a, int i_seq_b) {
 }
 
 bool Search::propagate_virtual_swap_1_1(int route_index, int previous_sequence_index, Sequence *cand_sequence) {

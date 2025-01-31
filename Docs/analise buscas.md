@@ -61,4 +61,3 @@ v.erase(v.begin()+1,v.begin()+3);
 vector<int> v2 = {0,1,2,3,4,5,6,7,8,9};
 v2.insert(v2.begin()+1,v2.begin()+6,v2.begin()+8);
 v2.erase(v2.begin()+6+2,v2.begin()+8+2);
-    

@@ -189,7 +189,6 @@ void Search::ls_intra_2opt() {
 }
 
 void Search::ls_intra_or_opt_1() {
-    this->solution->print();
     for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
 
         double best_delta = 0.0;
@@ -231,7 +230,6 @@ void Search::ls_intra_or_opt_1() {
 
 
         if (best_delta < 0.0) {
-
             shift(route,coordinates[0],coordinates[1]);
             propagate(i_route,min(coordinates[0],coordinates[1])-1);
             this->solution->calculate_total_cost();
@@ -1781,9 +1779,9 @@ void Search::shift(vector<Sequence> *route, int i_seq_a, int i_seq_b) {
     if (i_seq_a<i_seq_b) {
         route->insert(route->begin()+i_seq_b,route->begin()+i_seq_a,route->begin()+i_seq_a+1);
         route->erase(route->begin()+i_seq_a,route->begin()+i_seq_a+1);
-        this->solution->print();
     }else {
-
+        route->insert(route->begin()+i_seq_b,route->begin()+i_seq_a+1,route->begin()+i_seq_a+2);
+        route->erase(route->begin()+i_seq_a+1,route->begin()+i_seq_a+2);
     }
 }
 

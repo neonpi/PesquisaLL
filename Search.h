@@ -100,7 +100,7 @@ public:
     void calculate_delta_distance(tuple<int, int, Sequence, double> *cus);
     void print_candidate_list(vector<tuple<int, int, Sequence, double>> *cand_list);
 
-
+    void shift(vector<Sequence> *route, int i_seq_a, int i_seq_b);
     void test_cost();
 
     Instance* instance;

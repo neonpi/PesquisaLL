@@ -228,7 +228,15 @@ void Search::ls_intra_or_opt_1() {
             }
 
         }
-        cout<<endl;
+
+
+        if (best_delta < 0.0) {
+
+            shift(route,coordinates[0],coordinates[1]);
+            propagate(i_route,min(coordinates[0],coordinates[1])-1);
+            this->solution->calculate_total_cost();
+            i_route--;
+        }
 
     }
 }
@@ -1766,6 +1774,17 @@ void Search::print_candidate_list(vector<tuple<int, int, Sequence, double>> *can
         cout<<cand_route<<" - "<<cand_index<<" - "<<cand_sequence->node->id<<" - "<<get<3>(cand)<<endl;;
     }
     cout<<endl;
+}
+
+void Search::shift(vector<Sequence> *route, int i_seq_a, int i_seq_b) {
+
+    if (i_seq_a<i_seq_b) {
+        route->insert(route->begin()+i_seq_b,route->begin()+i_seq_a,route->begin()+i_seq_a+1);
+        route->erase(route->begin()+i_seq_a,route->begin()+i_seq_a+1);
+        this->solution->print();
+    }else {
+
+    }
 }
 
 void Search::test_cost() {

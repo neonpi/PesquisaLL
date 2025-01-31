@@ -34,6 +34,7 @@ public:
     void ls_intra_exchange();
     void ls_intra_2opt();
     void ls_intra_or_opt_1();
+    void ls_intra_or_opt_k(int k);
 
     void rvnd_inter();
     void ls_inter_shift_1_0();

@@ -29,9 +29,9 @@ Search::~Search() {
 
 void Search::run() {
     this->construct();
-    //this->ls_intra_or_opt_1();
-    this->rvnd_inter();
-    this->iterated_greedy();
+    this->ls_intra_or_opt_k(2);
+    /*this->rvnd_inter();
+    this->iterated_greedy();*/
 }
 
 void Search::construct() {
@@ -238,6 +238,31 @@ void Search::ls_intra_or_opt_1() {
             this->solution->calculate_total_cost();
             i_route--;
         }
+
+    }
+}
+
+void Search::ls_intra_or_opt_k(int k) {
+    this->solution->print();
+    for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
+        vector<Sequence>* route = &this->solution->routes.at(i_route);
+
+        if (route->size()>4) {
+
+            double best_delta = 0.0;
+            int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
+            for(int i_seq_a = 1; i_seq_a<((int)(route->size())-k-1);i_seq_a++) {
+                Sequence* seq_a = &route->at(i_seq_a);
+                for(int i_seq_b = i_seq_a+k; i_seq_b<(int)(route->size());i_seq_b++) {
+                    Sequence* seq_b = &route->at(i_seq_b);
+
+                    cout<<endl;
+                    
+                }
+            }
+
+        }
+
 
     }
 }

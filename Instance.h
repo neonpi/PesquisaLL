@@ -29,7 +29,6 @@ public:
     ~Instance();
 
     void calculate_distances();
-    void calcula_nearest_stations();
     void print();
 };
 

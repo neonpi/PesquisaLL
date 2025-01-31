@@ -29,9 +29,8 @@ Search::~Search() {
 
 void Search::run() {
     this->construct();
-    this->ls_intra_exchange();
-    /*this->rvnd_inter();
-    this->iterated_greedy();*/
+    this->rvnd_inter();
+    this->iterated_greedy();
 }
 
 void Search::construct() {
@@ -98,13 +97,11 @@ void Search::rvnd_intra() {
 
 //TODO tornar melhor aprimorante
 void Search::ls_intra_exchange() {
-    double best_cost = this->solution->total_cost;
 
     for(int i_route=0; i_route<(int)this->solution->routes.size();i_route++) {
         vector<Sequence>* route = &this->solution->routes.at(i_route);
         if(route->size()>4) {
 
-            //this->solution->print();
             double best_delta = 0.0;
             int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
 
@@ -116,7 +113,6 @@ void Search::ls_intra_exchange() {
                     Sequence* seq_b = &route->at(i_seq_b);
 
                     if(seq_a->node->id != seq_b->node->id) {
-                        this->solution->print();
                         double delta = calculate_delta_exchange(route, i_seq_a,i_seq_b);
 
                         if(Utils::improves(0.0,delta) &&
@@ -129,24 +125,17 @@ void Search::ls_intra_exchange() {
                             }
 
                         }
-                        /*swap_sequence_intraroute(i_route,i_seq_a,i_seq_b);
-                        //test_cost();
-                        if(this->solution->total_cost<best_cost && Utils::differs(this->solution->total_cost,best_cost) && is_viable()) {
-                            best_cost = this->solution->total_cost;
-                            i_seq_a = 0;
-
-                            break;
-                        }
-
-                        swap_sequence_intraroute(i_route,i_seq_a,i_seq_b);*/
-                        //test_cost();
-
                     }
 
                 }
 
+            }
 
-
+            if(best_delta<0.0) {
+                swap_sequence_intraroute(i_route,coordinates[0],coordinates[1]);
+                propagate(i_route,coordinates[0]-1);
+                this->solution->calculate_total_cost();
+                i_route--;
             }
         }
     }
@@ -758,10 +747,9 @@ void Search::ls_inter_swap_2_2() {
 
 void Search::iterated_greedy() {
     Solution* bestSolution = this->solution->clone();
-    int dec_size = 3;
+    int dec_size = 1;
     int dec_size_limit = this->instance->customers_qty * 0.8;
     vector<Node*> dec_list;
-    int iter=0;
     while(dec_size<dec_size_limit) {
 
         deconstruct(dec_size, &dec_list);
@@ -773,15 +761,10 @@ void Search::iterated_greedy() {
             delete bestSolution;
             bestSolution = this->solution->clone();
             dec_size = 1;
-            iter = 0;
         }else {
             delete this->solution;
             this->solution = bestSolution->clone();
-            if (iter<10) {
-                iter++;
-            }else {
-                dec_size++;
-            }
+            dec_size++;
         }
 
     }
@@ -1087,8 +1070,6 @@ void Search::swap_sequence_intraroute(int route_index, int seq_a_index, int seq_
     Sequence* sequence_a = &this->solution->routes.at(route_index).at(seq_a_index);
     Sequence* sequence_b = &this->solution->routes.at(route_index).at(seq_b_index);
 
-    this->solution->total_cost-= this->solution->routes.at(route_index).at((int)this->solution->routes.at(route_index).size()-1).current_distance;
-
     Node* node_a = sequence_a->node;
     Node* customer_a = sequence_a->customer;
 
@@ -1100,10 +1081,6 @@ void Search::swap_sequence_intraroute(int route_index, int seq_a_index, int seq_
 
     sequence_a->node = node_b;
     sequence_a->customer = customer_b;
-
-    propagate(route_index,seq_a_index<seq_b_index?(seq_a_index-1):(seq_b_index-1));
-
-    this->solution->total_cost+= this->solution->routes.at(route_index).at((int)this->solution->routes.at(route_index).size()-1).current_distance;
 }
 
 bool Search::is_viable() {

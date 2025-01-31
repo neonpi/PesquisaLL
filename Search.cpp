@@ -251,10 +251,19 @@ void Search::ls_intra_or_opt_k(int k) {
 
             double best_delta = 0.0;
             int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
-            for(int i_seq_a = 1; i_seq_a<((int)(route->size())-k-1);i_seq_a++) {
+            for(int i_seq_a = 1; i_seq_a<((int)(route->size())-k);i_seq_a++) {
                 Sequence* seq_a = &route->at(i_seq_a);
+                Sequence* seq_b = nullptr;
+                //Pra traz
+                for (int i_seq_b = i_seq_a-1; i_seq_b>0;i_seq_b--) {
+                    seq_b = &route->at(i_seq_b);
+                    this->solution->print();
+                    double delta = calculate_delta_or_opt_k(2,route,i_seq_a,i_seq_b);
+                    cout<<endl;
+                }
+                //Pra frente
                 for(int i_seq_b = i_seq_a+k; i_seq_b<(int)(route->size());i_seq_b++) {
-                    Sequence* seq_b = &route->at(i_seq_b);
+                    seq_b = &route->at(i_seq_b);
                     this->solution->print();
                     double delta = calculate_delta_or_opt_k(2,route,i_seq_a,i_seq_b);
                     cout<<endl;
@@ -928,8 +937,8 @@ double Search::calculate_delta_or_opt_1(vector<Sequence> *route, int i_seq_a, in
 double Search::calculate_delta_or_opt_k(int k, vector<Sequence> *route, int i_seq_a, int i_seq_b) {
     Sequence* seq_a_previous = &route->at(i_seq_a-1);
     Sequence* seq_a_begin = &route->at(i_seq_a);
-    Sequence* seq_a_end = &route->at(i_seq_a+k);
-    Sequence* seq_a_next = &route->at(i_seq_a+k+1);
+    Sequence* seq_a_end = &route->at(i_seq_a+k-1);
+    Sequence* seq_a_next = &route->at(i_seq_a+k);
 
     Sequence* seq_b_previous = &route->at(i_seq_b-1);
     Sequence* seq_b = &route->at(i_seq_b);

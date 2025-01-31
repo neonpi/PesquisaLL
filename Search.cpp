@@ -29,8 +29,9 @@ Search::~Search() {
 
 void Search::run() {
     this->construct();
-    this->rvnd_inter();
-    this->iterated_greedy();
+    this->ls_intra_exchange();
+    /*this->rvnd_inter();
+    this->iterated_greedy();*/
 }
 
 void Search::construct() {
@@ -102,18 +103,24 @@ void Search::ls_intra_exchange() {
 
     for(int i_route=0; i_route<(int)this->solution->routes.size();i_route++) {
         vector<Sequence>* route = &this->solution->routes.at(i_route);
-        this->solution->print();
         if(route->size()>4) {
+
+            //this->solution->print();
+            double best_delta = 0.0;
+            int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
+
             for(int i_seq_a=1;i_seq_a<(route->size()-2);i_seq_a++) {
 
-                Sequence* s_a = &route->at(i_seq_a);
+                Sequence* seq_a = &route->at(i_seq_a);
 
                 for(int i_seq_b = i_seq_a+1; i_seq_b<(route->size()-1);i_seq_b++) {
-                    Sequence* s_b = &route->at(i_seq_b);
+                    Sequence* seq_b = &route->at(i_seq_b);
 
-                    if(s_a->node->id != s_b->node->id) {
+                    if(seq_a->node->id != seq_b->node->id) {
+                        this->solution->print();
+                        double delta = calculate_delta_exchange(route, i_seq_a,i_seq_b);
 
-                        swap_sequence_intraroute(i_route,i_seq_a,i_seq_b);
+                        /*swap_sequence_intraroute(i_route,i_seq_a,i_seq_b);
                         //test_cost();
                         if(this->solution->total_cost<best_cost && Utils::differs(this->solution->total_cost,best_cost) && is_viable()) {
                             best_cost = this->solution->total_cost;
@@ -122,7 +129,7 @@ void Search::ls_intra_exchange() {
                             break;
                         }
 
-                        swap_sequence_intraroute(i_route,i_seq_a,i_seq_b);
+                        swap_sequence_intraroute(i_route,i_seq_a,i_seq_b);*/
                         //test_cost();
 
                     }
@@ -821,6 +828,31 @@ double Search::calculate_delta_2opt(vector<Sequence>* route, int i_seq_a, int i_
     delta -= this->instance->distances[slice_last->node->index][seq_b->node->index];
 
     return delta;
+}
+
+double Search::calculate_delta_exchange(vector<Sequence> *route, int i_seq_a, int i_seq_b) {
+
+    Sequence* seq_a_previous = &route->at(i_seq_a-1);
+    Sequence* seq_a = &route->at(i_seq_a);
+    Sequence* seq_a_next = &route->at(i_seq_a+1);
+
+    Sequence* seq_b_previous = &route->at(i_seq_b-1);
+    Sequence* seq_b = &route->at(i_seq_b);
+    Sequence* seq_b_next = &route->at(i_seq_b+1);
+
+    double delta = 0.0;
+    delta+= this->instance->distances[seq_a_previous->node->index][seq_b->node->index];
+    delta+= this->instance->distances[seq_b->node->index][seq_a_next->node->index];
+    delta-= this->instance->distances[seq_a_previous->node->index][seq_a->node->index];
+    delta-= this->instance->distances[seq_a->node->index][seq_a_next->node->index];
+
+    delta+= this->instance->distances[seq_b_previous->node->index][seq_a->node->index];
+    delta+= this->instance->distances[seq_a->node->index][seq_b_next->node->index];
+    delta-= this->instance->distances[seq_b_previous->node->index][seq_b->node->index];
+    delta-= this->instance->distances[seq_b->node->index][seq_b_next->node->index];
+
+    return delta;
+
 }
 
 double Search::calculate_delta_shift_1_0(vector<Sequence> *route_a, int i_seq_a, vector<Sequence> *route_b, int i_seq_b) {

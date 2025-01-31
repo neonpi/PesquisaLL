@@ -51,6 +51,7 @@ public:
     bool swap_2_1_broke_load(vector<Sequence>* route_a, Sequence* seq_a_1, Sequence *seq_a_2, vector<Sequence>* route_b, Sequence* seq_b);
     bool swap_2_2_broke_load(vector<Sequence>* route_a, Sequence* seq_a_1, Sequence *seq_a_2, vector<Sequence>* route_b, Sequence* seq_b_1, Sequence* seq_b_2);
     double calculate_delta_2opt(vector<Sequence>* route, int i_seq_a, int i_seq_b);
+    double calculate_delta_or_opt_1(vector<Sequence>* route, int i_seq_a, int i_seq_b);
     double calculate_delta_exchange(vector<Sequence>* route, int i_seq_a, int i_seq_b);
     double calculate_delta_shift_1_0(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);
     double calculate_delta_shift_2_0(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);

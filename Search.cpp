@@ -201,19 +201,18 @@ void Search::ls_intra_or_opt_1() {
             Sequence* seq_b = nullptr;
             //Seq_b é o indice do cara que vem depois do novo destino do seq_a. Seq_b eh empurrado
 
-            //Pra frente
-            for(int i_seq_b = i_seq_a + 2; i_seq_b<(int)(route->size());i_seq_b++) {
-                seq_b = &route->at(i_seq_b);
-                cout<<endl;
+            for(int i_seq_b = 1; i_seq_b<(int)(route->size());i_seq_b++) {
+                if (i_seq_a!=i_seq_b) {
+                    seq_b = &route->at(i_seq_b);
+                    double delta = calculate_delta_or_opt_1(route,i_seq_a,i_seq_b);
+
+                    if (i_seq_a<i_seq_b) {
+                        cout<<endl;
+                    }else {
+                        cout<<endl;
+                    }
+                }
             }
-
-            //Pra tras
-            for(int i_seq_b = i_seq_a -2; i_seq_b>0;i_seq_b--) {
-                seq_b = &route->at(i_seq_b);
-                cout<<endl;
-            }
-
-
 
         }
         cout<<endl;
@@ -852,6 +851,28 @@ double Search::calculate_delta_2opt(vector<Sequence>* route, int i_seq_a, int i_
     delta += this->instance->distances[slice_first->node->index][seq_b->node->index];
     delta -= this->instance->distances[seq_a->node->index][slice_first->node->index];
     delta -= this->instance->distances[slice_last->node->index][seq_b->node->index];
+
+    return delta;
+}
+
+double Search::calculate_delta_or_opt_1(vector<Sequence> *route, int i_seq_a, int i_seq_b) {
+    Sequence* seq_a_previous = &route->at(i_seq_a-1);
+    Sequence* seq_a = &route->at(i_seq_a);
+    Sequence* seq_a_next = &route->at(i_seq_a+1);
+
+    Sequence* seq_b_previous = &route->at(i_seq_b-1);
+    Sequence* seq_b = &route->at(i_seq_b);
+
+    double delta = 0.0;
+
+    delta+=this->instance->distances[seq_a_previous->node->index][seq_a_next->node->index];
+    delta-=this->instance->distances[seq_a_previous->node->index][seq_a->node->index];
+    delta-=this->instance->distances[seq_a->node->index][seq_a_next->node->index];
+
+    delta+=this->instance->distances[seq_b_previous->node->index][seq_a->node->index];
+    delta+=this->instance->distances[seq_a->node->index][seq_b->node->index];
+    delta-=this->instance->distances[seq_b_previous->node->index][seq_b->node->index];
+
 
     return delta;
 }

@@ -258,9 +258,9 @@ void Search::ls_intra_or_opt_k(int k) {
                 //Pra traz
                 for (int i_seq_b = i_seq_a-1; i_seq_b>0;i_seq_b--) {
                     seq_b = &route->at(i_seq_b);
-                    this->solution->print();
                     double delta = calculate_delta_or_opt_k(2,route,i_seq_a,i_seq_b);
-                    if(Utils::improves(0.0,delta) &&
+                    cout<<endl;
+                    /*if(Utils::improves(0.0,delta) &&
                         Utils::improves(best_delta,delta)) {
                         if (propagate_virtual_or_opt_k_down(k,i_route,i_seq_a,i_seq_b)) {
                             best_delta = delta;
@@ -268,25 +268,30 @@ void Search::ls_intra_or_opt_k(int k) {
                             coordinates[1] = i_seq_b;
                         }
 
-                    }
+                    }*/
                 }
-                //Pra frente
-                for(int i_seq_b = i_seq_a+k; i_seq_b<(int)(route->size());i_seq_b++) {
+                //Pra frente TODO ver esse limite depois
+                for(int i_seq_b = i_seq_a+k+1; i_seq_b<(int)route->size();i_seq_b++) {
                     seq_b = &route->at(i_seq_b);
-                    this->solution->print();
                     double delta = calculate_delta_or_opt_k(2,route,i_seq_a,i_seq_b);
-                    if(Utils::improves(0.0,delta) &&
+                    cout<<endl;
+                    /*if(Utils::improves(0.0,delta) &&
                         Utils::improves(best_delta,delta)) {
                         if (propagate_virtual_or_opt_k_up(k,i_route,i_seq_a,i_seq_b)) {
                             best_delta = delta;
                             coordinates[0] = i_seq_a;
                             coordinates[1] = i_seq_b;
                         }
-                    }
+                    }*/
 
                 }
             }
-
+            if (best_delta < 0.0) {
+                shift_k(k,route,coordinates[0],coordinates[1]);
+                propagate(i_route,min(coordinates[0],coordinates[1])-1);
+                this->solution->calculate_total_cost();
+                i_route--;
+            }
         }
 
 
@@ -1953,6 +1958,17 @@ void Search::shift(vector<Sequence> *route, int i_seq_a, int i_seq_b) {
     }else {
         route->insert(route->begin()+i_seq_b,route->begin()+i_seq_a+1,route->begin()+i_seq_a+2);
         route->erase(route->begin()+i_seq_a+1,route->begin()+i_seq_a+2);
+    }
+}
+
+void Search::shift_k(int k, vector<Sequence> *route, int i_seq_a, int i_seq_b) {
+
+    if (i_seq_a<i_seq_b) {
+        route->insert(route->begin()+i_seq_b,route->begin()+i_seq_a,route->begin()+i_seq_a+k);
+        route->erase(route->begin()+i_seq_a,route->begin()+i_seq_a+k);
+    }else {
+        route->insert(route->begin()+i_seq_b,route->begin()+i_seq_a+1,route->begin()+i_seq_a+k+1);
+        route->erase(route->begin()+i_seq_a+1,route->begin()+i_seq_a+k+1);
     }
 }
 

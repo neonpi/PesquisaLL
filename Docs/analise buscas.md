@@ -31,13 +31,45 @@ D0  1   4   5   6   7   8   9   10  |2   3| Dt
     Não faz sentido aplicar o or-opt se estivermos com o nó e o destino dentro deste bloquinho de locker
 
 
- Rotacionar o vetor:
-
+Caso a < b OK
 V_0: D0 -> C4(P1) -> C22(P1) -> C5(P1) -> C21(P1) -> C2(P1) -> C10 -> C3(P1) -> C23(P1) -> C9(P1) -> C7(P1) -> C24(P1) -> C20 -> Dt -> 
 V_1: D0 -> C13(P0) -> C16(P0) -> C1(P0) -> C17(P0) -> C18 -> C14 -> C15 -> C8 -> Dt -> 
 V_2: D0 -> C12 -> C6 -> C11 -> Dt -> 
 V_3: D0 -> C0(P1) -> C19 -> Dt -> 
 
-C4(P1) -> C22(P1) 
+V_0: D0 -> C4(P1) -> C22(P1) -> C5(P1) -> C21(P1) -> C2(P1) -> C10 -> C3(P1) -> C23(P1) -> C9(P1) -> C7(P1) -> C24(P1) -> C20 -> Dt -> 
+                                                      5         6                                                          12
+C2(P1) -> C10
+C20
+[5 12]
 
-C2(P1)
+Caso a>b
+    a == b+1 OK
+V_0: D0 -> C20 -> C22(P0) -> C17(P0) -> C13(P0) -> C11(P0) -> C18(P0) -> C9(P0) -> C10(P0) -> C8(P0) -> C5(P0) -> C7(P0) -> C3(P1) -> C0(P1) -> C2(P1) -> Dt -> 
+V_1: D0 -> C23 -> C6 -> C14 -> C1 -> C4 -> C15(P0) -> Dt -> 
+V_2: D0 -> C21(P0) -> C19 -> C24 -> Dt -> 
+V_3: D0 -> C12 -> C16 -> Dt -> 
+
+V_1: D0 -> C23 -> C6 -> C14 -> C1 -> C4 -> C15(P0) -> Dt -> 
+                   2     3      4
+                   b     a      a+1
+
+C14 -> C1
+C6
+[3 2]
+
+V_1: D0 -> C23 -> C14 -> C1 -> C6 -> C4 -> C15(P0) -> Dt -> 
+    
+    a >b+1
+
+V_0: D0 -> C8(P0) -> C18(P0) -> C7 -> C9 -> C5(P1) -> C2(P1) -> C0(P1) -> C17(P1) -> C4(P1) -> C1 -> C3 -> C6 -> C23 -> Dt -> 
+V_1: D0 -> C19 -> C20 -> C24 -> C11 -> C13(P0) -> C10 -> C12(P0) -> C22(P0) -> C16 -> C21 -> Dt -> 
+V_2: D0 -> C15(P0) -> C14 -> Dt -> 
+
+V_0: D0 -> C8(P0) -> C18(P0) -> C7 -> C9 -> C5(P1) -> C2(P1) -> C0(P1) -> C17(P1) -> C4(P1) -> C1 -> C3 -> C6 -> C23 -> Dt -> 
+
+[4 1]
+C9 -> C5(P1)
+C8(P0)
+
+V_0: D0 -> C9 -> C5(P1) -> C8(P0) -> C18(P0) -> C7 -> C2(P1) -> C0(P1) -> C17(P1) -> C4(P1) -> C1 -> C3 -> C6 -> C23 -> Dt ->

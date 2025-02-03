@@ -29,9 +29,8 @@ Search::~Search() {
 
 void Search::run() {
     this->construct();
-    this->ls_intra_or_opt_k(2);
-    /*this->rvnd_inter();
-    this->iterated_greedy();*/
+    this->rvnd_inter();
+    this->iterated_greedy();
 }
 
 void Search::construct() {
@@ -70,12 +69,12 @@ void Search::insertion_heuristic() {
 
 void Search::rvnd_intra() {
 
-    vector<int> neighb = {0,1,2};
+    vector<int> neighb = {0,1,2,3};
     int last_improved_neighb = -1;
     random_shuffle(neighb.begin(),neighb.end());
     double cost_backup = this->solution->total_cost;
 
-    for(int i=0;i<3;i++) {
+    for(int i=0;i<4;i++) {
         if(neighb[i] != last_improved_neighb) {
             switch (neighb[i]) {
                 case 0:
@@ -86,6 +85,9 @@ void Search::rvnd_intra() {
                 break;
                 case 2:
                     this->ls_intra_or_opt_1();
+                break;;
+                case 3:
+                    this->ls_intra_or_opt_k(2);
                 break;
                 default:
                     cout<<"Unknown LS"<<endl;
@@ -243,11 +245,11 @@ void Search::ls_intra_or_opt_1() {
 }
 
 void Search::ls_intra_or_opt_k(int k) {
-    this->solution->print();
+
     for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
         vector<Sequence>* route = &this->solution->routes.at(i_route);
 
-        if (route->size()>4) {
+        if (route->size()>(k+2)) {
 
             double best_delta = 0.0;
             int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
@@ -259,8 +261,7 @@ void Search::ls_intra_or_opt_k(int k) {
                 for (int i_seq_b = i_seq_a-1; i_seq_b>0;i_seq_b--) {
                     seq_b = &route->at(i_seq_b);
                     double delta = calculate_delta_or_opt_k(2,route,i_seq_a,i_seq_b);
-                    cout<<endl;
-                    /*if(Utils::improves(0.0,delta) &&
+                    if(Utils::improves(0.0,delta) &&
                         Utils::improves(best_delta,delta)) {
                         if (propagate_virtual_or_opt_k_down(k,i_route,i_seq_a,i_seq_b)) {
                             best_delta = delta;
@@ -268,21 +269,20 @@ void Search::ls_intra_or_opt_k(int k) {
                             coordinates[1] = i_seq_b;
                         }
 
-                    }*/
+                    }
                 }
-                //Pra frente TODO ver esse limite depois
+                //Pra frente
                 for(int i_seq_b = i_seq_a+k+1; i_seq_b<(int)route->size();i_seq_b++) {
                     seq_b = &route->at(i_seq_b);
                     double delta = calculate_delta_or_opt_k(2,route,i_seq_a,i_seq_b);
-                    cout<<endl;
-                    /*if(Utils::improves(0.0,delta) &&
+                    if(Utils::improves(0.0,delta) &&
                         Utils::improves(best_delta,delta)) {
                         if (propagate_virtual_or_opt_k_up(k,i_route,i_seq_a,i_seq_b)) {
                             best_delta = delta;
                             coordinates[0] = i_seq_a;
                             coordinates[1] = i_seq_b;
                         }
-                    }*/
+                    }
 
                 }
             }
@@ -1964,12 +1964,10 @@ void Search::shift(vector<Sequence> *route, int i_seq_a, int i_seq_b) {
 void Search::shift_k(int k, vector<Sequence> *route, int i_seq_a, int i_seq_b) {
 
     if (i_seq_a<i_seq_b) {
-        route->insert(route->begin()+i_seq_b,route->begin()+i_seq_a,route->begin()+i_seq_a+k);
-        route->erase(route->begin()+i_seq_a,route->begin()+i_seq_a+k);
+        rotate(route->begin() + i_seq_a, route->begin() + i_seq_a + k, route->begin() + i_seq_b );
     }else {
-        route->insert(route->begin()+i_seq_b,route->begin()+i_seq_a+1,route->begin()+i_seq_a+k+1);
-        route->erase(route->begin()+i_seq_a+1,route->begin()+i_seq_a+k+1);
-    }
+        rotate(route->begin() + i_seq_b, route->begin() + i_seq_a, route->begin() + i_seq_a + k );    }
+
 }
 
 void Search::test_cost() {

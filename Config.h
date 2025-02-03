@@ -12,6 +12,11 @@
 using namespace std;
 class Config {
 public:
+    int runs;
+    vector<long> seeds;
+    double alpha;
+    int run;
+
     Config(int runs, double alpha) {
         this->runs = runs;
         this->alpha = alpha;
@@ -21,9 +26,6 @@ public:
             this->seeds.push_back(rand());
         }
     };
-    int runs;
-    vector<long> seeds;
-    double alpha;
 
     void print() {
         ofstream file;

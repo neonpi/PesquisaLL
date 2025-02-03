@@ -69,12 +69,12 @@ void Search::insertion_heuristic() {
 
 void Search::rvnd_intra() {
 
-    vector<int> neighb = {0,1,2,3};
+    vector<int> neighb = {0,1,2,3,4};
     int last_improved_neighb = -1;
     random_shuffle(neighb.begin(),neighb.end());
     double cost_backup = this->solution->total_cost;
 
-    for(int i=0;i<4;i++) {
+    for(int i=0;i<5;i++) {
         if(neighb[i] != last_improved_neighb) {
             switch (neighb[i]) {
                 case 0:
@@ -85,9 +85,12 @@ void Search::rvnd_intra() {
                 break;
                 case 2:
                     this->ls_intra_or_opt_1();
-                break;;
+                break;
                 case 3:
                     this->ls_intra_or_opt_k(2);
+                break;
+                case 4:
+                    this->ls_intra_or_opt_k(3);
                 break;
                 default:
                     cout<<"Unknown LS"<<endl;
@@ -140,7 +143,12 @@ void Search::ls_intra_exchange() {
             if(best_delta<0.0) {
                 swap_sequence_intraroute(i_route,coordinates[0],coordinates[1]);
                 propagate(i_route,coordinates[0]-1);
+                double estimated = this->solution->total_cost + best_delta;
                 this->solution->calculate_total_cost();
+                if (Utils::differs(estimated,this->solution->total_cost)) {
+                    cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
+                    exit(20);
+                }
                 i_route--;
             }
         }
@@ -185,7 +193,12 @@ void Search::ls_intra_2opt() {
             if(best_delta<0.0) {
                 reverse(route->begin()+coordinates[0]+1,route->begin()+coordinates[1]);
                 propagate(i_route,coordinates[0]);
+                double estimated = this->solution->total_cost + best_delta;
                 this->solution->calculate_total_cost();
+                if (Utils::differs(estimated,this->solution->total_cost)) {
+                    cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
+                    exit(20);
+                }
                 i_route--;
             }
 
@@ -237,7 +250,12 @@ void Search::ls_intra_or_opt_1() {
         if (best_delta < 0.0) {
             shift(route,coordinates[0],coordinates[1]);
             propagate(i_route,min(coordinates[0],coordinates[1])-1);
+            double estimated = this->solution->total_cost + best_delta;
             this->solution->calculate_total_cost();
+            if (Utils::differs(estimated,this->solution->total_cost)) {
+                cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
+                exit(20);
+            }
             i_route--;
         }
 
@@ -260,7 +278,7 @@ void Search::ls_intra_or_opt_k(int k) {
                 //Pra traz
                 for (int i_seq_b = i_seq_a-1; i_seq_b>0;i_seq_b--) {
                     seq_b = &route->at(i_seq_b);
-                    double delta = calculate_delta_or_opt_k(2,route,i_seq_a,i_seq_b);
+                    double delta = calculate_delta_or_opt_k(k,route,i_seq_a,i_seq_b);
                     if(Utils::improves(0.0,delta) &&
                         Utils::improves(best_delta,delta)) {
                         if (propagate_virtual_or_opt_k_down(k,i_route,i_seq_a,i_seq_b)) {
@@ -274,7 +292,7 @@ void Search::ls_intra_or_opt_k(int k) {
                 //Pra frente
                 for(int i_seq_b = i_seq_a+k+1; i_seq_b<(int)route->size();i_seq_b++) {
                     seq_b = &route->at(i_seq_b);
-                    double delta = calculate_delta_or_opt_k(2,route,i_seq_a,i_seq_b);
+                    double delta = calculate_delta_or_opt_k(k,route,i_seq_a,i_seq_b);
                     if(Utils::improves(0.0,delta) &&
                         Utils::improves(best_delta,delta)) {
                         if (propagate_virtual_or_opt_k_up(k,i_route,i_seq_a,i_seq_b)) {
@@ -289,7 +307,13 @@ void Search::ls_intra_or_opt_k(int k) {
             if (best_delta < 0.0) {
                 shift_k(k,route,coordinates[0],coordinates[1]);
                 propagate(i_route,min(coordinates[0],coordinates[1])-1);
+
+                double estimated = this->solution->total_cost + best_delta;
                 this->solution->calculate_total_cost();
+                if (Utils::differs(estimated,this->solution->total_cost)) {
+                    cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
+                    exit(20);
+                }
                 i_route--;
             }
         }
@@ -410,7 +434,9 @@ void Search::ls_inter_shift_1_0() {
         propagate(coordinates[0],coordinates[1]-1);
 
         if(route_a->size() == 2) {
+            (route_a->end()-1)->current_distance = 0.0;
             this->solution->used_routes--;
+            this->solution->sort_routes();
         }
 
         //Reajustando a demanda mínima da rota que foi reduzida
@@ -423,7 +449,12 @@ void Search::ls_inter_shift_1_0() {
             }
         }
 
+        double estimated = this->solution->total_cost + best_delta;
         this->solution->calculate_total_cost();
+        if (Utils::differs(estimated,this->solution->total_cost)) {
+            cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
+            exit(20);
+        }
     }
 }
 
@@ -507,7 +538,9 @@ void Search::ls_inter_shift_2_0() {
         propagate(coordinates[0],coordinates[1]-1);
 
         if(route_a->size() == 2) {
+            (route_a->end()-1)->current_distance = 0.0;
             this->solution->used_routes--;
+            this->solution->sort_routes();
         }
 
         //Reajustando a demanda mínima da rota que foi reduzida
@@ -520,7 +553,12 @@ void Search::ls_inter_shift_2_0() {
             }
         }
 
+        double estimated = this->solution->total_cost + best_delta;
         this->solution->calculate_total_cost();
+        if (Utils::differs(estimated,this->solution->total_cost)) {
+            cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
+            exit(20);
+        }
     }
 }
 bool Search::swap_1_1_broke_load(vector<Sequence>* route_a, Sequence* seq_a , vector<Sequence>* route_b, Sequence* seq_b) {
@@ -629,7 +667,12 @@ void Search::ls_inter_swap_1_1() {
             }
         }
 
+        double estimated = this->solution->total_cost + best_delta;
         this->solution->calculate_total_cost();
+        if (Utils::differs(estimated,this->solution->total_cost)) {
+            cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
+            exit(20);
+        }
     }
 
 }
@@ -722,7 +765,9 @@ void Search::ls_inter_swap_2_1() {
         propagate(coordinates[0],coordinates[1]-1);
 
         if(route_a->size() == 2) {
+            (route_a->end()-1)->current_distance = 0.0;
             this->solution->used_routes--;
+            this->solution->sort_routes();
         }
 
         //Reajustando a demanda mínima da rota que foi reduzida
@@ -748,7 +793,12 @@ void Search::ls_inter_swap_2_1() {
             }
         }
 
+        double estimated = this->solution->total_cost + best_delta;
         this->solution->calculate_total_cost();
+        if (Utils::differs(estimated,this->solution->total_cost)) {
+            cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
+            exit(20);
+        }
     }
 }
 
@@ -851,7 +901,12 @@ void Search::ls_inter_swap_2_2() {
             }
         }
 
+        double estimated = this->solution->total_cost + best_delta;
         this->solution->calculate_total_cost();
+        if (Utils::differs(estimated,this->solution->total_cost)) {
+            cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
+            exit(20);
+        }
     }
 
 }
@@ -860,12 +915,10 @@ void Search::iterated_greedy() {
     Solution* bestSolution = this->solution->clone();
     int dec_size = 1;
     int dec_size_limit = this->instance->customers_qty * 0.4;
-    vector<Node*> dec_list;
+
     while(dec_size<dec_size_limit) {
-
-        deconstruct(dec_size, &dec_list);
+        deconstruct(dec_size);
         insertion_heuristic();
-
         this->rvnd_inter();
 
         if(this->solution->total_cost < bestSolution->total_cost) {
@@ -877,43 +930,41 @@ void Search::iterated_greedy() {
             this->solution = bestSolution->clone();
             dec_size++;
         }
-
     }
 
 }
 
-void Search::deconstruct(int dec_size, vector<Node *> *dec_list) {
+void Search::deconstruct(int dec_size) {
 
-    vector<int> i_routes;
+
     for(int i=0;i<dec_size;i++) {
 
         int i_route = rand()%this->solution->used_routes;
-        i_routes.push_back(i_route);
         vector<Sequence>* route = &this->solution->routes.at(i_route);
 
         int i_seq = 1 + rand()%((int)route->size()-2);
         Sequence* seq = &route->at(i_seq);
-        dec_list->push_back(seq->customer);
         this->solution->visited.at(seq->customer->index) = false;
 
         route->erase(route->begin()+i_seq,route->begin()+i_seq+1);
 
         if(route->size() == 2) {
             this->solution->used_routes--;
-            this->solution->sort_routes();
+            (route->end()-1)->current_distance = 0.0;
         }
 
-    }
-    //TODO pensar em um traamento quando a rota fica vazia na desconstrução
-    //Propagando remoções
-    sort(i_routes.begin(), i_routes.end(), [this](int a, int b){ return a > b; });
+        this->solution->sort_routes();
 
-    propagate(i_routes.at(0),0);
-    for(int i=1;i<i_routes.size();i++) {
-        if(i_routes.at(i)!= i_routes.at(i-1)) {
-            propagate(i_routes.at(i),0);
-        }
     }
+
+    for(int i=0;i<this->solution->routes.size()
+        && (int)this->solution->routes.at(i).size() > 2;i++) {
+
+        propagate(i,0);
+
+    }
+
+
 
 
 
@@ -1403,7 +1454,7 @@ void Search::propagate(int route_index, int previous_sequence_index) {
     Sequence* previous_sequence = nullptr;
     Sequence* current_sequence = &route->at(previous_sequence_index);
 
-    for(int i=previous_sequence_index+1; i<route->size(); i++) {
+    for(int i=previous_sequence_index+1; i<(int)route->size(); i++) {
 
         previous_sequence = current_sequence;
         current_sequence = &route->at(i);

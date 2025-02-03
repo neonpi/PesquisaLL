@@ -47,7 +47,31 @@ void Solution::calculate_total_cost() {
     }
 }
 
+void Solution::test_routes_distances() {
+  int o=0;
+    for (vector<Sequence> route : this->routes) {
+        double partial_cost = 0.0;
+        for(int i=1;i<(int)route.size();i++) {
+              Sequence * seq_a = &route.at(i-1);
+              Sequence * seq_b =& route.at(i);
+              partial_cost += this->instance->distances[seq_a->node->index][seq_b->node->index];
+              if(true) {
+                cout<<"Deu ruim"<<endl;
+              }
+        }
+        o++;
+    }
+}
+void Solution::print_detailed_total_cost() {
+    string totals="";
+    for (vector<Sequence> route : this->routes) {
+            totals+=" "+to_string((route.end()-1)->current_distance);//+"("+to_string(route.size())+")";
+        if((route.end()-1)->current_distance>0.0){
 
+        }
+    }
+    cout<<totals<<endl;
+}
 void Solution::print() {
     int used_vehicles = 0;
     vector<string> routes_string;

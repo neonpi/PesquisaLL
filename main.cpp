@@ -20,13 +20,12 @@ int main()
 
     Config* config = new Config(30,0.03);
     config->print();
-    //Config* config = new Config(30,0.05);
 
-    //Utils::print_output(s);
     cout<<"RUNNING EXPERIMENTS"<<endl;
+
     for(Instance* instance: instances) {
 
-        //if(instance->inst_name == "C206_co_25.txt") {
+        //if(instance->inst_name == "RC103_co_50.txt") {
             cout<<"Instance "<< instance->inst_name<<endl;
             Stats* stats = new Stats(instance, config);
             default_run(instance, config, stats);
@@ -39,6 +38,7 @@ int main()
         //}
 
     }
+
     delete config;
     cout<<"EXPERIMENTS FINISHED"<<endl;
     return 0;
@@ -50,8 +50,8 @@ void default_run(Instance *instance, Config* config, Stats* stats) {
         srand(config->seeds.at(i));
         //cout<<config->seeds.at(i)<<endl;
         //cout<<config->seeds.at(i)<<endl;
-        //srand(26142);
-        srand(10822);
+        //srand(23837);
+        config->run = i;
 
         Search* search = new Search(instance,config);
         clock_t time = clock();

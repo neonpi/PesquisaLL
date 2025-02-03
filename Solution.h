@@ -6,6 +6,7 @@
 #define SOLUTION_H
 #include "Instance.h"
 #include "Sequence.h"
+//#include "Utils.h"
 
 
 class Solution {
@@ -15,6 +16,8 @@ public:
 
     void initialize_routes();
     void calculate_total_cost();
+    void print_detailed_total_cost();
+    void test_routes_distances();
     void print();
     void print_is_viable(long seed);
     void sort_routes();

@@ -27,6 +27,20 @@ D0  1   4   5   6   7   8   |2   3|   9   10 Dt
 D0  1   4   5   6   7   8   9   |2   3|   10 Dt
 D0  1   4   5   6   7   8   9   10  |2   3| Dt
 
+1   2   3   4   5
+6   7   8   9   10
+
+1   2   |3   4   5
+6   7   8|   9   10
+
+1   2  |9   10 
+6   7   8 |3   4   5
+
+1   2   9   4   5
+6   7   8   3   10
+
+
+
 
     Não faz sentido aplicar o or-opt se estivermos com o nó e o destino dentro deste bloquinho de locker
 
@@ -55,3 +69,10 @@ V_3: D0 -> C35(P1) -> C3(P1) -> C39(P1) -> C42(P1) -> C7(P1) -> C36(P1) -> C40(P
 V_4: D0 -> C25 -> C27 -> C29 -> C14(P0) -> C8(P0) -> C20(P0) -> C24(P0) -> Dt -> 
 V_5: D0 -> C10 -> C13 -> C34(P1) -> Dt -> 
 V_6: D0 -> C18(P0) -> C12(P0) -> Dt ->
+
+Colocar na saida o custo da solucao
+colocar na tabela de resultados a qtd de veiculos
+melhorar o construtivo (lista de candidatos)
+Usar ig multi start (tipo o grasp)
+afrouxar os parametros pra instancia que ta dando 16% de gap
+Procurar algum artigo do anand para substituir alguma citação dele referente a rvnd

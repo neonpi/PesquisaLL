@@ -181,9 +181,9 @@ void Solution::print_is_viable(long seed) {
 
 }
 
-void Solution::sort_routes() {
+/*void Solution::sort_routes() {
     sort(this->routes.begin(), this->routes.end(), [this](vector<Sequence> seq_a, vector<Sequence> seq_b){return seq_a.size() > seq_b.size();});
-}
+}*/
 
 Solution * Solution::clone() {
 

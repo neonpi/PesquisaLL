@@ -1,0 +1,668 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 17.30     76.35    76.35 4071187968     0.00     0.00  Search::propagate_virtual(int, int, Sequence*)
+ 10.08    120.83    44.48                             _mcount_private
+  9.56    163.03    42.20                             void std::__introsort_loop<__gnu_cxx::__normal_iterator<std::tuple<int, int, Sequence, double>*, std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > > >, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::build_candidate_list()::{lambda(std::tuple<int, int, Sequence, double>, std::tuple<int, int, Sequence, double>)#1}> >(__gnu_cxx::__normal_iterator<std::tuple<int, int, Sequence, double>*, std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > > >, __gnu_cxx::__ops::_Iter_comp_iter<Search::build_candidate_list()::{lambda(std::tuple<int, int, Sequence, double>, std::tuple<int, int, Sequence, double>)#1}>, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::build_candidate_list()::{lambda(std::tuple<int, int, Sequence, double>, std::tuple<int, int, Sequence, double>)#1}>)
+  7.43    195.83    32.80                             __fentry__
+  7.10    227.18    31.35   627585     0.05     0.05  Search::ls_inter_swap_2_1()
+  7.02    258.19    31.01 260667882     0.00     0.00  Search::try_customer_candidate(std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >*, Node*)
+  6.29    285.95    27.76 19630647     0.00     0.00  Search::try_locker_candidate(std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >*, Node*)
+  4.41    305.42    19.47 527341464     0.00     0.00  Search::propagate(int, int)
+  3.85    322.41    16.99   545172     0.03     0.04  Search::ls_inter_shift_1_0()
+  3.66    338.55    16.14   624973     0.03     0.03  Search::ls_inter_shift_2_0()
+  3.24    352.86    14.31                             void std::__introsort_loop<__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*)::{lambda(int, int)#1}> >(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__ops::_Iter_comp_iter<Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*)::{lambda(int, int)#1}>, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*)::{lambda(int, int)#1}>)
+  2.75    364.99    12.13 2412581870     0.00     0.00  Search::calculate_delta_distance(std::tuple<int, int, Sequence, double>*)
+  2.60    376.46    11.47   618807     0.02     0.04  Search::ls_inter_swap_1_1()
+  2.56    387.76    11.30 1553131906     0.00     0.00  Search::calculate_delta_swap_1_1(std::vector<Sequence, std::allocator<Sequence> >*, int, std::vector<Sequence, std::allocator<Sequence> >*, int)
+  2.32    398.01    10.25 1275247573     0.00     0.00  Search::calculate_delta_swap_2_2(std::vector<Sequence, std::allocator<Sequence> >*, int, std::vector<Sequence, std::allocator<Sequence> >*, int)
+  2.15    407.51     9.50   637532     0.01     0.03  Search::ls_inter_swap_2_2()
+  1.91    415.96     8.45 38029408     0.00     0.00  void std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >::_M_realloc_insert<std::tuple<int, int, Sequence, double> const&>(__gnu_cxx::__normal_iterator<std::tuple<int, int, Sequence, double>*, std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > > >, std::tuple<int, int, Sequence, double> const&)
+  1.53    422.70     6.74                             __tcf_0
+  0.83    426.38     3.68   702978     0.01     0.01  Search::ls_intra_2opt()
+  0.82    430.00     3.62                             void std::__introsort_loop<__gnu_cxx::__normal_iterator<std::vector<Sequence, std::allocator<Sequence> >*, std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > > >, long long, __gnu_cxx::__ops::_Iter_comp_iter<Solution::sort_routes()::{lambda(std::vector<Sequence, std::allocator<Sequence> >, std::vector<Sequence, std::allocator<Sequence> >)#1}> >(__gnu_cxx::__normal_iterator<std::vector<Sequence, std::allocator<Sequence> >*, std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > > >, __gnu_cxx::__ops::_Iter_comp_iter<Solution::sort_routes()::{lambda(std::vector<Sequence, std::allocator<Sequence> >, std::vector<Sequence, std::allocator<Sequence> >)#1}>, long long, __gnu_cxx::__ops::_Iter_comp_iter<Solution::sort_routes()::{lambda(std::vector<Sequence, std::allocator<Sequence> >, std::vector<Sequence, std::allocator<Sequence> >)#1}>)
+  0.72    433.16     3.16 522000232     0.00     0.00  Search::swap_sequence_intraroute(int, int, int)
+  0.53    435.51     2.35 2356464770     0.00     0.00  Utils::improves(double, double)
+  0.38    437.17     1.66  4346803     0.00     0.04  Search::build_candidate_list()
+  0.33    438.64     1.47   619115     0.00     0.04  Search::ls_intra_exchange()
+  0.10    439.09     0.45  1828294     0.00     0.00  Search::is_viable()
+  0.09    439.50     0.41  1290073     0.00     0.00  Solution::calculate_total_cost()
+  0.05    439.73     0.23                             std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::compare(char const*) const
+  0.05    439.96     0.23                             operator delete(void*)
+  0.05    440.18     0.22 10737625     0.00     0.00  std::vector<Sequence, std::allocator<Sequence> >::operator=(std::vector<Sequence, std::allocator<Sequence> > const&)
+  0.03    440.32     0.14   434545     0.00     0.00  Solution::initialize_routes()
+  0.03    440.45     0.13   424465     0.00     0.00  Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*)
+  0.02    440.56     0.11  5797985     0.00     0.00  Search::propagate_virtual_2opt(int, int, int)
+  0.02    440.66     0.10   429505     0.00     0.34  Search::rvnd_inter()
+  0.02    440.74     0.08  4527128     0.00     0.00  Solution::sort_routes()
+  0.02    440.82     0.08   434545     0.00     0.00  Solution::Solution(Instance*)
+  0.02    440.90     0.08                             Search::propagate(int, int) [clone .constprop.210]
+  0.02    440.98     0.08                             operator new(unsigned long long)
+  0.01    441.04     0.06  4483795     0.00     0.00  Search::propagate_virtual_segment(int, int, Sequence*, Sequence*)
+  0.01    441.10     0.06  2391551     0.00     0.00  Search::propagate_virtual_swap_1_1(int, int, Sequence*)
+  0.01    441.15     0.05   429505     0.00     0.37  Search::insertion_heuristic()
+  0.01    441.20     0.05                             std::vector<Sequence, std::allocator<Sequence> >::_M_fill_insert(__gnu_cxx::__normal_iterator<Sequence*, std::vector<Sequence, std::allocator<Sequence> > >, unsigned long long, Sequence const&) [clone .constprop.208]
+  0.01    441.24     0.04  3917298     0.00     0.00  Search::insert_sequency(std::tuple<int, int, Sequence, double>)
+  0.01    441.28     0.04  1143506     0.00     0.00  std::vector<bool, std::allocator<bool> >::_M_insert_aux(std::_Bit_iterator, bool)
+  0.01    441.32     0.04   927074     0.00     0.00  Search::propagate_virtual_swap_2_1(int, int, Sequence*, Sequence*)
+  0.01    441.35     0.03  1965085     0.00     0.00  Search::propagate_virtual_swap_1_2(int, int, Sequence*)
+  0.01    441.38     0.03   429505     0.00     0.00  Solution::clone()
+  0.00    441.39     0.01  8350205     0.00     0.00  Utils::differs(double, double, double)
+  0.00    441.40     0.01   987003     0.00     0.00  Search::propagate_virtual_swap_2_2(int, int, Sequence*, Sequence*)
+  0.00    441.41     0.01   563366     0.00     0.05  Search::rvnd_intra()
+  0.00    441.42     0.01     5040     0.00     0.00  Utils::print_route_file(Search*, bool, long)
+  0.00    441.43     0.01      168     0.06     0.06  Instance::calculate_distances()
+  0.00    441.44     0.01                             memmove
+  0.00    441.44     0.00 2645867089     0.00     0.00  Node::print()
+  0.00    441.44     0.00 115722439     0.00     0.00  Search::run()
+  0.00    441.44     0.00  1554298     0.00     0.00  void std::vector<int, std::allocator<int> >::_M_realloc_insert<int const&>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, int const&)
+  0.00    441.44     0.00   434545     0.00     0.00  std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > >::reserve(unsigned long long)
+  0.00    441.44     0.00   429505     0.00     0.00  std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > >::operator=(std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > > const&)
+  0.00    441.44     0.00   424465     0.00     0.00  Solution::~Solution()
+  0.00    441.44     0.00    85176     0.00     0.00  Factory::defineNodeIndexes(Instance*)
+  0.00    441.44     0.00    65737     0.00     0.00  void std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_realloc_insert<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&>(__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+  0.00    441.44     0.00    49680     0.00     0.00  void std::vector<Node*, std::allocator<Node*> >::_M_realloc_insert<Node* const&>(__gnu_cxx::__normal_iterator<Node**, std::vector<Node*, std::allocator<Node*> > >, Node* const&)
+  0.00    441.44     0.00    33768     0.00     0.00  Node::~Node()
+  0.00    441.44     0.00    30744     0.00     0.00  Stats::set_result(double, double)
+  0.00    441.44     0.00    17567     0.00     0.00  Utils::tookenize(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)
+  0.00    441.44     0.00    10696     0.00     0.00  Node::Node()
+  0.00    441.44     0.00     6366     0.00     0.00  void std::vector<Node*, std::allocator<Node*> >::emplace_back<Node*>(Node*&&)
+  0.00    441.44     0.00     5040     0.00     0.93  Search::iterated_greedy()
+  0.00    441.44     0.00     5040     0.00     0.00  Search::Search(Instance*, Config*)
+  0.00    441.44     0.00     5040     0.00     0.00  Search::~Search()
+  0.00    441.44     0.00     5040     0.00     0.00  Solution::print_is_viable(long)
+  0.00    441.44     0.00     2016     0.00     0.00  void std::vector<double, std::allocator<double> >::_M_realloc_insert<double const&>(__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, double const&)
+  0.00    441.44     0.00     1176     0.00     0.00  void std::vector<Node, std::allocator<Node> >::_M_realloc_insert<Node const&>(__gnu_cxx::__normal_iterator<Node*, std::vector<Node, std::allocator<Node> > >, Node const&)
+  0.00    441.44     0.00      168     0.00    28.16  default_run(Instance*, Config*, Stats*)
+  0.00    441.44     0.00      168     0.00     0.00  Stats::finish_stats()
+  0.00    441.44     0.00      168     0.00     0.00  Stats::Stats(Instance*, Config*)
+  0.00    441.44     0.00      168     0.00     0.00  Utils::print_stats_file(Stats*)
+  0.00    441.44     0.00      168     0.00     0.00  Utils::print_final_stats(Stats*)
+  0.00    441.44     0.00      168     0.00     0.06  Vrppl::buildInstance(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)
+  0.00    441.44     0.00      168     0.00     0.00  Instance::Instance()
+  0.00    441.44     0.00      168     0.00     0.00  std::vector<Node, std::allocator<Node> >::reserve(unsigned long long)
+  0.00    441.44     0.00      168     0.00     0.00  std::vector<Node, std::allocator<Node> >::operator=(std::vector<Node, std::allocator<Node> > const&)
+  0.00    441.44     0.00       32     0.00     0.00  Instance::print()
+  0.00    441.44     0.00        9     0.00     0.00  void std::vector<Instance*, std::allocator<Instance*> >::_M_realloc_insert<Instance* const&>(__gnu_cxx::__normal_iterator<Instance**, std::vector<Instance*, std::allocator<Instance*> > >, Instance* const&)
+  0.00    441.44     0.00        6     0.00     0.00  void std::vector<long, std::allocator<long> >::_M_realloc_insert<long>(__gnu_cxx::__normal_iterator<long*, std::vector<long, std::allocator<long> > >, long&&)
+  0.00    441.44     0.00        1     0.00    10.00  Utils::buildInstances(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)
+  0.00    441.44     0.00        1     0.00     0.00  Config::print()
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 4 byte(s) for 0.00% of 450.01 seconds
+
+index % time    self  children    called     name
+[1]     67.7    0.23  304.29 66814385+54294192 <cycle 1 as a whole> [1]
+                0.05  157.57  429505             Search::insertion_heuristic() <cycle 1> [3]
+                0.10  146.72  429505             Search::rvnd_inter() <cycle 1> [5]
+                0.08    0.00 4527128             Solution::sort_routes() <cycle 1> [44]
+                0.00    0.00 115722439             Search::run() <cycle 1> [153]
+-----------------------------------------------
+                                                 <spontaneous>
+[2]     61.9    6.74  271.59                 __tcf_0 [2]
+                0.21  271.39 59590518/66814385     Search::run() <cycle 1> [153]
+-----------------------------------------------
+                                5040             Search::run() <cycle 1> [153]
+                0.00    1.93  424465/66814385     Search::iterated_greedy() [30]
+[3]     35.0    0.05  157.57  429505         Search::insertion_heuristic() <cycle 1> [3]
+                1.66  155.59 4346803/4346803     Search::build_candidate_list() [4]
+                0.04    0.14 3917298/3917298     Search::insert_sequency(std::tuple<int, int, Sequence, double>) [41]
+                0.14    0.00  429505/1290073     Solution::calculate_total_cost() [34]
+                             3917298             Solution::sort_routes() <cycle 1> [44]
+-----------------------------------------------
+                1.66  155.59 4346803/4346803     Search::insertion_heuristic() <cycle 1> [3]
+[4]     34.9    1.66  155.59 4346803         Search::build_candidate_list() [4]
+               31.01   66.61 260667882/260667882     Search::try_customer_candidate(std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >*, Node*) [6]
+               27.76   30.21 19630647/19630647     Search::try_locker_candidate(std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >*, Node*) [8]
+                0.00    0.00 2357766509/2645867089     Node::print() [152]
+-----------------------------------------------
+                                5040             Search::run() <cycle 1> [153]
+                0.00    1.93  424465/66814385     Search::iterated_greedy() [30]
+[5]     32.6    0.10  146.72  429505         Search::rvnd_inter() <cycle 1> [5]
+               31.35    2.66  627585/627585      Search::ls_inter_swap_2_1() [11]
+                0.01   28.83  563366/563366      Search::rvnd_intra() [14]
+               11.47   12.92  618807/618807      Search::ls_inter_swap_1_1() [15]
+                9.50   11.54  637532/637532      Search::ls_inter_swap_2_2() [18]
+               16.99    2.84  545172/545172      Search::ls_inter_shift_1_0() [19]
+               16.14    2.29  624973/624973      Search::ls_inter_shift_2_0() [21]
+                0.18    0.00  563366/1290073     Solution::calculate_total_cost() [34]
+                              563366             Solution::sort_routes() <cycle 1> [44]
+-----------------------------------------------
+               31.01   66.61 260667882/260667882     Search::build_candidate_list() [4]
+[6]     21.7   31.01   66.61 260667882         Search::try_customer_candidate(std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >*, Node*) [6]
+               51.72    0.00 2758108080/4071187968     Search::propagate_virtual(int, int, Sequence*) [7]
+                7.86    0.00 35395574/38029408     void std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >::_M_realloc_insert<std::tuple<int, int, Sequence, double> const&>(__gnu_cxx::__normal_iterator<std::tuple<int, int, Sequence, double>*, std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > > >, std::tuple<int, int, Sequence, double> const&) [27]
+                7.02    0.00 1395678397/2412581870     Search::calculate_delta_distance(std::tuple<int, int, Sequence, double>*) [23]
+-----------------------------------------------
+                0.11    0.00 6054235/4071187968     Search::ls_inter_shift_1_0() [19]
+               24.51    0.00 1307025653/4071187968     Search::try_locker_candidate(std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >*, Node*) [8]
+               51.72    0.00 2758108080/4071187968     Search::try_customer_candidate(std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >*, Node*) [6]
+[7]     17.0   76.35    0.00 4071187968         Search::propagate_virtual(int, int, Sequence*) [7]
+-----------------------------------------------
+               27.76   30.21 19630647/19630647     Search::build_candidate_list() [4]
+[8]     12.9   27.76   30.21 19630647         Search::try_locker_candidate(std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >*, Node*) [8]
+               24.51    0.00 1307025653/4071187968     Search::propagate_virtual(int, int, Sequence*) [7]
+                5.11    0.00 1016903473/2412581870     Search::calculate_delta_distance(std::tuple<int, int, Sequence, double>*) [23]
+                0.59    0.00 2633834/38029408     void std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >::_M_realloc_insert<std::tuple<int, int, Sequence, double> const&>(__gnu_cxx::__normal_iterator<std::tuple<int, int, Sequence, double>*, std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > > >, std::tuple<int, int, Sequence, double> const&) [27]
+-----------------------------------------------
+                                                 <spontaneous>
+[9]      9.9   44.48    0.00                 _mcount_private [9]
+-----------------------------------------------
+                                                 <spontaneous>
+[10]     9.4   42.20    0.00                 void std::__introsort_loop<__gnu_cxx::__normal_iterator<std::tuple<int, int, Sequence, double>*, std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > > >, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::build_candidate_list()::{lambda(std::tuple<int, int, Sequence, double>, std::tuple<int, int, Sequence, double>)#1}> >(__gnu_cxx::__normal_iterator<std::tuple<int, int, Sequence, double>*, std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > > >, __gnu_cxx::__ops::_Iter_comp_iter<Search::build_candidate_list()::{lambda(std::tuple<int, int, Sequence, double>, std::tuple<int, int, Sequence, double>)#1}>, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::build_candidate_list()::{lambda(std::tuple<int, int, Sequence, double>, std::tuple<int, int, Sequence, double>)#1}>) [10]
+                0.00    0.00 227526397/2645867089     Node::print() [152]
+-----------------------------------------------
+               31.35    2.66  627585/627585      Search::rvnd_inter() <cycle 1> [5]
+[11]     7.6   31.35    2.66  627585         Search::ls_inter_swap_2_1() [11]
+                2.58    0.00 2589907421/2356464770     Utils::improves(double, double) [25]
+                0.04    0.00  927074/927074      Search::propagate_virtual_swap_2_1(int, int, Sequence*, Sequence*) [51]
+                0.03    0.00 1965085/1965085     Search::propagate_virtual_swap_1_2(int, int, Sequence*) [52]
+                0.01    0.00  166926/527341464     Search::propagate(int, int) [20]
+                0.00    0.00   83463/2645867089     Node::print() [152]
+-----------------------------------------------
+                                                 <spontaneous>
+[12]     7.3   32.80    0.00                 __fentry__ [12]
+-----------------------------------------------
+                                                 <spontaneous>
+[13]     7.2    3.62   28.84                 void std::__introsort_loop<__gnu_cxx::__normal_iterator<std::vector<Sequence, std::allocator<Sequence> >*, std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > > >, long long, __gnu_cxx::__ops::_Iter_comp_iter<Solution::sort_routes()::{lambda(std::vector<Sequence, std::allocator<Sequence> >, std::vector<Sequence, std::allocator<Sequence> >)#1}> >(__gnu_cxx::__normal_iterator<std::vector<Sequence, std::allocator<Sequence> >*, std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > > >, __gnu_cxx::__ops::_Iter_comp_iter<Solution::sort_routes()::{lambda(std::vector<Sequence, std::allocator<Sequence> >, std::vector<Sequence, std::allocator<Sequence> >)#1}>, long long, __gnu_cxx::__ops::_Iter_comp_iter<Solution::sort_routes()::{lambda(std::vector<Sequence, std::allocator<Sequence> >, std::vector<Sequence, std::allocator<Sequence> >)#1}>) [13]
+                0.02   28.82 6328473/66814385     Search::run() <cycle 1> [153]
+-----------------------------------------------
+                0.01   28.83  563366/563366      Search::rvnd_inter() <cycle 1> [5]
+[14]     6.4    0.01   28.83  563366         Search::rvnd_intra() [14]
+                1.47   22.89  619115/619115      Search::ls_intra_exchange() [16]
+                3.68    0.79  702978/702978      Search::ls_intra_2opt() [31]
+-----------------------------------------------
+               11.47   12.92  618807/618807      Search::rvnd_inter() <cycle 1> [5]
+[15]     5.4   11.47   12.92  618807         Search::ls_inter_swap_1_1() [15]
+               11.30    0.00 1553131906/1553131906     Search::calculate_delta_swap_1_1(std::vector<Sequence, std::allocator<Sequence> >*, int, std::vector<Sequence, std::allocator<Sequence> >*, int) [24]
+                1.55    0.00 1555194031/2356464770     Utils::improves(double, double) [25]
+                0.06    0.00 2391551/2391551     Search::propagate_virtual_swap_1_1(int, int, Sequence*) [48]
+                0.01    0.00  212192/527341464     Search::propagate(int, int) [20]
+                0.00    0.00  212192/2645867089     Node::print() [152]
+-----------------------------------------------
+                1.47   22.89  619115/619115      Search::rvnd_intra() [14]
+[16]     5.4    1.47   22.89  619115         Search::ls_intra_exchange() [16]
+                3.16   19.27 522000232/522000232     Search::swap_sequence_intraroute(int, int, int) [17]
+                0.45    0.00 1828294/1828294     Search::is_viable() [33]
+                0.01    0.00 8350205/8350205     Utils::differs(double, double, double) [54]
+-----------------------------------------------
+                3.16   19.27 522000232/522000232     Search::ls_intra_exchange() [16]
+[17]     5.0    3.16   19.27 522000232         Search::swap_sequence_intraroute(int, int, int) [17]
+               19.27    0.00 522000232/527341464     Search::propagate(int, int) [20]
+-----------------------------------------------
+                9.50   11.54  637532/637532      Search::rvnd_inter() <cycle 1> [5]
+[18]     4.7    9.50   11.54  637532         Search::ls_inter_swap_2_2() [18]
+               10.25    0.00 1275247573/1275247573     Search::calculate_delta_swap_2_2(std::vector<Sequence, std::allocator<Sequence> >*, int, std::vector<Sequence, std::allocator<Sequence> >*, int) [26]
+                1.27    0.00 1276073334/2356464770     Utils::improves(double, double) [25]
+                0.01    0.00  987003/987003      Search::propagate_virtual_swap_2_2(int, int, Sequence*, Sequence*) [55]
+                0.00    0.00   74250/527341464     Search::propagate(int, int) [20]
+-----------------------------------------------
+               16.99    2.84  545172/545172      Search::rvnd_inter() <cycle 1> [5]
+[19]     4.4   16.99    2.84  545172         Search::ls_inter_shift_1_0() [19]
+                2.71    0.00 2717529104/2356464770     Utils::improves(double, double) [25]
+                0.11    0.00 6054235/4071187968     Search::propagate_virtual(int, int, Sequence*) [7]
+                0.02    0.00  487550/527341464     Search::propagate(int, int) [20]
+                0.00    0.00  243775/2645867089     Node::print() [152]
+-----------------------------------------------
+                0.00    0.00   74250/527341464     Search::ls_inter_swap_2_2() [18]
+                0.01    0.00  166926/527341464     Search::ls_inter_swap_2_1() [11]
+                0.01    0.00  185814/527341464     Search::ls_inter_shift_2_0() [21]
+                0.01    0.00  212192/527341464     Search::ls_inter_swap_1_1() [15]
+                0.01    0.00  297202/527341464     Search::ls_intra_2opt() [31]
+                0.02    0.00  487550/527341464     Search::ls_inter_shift_1_0() [19]
+                0.14    0.00 3917298/527341464     Search::insert_sequency(std::tuple<int, int, Sequence, double>) [41]
+               19.27    0.00 522000232/527341464     Search::swap_sequence_intraroute(int, int, int) [17]
+[20]     4.3   19.47    0.00 527341464         Search::propagate(int, int) [20]
+-----------------------------------------------
+               16.14    2.29  624973/624973      Search::rvnd_inter() <cycle 1> [5]
+[21]     4.1   16.14    2.29  624973         Search::ls_inter_shift_2_0() [21]
+                2.23    0.00 2232520021/2356464770     Utils::improves(double, double) [25]
+                0.06    0.00 4483795/4483795     Search::propagate_virtual_segment(int, int, Sequence*, Sequence*) [47]
+                0.01    0.00  185814/527341464     Search::propagate(int, int) [20]
+-----------------------------------------------
+                                                 <spontaneous>
+[22]     3.2   14.31    0.00                 void std::__introsort_loop<__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*)::{lambda(int, int)#1}> >(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__ops::_Iter_comp_iter<Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*)::{lambda(int, int)#1}>, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*)::{lambda(int, int)#1}>) [22]
+                0.00    0.00 54172536/2645867089     Node::print() [152]
+-----------------------------------------------
+                5.11    0.00 1016903473/2412581870     Search::try_locker_candidate(std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >*, Node*) [8]
+                7.02    0.00 1395678397/2412581870     Search::try_customer_candidate(std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >*, Node*) [6]
+[23]     2.7   12.13    0.00 2412581870         Search::calculate_delta_distance(std::tuple<int, int, Sequence, double>*) [23]
+-----------------------------------------------
+               11.30    0.00 1553131906/1553131906     Search::ls_inter_swap_1_1() [15]
+[24]     2.5   11.30    0.00 1553131906         Search::calculate_delta_swap_1_1(std::vector<Sequence, std::allocator<Sequence> >*, int, std::vector<Sequence, std::allocator<Sequence> >*, int) [24]
+-----------------------------------------------
+                0.57    0.00 575175451/2356464770     Search::ls_intra_2opt() [31]
+                1.27    0.00 1276073334/2356464770     Search::ls_inter_swap_2_2() [18]
+                1.55    0.00 1555194031/2356464770     Search::ls_inter_swap_1_1() [15]
+                2.23    0.00 2232520021/2356464770     Search::ls_inter_shift_2_0() [21]
+                2.58    0.00 2589907421/2356464770     Search::ls_inter_swap_2_1() [11]
+                2.71    0.00 2717529104/2356464770     Search::ls_inter_shift_1_0() [19]
+[25]     2.4   10.92    0.00 2356464770         Utils::improves(double, double) [25]
+-----------------------------------------------
+               10.25    0.00 1275247573/1275247573     Search::ls_inter_swap_2_2() [18]
+[26]     2.3   10.25    0.00 1275247573         Search::calculate_delta_swap_2_2(std::vector<Sequence, std::allocator<Sequence> >*, int, std::vector<Sequence, std::allocator<Sequence> >*, int) [26]
+-----------------------------------------------
+                0.59    0.00 2633834/38029408     Search::try_locker_candidate(std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >*, Node*) [8]
+                7.86    0.00 35395574/38029408     Search::try_customer_candidate(std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >*, Node*) [6]
+[27]     1.9    8.45    0.00 38029408         void std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >::_M_realloc_insert<std::tuple<int, int, Sequence, double> const&>(__gnu_cxx::__normal_iterator<std::tuple<int, int, Sequence, double>*, std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > > >, std::tuple<int, int, Sequence, double> const&) [27]
+-----------------------------------------------
+                                                 <spontaneous>
+[28]     1.1    0.00    4.74                 main [28]
+                0.00    4.73     168/168         default_run(Instance*, Config*, Stats*) [29]
+                0.00    0.01       1/1           Utils::buildInstances(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [59]
+                0.00    0.00     168/168         Stats::Stats(Instance*, Config*) [170]
+                0.00    0.00     168/168         Stats::finish_stats() [169]
+                0.00    0.00     168/168         Utils::print_stats_file(Stats*) [171]
+                0.00    0.00     168/168         Utils::print_final_stats(Stats*) [172]
+                0.00    0.00       6/6           void std::vector<long, std::allocator<long> >::_M_realloc_insert<long>(__gnu_cxx::__normal_iterator<long*, std::vector<long, std::allocator<long> > >, long&&) [178]
+                0.00    0.00       1/1           Config::print() [179]
+-----------------------------------------------
+                0.00    4.73     168/168         main [28]
+[29]     1.1    0.00    4.73     168         default_run(Instance*, Config*, Stats*) [29]
+                0.00    4.69    5040/5040        Search::iterated_greedy() [30]
+                0.00    0.02    5040/66814385     Search::run() <cycle 1> [153]
+                0.01    0.00    5040/5040        Utils::print_route_file(Search*, bool, long) [56]
+                0.00    0.00    5040/5040        Search::Search(Instance*, Config*) [60]
+                0.00    0.00    5040/30744       Stats::set_result(double, double) [161]
+                0.00    0.00    5040/5040        Solution::print_is_viable(long) [166]
+                0.00    0.00    5040/5040        Search::~Search() [165]
+-----------------------------------------------
+                0.00    4.69    5040/5040        default_run(Instance*, Config*, Stats*) [29]
+[30]     1.0    0.00    4.69    5040         Search::iterated_greedy() [30]
+                0.00    1.93  424465/66814385     Search::insertion_heuristic() <cycle 1> [3]
+                0.00    1.93  424465/66814385     Search::rvnd_inter() <cycle 1> [5]
+                0.03    0.48  429505/429505      Solution::clone() [32]
+                0.13    0.19  424465/424465      Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*) [35]
+                0.00    0.00  424465/424465      Solution::~Solution() [156]
+-----------------------------------------------
+                3.68    0.79  702978/702978      Search::rvnd_intra() [14]
+[31]     1.0    3.68    0.79  702978         Search::ls_intra_2opt() [31]
+                0.57    0.00 575175451/2356464770     Utils::improves(double, double) [25]
+                0.11    0.00 5797985/5797985     Search::propagate_virtual_2opt(int, int, int) [43]
+                0.09    0.00  297202/1290073     Solution::calculate_total_cost() [34]
+                0.01    0.00  297202/527341464     Search::propagate(int, int) [20]
+-----------------------------------------------
+                0.03    0.48  429505/429505      Search::iterated_greedy() [30]
+[32]     0.1    0.03    0.48  429505         Solution::clone() [32]
+                0.08    0.18  429505/434545      Solution::Solution(Instance*) [36]
+                0.00    0.22  429505/429505      std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > >::operator=(std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > > const&) [40]
+-----------------------------------------------
+                0.45    0.00 1828294/1828294     Search::ls_intra_exchange() [16]
+[33]     0.1    0.45    0.00 1828294         Search::is_viable() [33]
+-----------------------------------------------
+                0.09    0.00  297202/1290073     Search::ls_intra_2opt() [31]
+                0.14    0.00  429505/1290073     Search::insertion_heuristic() <cycle 1> [3]
+                0.18    0.00  563366/1290073     Search::rvnd_inter() <cycle 1> [5]
+[34]     0.1    0.41    0.00 1290073         Solution::calculate_total_cost() [34]
+-----------------------------------------------
+                0.13    0.19  424465/424465      Search::iterated_greedy() [30]
+[35]     0.1    0.13    0.19  424465         Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*) [35]
+                0.00    0.19   41424/66814385     Solution::sort_routes() <cycle 1> [44]
+                0.00    0.00 1944919/2645867089     Node::print() [152]
+                0.00    0.00 1554298/1554298     void std::vector<int, std::allocator<int> >::_M_realloc_insert<int const&>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, int const&) [154]
+                0.00    0.00   49680/49680       void std::vector<Node*, std::allocator<Node*> >::_M_realloc_insert<Node* const&>(__gnu_cxx::__normal_iterator<Node**, std::vector<Node*, std::allocator<Node*> > >, Node* const&) [159]
+-----------------------------------------------
+                0.00    0.00    5040/434545      Search::Search(Instance*, Config*) [60]
+                0.08    0.18  429505/434545      Solution::clone() [32]
+[36]     0.1    0.08    0.18  434545         Solution::Solution(Instance*) [36]
+                0.14    0.00  434545/434545      Solution::initialize_routes() [42]
+                0.04    0.00 1143506/1143506     std::vector<bool, std::allocator<bool> >::_M_insert_aux(std::_Bit_iterator, bool) [50]
+-----------------------------------------------
+                                                 <spontaneous>
+[37]     0.1    0.23    0.00                 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::compare(char const*) const [37]
+-----------------------------------------------
+                                                 <spontaneous>
+[38]     0.1    0.23    0.00                 operator delete(void*) [38]
+-----------------------------------------------
+                0.22    0.00 10737625/10737625     std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > >::operator=(std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > > const&) [40]
+[39]     0.0    0.22    0.00 10737625         std::vector<Sequence, std::allocator<Sequence> >::operator=(std::vector<Sequence, std::allocator<Sequence> > const&) [39]
+-----------------------------------------------
+                0.00    0.22  429505/429505      Solution::clone() [32]
+[40]     0.0    0.00    0.22  429505         std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > >::operator=(std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > > const&) [40]
+                0.22    0.00 10737625/10737625     std::vector<Sequence, std::allocator<Sequence> >::operator=(std::vector<Sequence, std::allocator<Sequence> > const&) [39]
+-----------------------------------------------
+                0.04    0.14 3917298/3917298     Search::insertion_heuristic() <cycle 1> [3]
+[41]     0.0    0.04    0.14 3917298         Search::insert_sequency(std::tuple<int, int, Sequence, double>) [41]
+                0.14    0.00 3917298/527341464     Search::propagate(int, int) [20]
+                0.00    0.00 3917298/2645867089     Node::print() [152]
+-----------------------------------------------
+                0.14    0.00  434545/434545      Solution::Solution(Instance*) [36]
+[42]     0.0    0.14    0.00  434545         Solution::initialize_routes() [42]
+                0.00    0.00  434545/434545      std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > >::reserve(unsigned long long) [155]
+-----------------------------------------------
+                0.11    0.00 5797985/5797985     Search::ls_intra_2opt() [31]
+[43]     0.0    0.11    0.00 5797985         Search::propagate_virtual_2opt(int, int, int) [43]
+-----------------------------------------------
+                                5040             Search::run() <cycle 1> [153]
+                              563366             Search::rvnd_inter() <cycle 1> [5]
+                             3917298             Search::insertion_heuristic() <cycle 1> [3]
+                0.00    0.19   41424/66814385     Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*) [35]
+[44]     0.0    0.08    0.00 4527128         Solution::sort_routes() <cycle 1> [44]
+                             49798408             Search::run() <cycle 1> [153]
+-----------------------------------------------
+                                                 <spontaneous>
+[45]     0.0    0.08    0.00                 Search::propagate(int, int) [clone .constprop.210] [45]
+-----------------------------------------------
+                                                 <spontaneous>
+[46]     0.0    0.08    0.00                 operator new(unsigned long long) [46]
+-----------------------------------------------
+                0.06    0.00 4483795/4483795     Search::ls_inter_shift_2_0() [21]
+[47]     0.0    0.06    0.00 4483795         Search::propagate_virtual_segment(int, int, Sequence*, Sequence*) [47]
+-----------------------------------------------
+                0.06    0.00 2391551/2391551     Search::ls_inter_swap_1_1() [15]
+[48]     0.0    0.06    0.00 2391551         Search::propagate_virtual_swap_1_1(int, int, Sequence*) [48]
+-----------------------------------------------
+                                                 <spontaneous>
+[49]     0.0    0.05    0.00                 std::vector<Sequence, std::allocator<Sequence> >::_M_fill_insert(__gnu_cxx::__normal_iterator<Sequence*, std::vector<Sequence, std::allocator<Sequence> > >, unsigned long long, Sequence const&) [clone .constprop.208] [49]
+-----------------------------------------------
+                0.04    0.00 1143506/1143506     Solution::Solution(Instance*) [36]
+[50]     0.0    0.04    0.00 1143506         std::vector<bool, std::allocator<bool> >::_M_insert_aux(std::_Bit_iterator, bool) [50]
+-----------------------------------------------
+                0.04    0.00  927074/927074      Search::ls_inter_swap_2_1() [11]
+[51]     0.0    0.04    0.00  927074         Search::propagate_virtual_swap_2_1(int, int, Sequence*, Sequence*) [51]
+-----------------------------------------------
+                0.03    0.00 1965085/1965085     Search::ls_inter_swap_2_1() [11]
+[52]     0.0    0.03    0.00 1965085         Search::propagate_virtual_swap_1_2(int, int, Sequence*) [52]
+-----------------------------------------------
+                                                 <spontaneous>
+[53]     0.0    0.01    0.00                 memmove [53]
+-----------------------------------------------
+                0.01    0.00 8350205/8350205     Search::ls_intra_exchange() [16]
+[54]     0.0    0.01    0.00 8350205         Utils::differs(double, double, double) [54]
+-----------------------------------------------
+                0.01    0.00  987003/987003      Search::ls_inter_swap_2_2() [18]
+[55]     0.0    0.01    0.00  987003         Search::propagate_virtual_swap_2_2(int, int, Sequence*, Sequence*) [55]
+-----------------------------------------------
+                0.01    0.00    5040/5040        default_run(Instance*, Config*, Stats*) [29]
+[56]     0.0    0.01    0.00    5040         Utils::print_route_file(Search*, bool, long) [56]
+                0.00    0.00    5040/30744       Stats::set_result(double, double) [161]
+-----------------------------------------------
+                0.00    0.01     168/168         Utils::buildInstances(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [59]
+[57]     0.0    0.00    0.01     168         Vrppl::buildInstance(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [57]
+                0.01    0.00     168/168         Instance::calculate_distances() [58]
+                0.00    0.00   85176/85176       Factory::defineNodeIndexes(Instance*) [157]
+                0.00    0.00   21392/33768       Node::~Node() [160]
+                0.00    0.00   17567/17567       Utils::tookenize(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [162]
+                0.00    0.00   10696/10696       Node::Node() [163]
+                0.00    0.00    6366/6366        void std::vector<Node*, std::allocator<Node*> >::emplace_back<Node*>(Node*&&) [164]
+                0.00    0.00    1176/1176        void std::vector<Node, std::allocator<Node> >::_M_realloc_insert<Node const&>(__gnu_cxx::__normal_iterator<Node*, std::vector<Node, std::allocator<Node> > >, Node const&) [168]
+                0.00    0.00     168/168         Instance::Instance() [173]
+                0.00    0.00     168/168         std::vector<Node, std::allocator<Node> >::reserve(unsigned long long) [174]
+                0.00    0.00     168/168         std::vector<Node, std::allocator<Node> >::operator=(std::vector<Node, std::allocator<Node> > const&) [175]
+-----------------------------------------------
+                0.01    0.00     168/168         Vrppl::buildInstance(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [57]
+[58]     0.0    0.01    0.00     168         Instance::calculate_distances() [58]
+-----------------------------------------------
+                0.00    0.01       1/1           main [28]
+[59]     0.0    0.00    0.01       1         Utils::buildInstances(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [59]
+                0.00    0.01     168/168         Vrppl::buildInstance(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [57]
+                0.00    0.00       9/9           void std::vector<Instance*, std::allocator<Instance*> >::_M_realloc_insert<Instance* const&>(__gnu_cxx::__normal_iterator<Instance**, std::vector<Instance*, std::allocator<Instance*> > >, Instance* const&) [177]
+-----------------------------------------------
+                0.00    0.00    5040/5040        default_run(Instance*, Config*, Stats*) [29]
+[60]     0.0    0.00    0.00    5040         Search::Search(Instance*, Config*) [60]
+                0.00    0.00    5040/434545      Solution::Solution(Instance*) [36]
+-----------------------------------------------
+                0.00    0.00   83463/2645867089     Search::ls_inter_swap_2_1() [11]
+                0.00    0.00  212192/2645867089     Search::ls_inter_swap_1_1() [15]
+                0.00    0.00  243775/2645867089     Search::ls_inter_shift_1_0() [19]
+                0.00    0.00 1944919/2645867089     Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*) [35]
+                0.00    0.00 3917298/2645867089     Search::insert_sequency(std::tuple<int, int, Sequence, double>) [41]
+                0.00    0.00 54172536/2645867089     void std::__introsort_loop<__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*)::{lambda(int, int)#1}> >(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__ops::_Iter_comp_iter<Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*)::{lambda(int, int)#1}>, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*)::{lambda(int, int)#1}>) [22]
+                0.00    0.00 227526397/2645867089     void std::__introsort_loop<__gnu_cxx::__normal_iterator<std::tuple<int, int, Sequence, double>*, std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > > >, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::build_candidate_list()::{lambda(std::tuple<int, int, Sequence, double>, std::tuple<int, int, Sequence, double>)#1}> >(__gnu_cxx::__normal_iterator<std::tuple<int, int, Sequence, double>*, std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > > >, __gnu_cxx::__ops::_Iter_comp_iter<Search::build_candidate_list()::{lambda(std::tuple<int, int, Sequence, double>, std::tuple<int, int, Sequence, double>)#1}>, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::build_candidate_list()::{lambda(std::tuple<int, int, Sequence, double>, std::tuple<int, int, Sequence, double>)#1}>) [10]
+                0.00    0.00 2357766509/2645867089     Search::build_candidate_list() [4]
+[152]    0.0    0.00    0.00 2645867089         Node::print() [152]
+-----------------------------------------------
+                             49798408             Solution::sort_routes() <cycle 1> [44]
+                0.00    0.02    5040/66814385     default_run(Instance*, Config*, Stats*) [29]
+                0.02   28.82 6328473/66814385     void std::__introsort_loop<__gnu_cxx::__normal_iterator<std::vector<Sequence, std::allocator<Sequence> >*, std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > > >, long long, __gnu_cxx::__ops::_Iter_comp_iter<Solution::sort_routes()::{lambda(std::vector<Sequence, std::allocator<Sequence> >, std::vector<Sequence, std::allocator<Sequence> >)#1}> >(__gnu_cxx::__normal_iterator<std::vector<Sequence, std::allocator<Sequence> >*, std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > > >, __gnu_cxx::__ops::_Iter_comp_iter<Solution::sort_routes()::{lambda(std::vector<Sequence, std::allocator<Sequence> >, std::vector<Sequence, std::allocator<Sequence> >)#1}>, long long, __gnu_cxx::__ops::_Iter_comp_iter<Solution::sort_routes()::{lambda(std::vector<Sequence, std::allocator<Sequence> >, std::vector<Sequence, std::allocator<Sequence> >)#1}>) [13]
+                0.21  271.39 59590518/66814385     __tcf_0 [2]
+[153]    0.0    0.00    0.00 115722439         Search::run() <cycle 1> [153]
+                                5040             Search::insertion_heuristic() <cycle 1> [3]
+                                5040             Solution::sort_routes() <cycle 1> [44]
+                                5040             Search::rvnd_inter() <cycle 1> [5]
+-----------------------------------------------
+                0.00    0.00 1554298/1554298     Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*) [35]
+[154]    0.0    0.00    0.00 1554298         void std::vector<int, std::allocator<int> >::_M_realloc_insert<int const&>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, int const&) [154]
+-----------------------------------------------
+                0.00    0.00  434545/434545      Solution::initialize_routes() [42]
+[155]    0.0    0.00    0.00  434545         std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > >::reserve(unsigned long long) [155]
+-----------------------------------------------
+                0.00    0.00  424465/424465      Search::iterated_greedy() [30]
+[156]    0.0    0.00    0.00  424465         Solution::~Solution() [156]
+-----------------------------------------------
+                0.00    0.00   85176/85176       Vrppl::buildInstance(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [57]
+[157]    0.0    0.00    0.00   85176         Factory::defineNodeIndexes(Instance*) [157]
+-----------------------------------------------
+                0.00    0.00   65737/65737       Utils::tookenize(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [162]
+[158]    0.0    0.00    0.00   65737         void std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_realloc_insert<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&>(__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [158]
+-----------------------------------------------
+                0.00    0.00   49680/49680       Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*) [35]
+[159]    0.0    0.00    0.00   49680         void std::vector<Node*, std::allocator<Node*> >::_M_realloc_insert<Node* const&>(__gnu_cxx::__normal_iterator<Node**, std::vector<Node*, std::allocator<Node*> > >, Node* const&) [159]
+-----------------------------------------------
+                0.00    0.00   12376/33768       void std::vector<Node, std::allocator<Node> >::_M_realloc_insert<Node const&>(__gnu_cxx::__normal_iterator<Node*, std::vector<Node, std::allocator<Node> > >, Node const&) [168]
+                0.00    0.00   21392/33768       Vrppl::buildInstance(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [57]
+[160]    0.0    0.00    0.00   33768         Node::~Node() [160]
+-----------------------------------------------
+                0.00    0.00     504/30744       Utils::print_final_stats(Stats*) [172]
+                0.00    0.00    5040/30744       default_run(Instance*, Config*, Stats*) [29]
+                0.00    0.00    5040/30744       Utils::print_route_file(Search*, bool, long) [56]
+                0.00    0.00   20160/30744       Utils::print_stats_file(Stats*) [171]
+[161]    0.0    0.00    0.00   30744         Stats::set_result(double, double) [161]
+                0.00    0.00    2016/2016        void std::vector<double, std::allocator<double> >::_M_realloc_insert<double const&>(__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, double const&) [167]
+-----------------------------------------------
+                0.00    0.00   17567/17567       Vrppl::buildInstance(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [57]
+[162]    0.0    0.00    0.00   17567         Utils::tookenize(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [162]
+                0.00    0.00   65737/65737       void std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_realloc_insert<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&>(__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [158]
+-----------------------------------------------
+                0.00    0.00   10696/10696       Vrppl::buildInstance(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [57]
+[163]    0.0    0.00    0.00   10696         Node::Node() [163]
+-----------------------------------------------
+                0.00    0.00    6366/6366        Vrppl::buildInstance(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [57]
+[164]    0.0    0.00    0.00    6366         void std::vector<Node*, std::allocator<Node*> >::emplace_back<Node*>(Node*&&) [164]
+-----------------------------------------------
+                0.00    0.00    5040/5040        default_run(Instance*, Config*, Stats*) [29]
+[165]    0.0    0.00    0.00    5040         Search::~Search() [165]
+-----------------------------------------------
+                0.00    0.00    5040/5040        default_run(Instance*, Config*, Stats*) [29]
+[166]    0.0    0.00    0.00    5040         Solution::print_is_viable(long) [166]
+-----------------------------------------------
+                0.00    0.00    2016/2016        Stats::set_result(double, double) [161]
+[167]    0.0    0.00    0.00    2016         void std::vector<double, std::allocator<double> >::_M_realloc_insert<double const&>(__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, double const&) [167]
+-----------------------------------------------
+                0.00    0.00    1176/1176        Vrppl::buildInstance(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [57]
+[168]    0.0    0.00    0.00    1176         void std::vector<Node, std::allocator<Node> >::_M_realloc_insert<Node const&>(__gnu_cxx::__normal_iterator<Node*, std::vector<Node, std::allocator<Node> > >, Node const&) [168]
+                0.00    0.00   12376/33768       Node::~Node() [160]
+-----------------------------------------------
+                0.00    0.00     168/168         main [28]
+[169]    0.0    0.00    0.00     168         Stats::finish_stats() [169]
+-----------------------------------------------
+                0.00    0.00     168/168         main [28]
+[170]    0.0    0.00    0.00     168         Stats::Stats(Instance*, Config*) [170]
+-----------------------------------------------
+                0.00    0.00     168/168         main [28]
+[171]    0.0    0.00    0.00     168         Utils::print_stats_file(Stats*) [171]
+                0.00    0.00   20160/30744       Stats::set_result(double, double) [161]
+-----------------------------------------------
+                0.00    0.00     168/168         main [28]
+[172]    0.0    0.00    0.00     168         Utils::print_final_stats(Stats*) [172]
+                0.00    0.00     504/30744       Stats::set_result(double, double) [161]
+-----------------------------------------------
+                0.00    0.00     168/168         Vrppl::buildInstance(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [57]
+[173]    0.0    0.00    0.00     168         Instance::Instance() [173]
+-----------------------------------------------
+                0.00    0.00     168/168         Vrppl::buildInstance(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [57]
+[174]    0.0    0.00    0.00     168         std::vector<Node, std::allocator<Node> >::reserve(unsigned long long) [174]
+-----------------------------------------------
+                0.00    0.00     168/168         Vrppl::buildInstance(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [57]
+[175]    0.0    0.00    0.00     168         std::vector<Node, std::allocator<Node> >::operator=(std::vector<Node, std::allocator<Node> > const&) [175]
+-----------------------------------------------
+                0.00    0.00      32/32          Config::print() [179]
+[176]    0.0    0.00    0.00      32         Instance::print() [176]
+-----------------------------------------------
+                0.00    0.00       9/9           Utils::buildInstances(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [59]
+[177]    0.0    0.00    0.00       9         void std::vector<Instance*, std::allocator<Instance*> >::_M_realloc_insert<Instance* const&>(__gnu_cxx::__normal_iterator<Instance**, std::vector<Instance*, std::allocator<Instance*> > >, Instance* const&) [177]
+-----------------------------------------------
+                0.00    0.00       6/6           main [28]
+[178]    0.0    0.00    0.00       6         void std::vector<long, std::allocator<long> >::_M_realloc_insert<long>(__gnu_cxx::__normal_iterator<long*, std::vector<long, std::allocator<long> > >, long&&) [178]
+-----------------------------------------------
+                0.00    0.00       1/1           main [28]
+[179]    0.0    0.00    0.00       1         Config::print() [179]
+                0.00    0.00      32/32          Instance::print() [176]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+  [29] default_run(Instance*, Config*, Stats*) [3] Search::insertion_heuristic() [36] Solution::Solution(Instance*)
+ [152] Node::print()           [4] Search::build_candidate_list() [156] Solution::~Solution()
+ [163] Node::Node()            [8] Search::try_locker_candidate(std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >*, Node*) [37] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::compare(char const*) const
+ [160] Node::~Node()          [43] Search::propagate_virtual_2opt(int, int, int) [168] void std::vector<Node, std::allocator<Node> >::_M_realloc_insert<Node const&>(__gnu_cxx::__normal_iterator<Node*, std::vector<Node, std::allocator<Node> > >, Node const&)
+ [161] Stats::set_result(double, double) [6] Search::try_customer_candidate(std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >*, Node*) [174] std::vector<Node, std::allocator<Node> >::reserve(unsigned long long)
+ [169] Stats::finish_stats()  [23] Search::calculate_delta_distance(std::tuple<int, int, Sequence, double>*) [175] std::vector<Node, std::allocator<Node> >::operator=(std::vector<Node, std::allocator<Node> > const&)
+ [170] Stats::Stats(Instance*, Config*) [24] Search::calculate_delta_swap_1_1(std::vector<Sequence, std::allocator<Sequence> >*, int, std::vector<Sequence, std::allocator<Sequence> >*, int) [49] std::vector<Sequence, std::allocator<Sequence> >::_M_fill_insert(__gnu_cxx::__normal_iterator<Sequence*, std::vector<Sequence, std::allocator<Sequence> > >, unsigned long long, Sequence const&) [clone .constprop.208]
+  [59] Utils::buildInstances(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [26] Search::calculate_delta_swap_2_2(std::vector<Sequence, std::allocator<Sequence> >*, int, std::vector<Sequence, std::allocator<Sequence> >*, int) [39] std::vector<Sequence, std::allocator<Sequence> >::operator=(std::vector<Sequence, std::allocator<Sequence> > const&)
+  [56] Utils::print_route_file(Search*, bool, long) [17] Search::swap_sequence_intraroute(int, int, int) [158] void std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_realloc_insert<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&>(__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+ [171] Utils::print_stats_file(Stats*) [47] Search::propagate_virtual_segment(int, int, Sequence*, Sequence*) [164] void std::vector<Node*, std::allocator<Node*> >::emplace_back<Node*>(Node*&&)
+ [172] Utils::print_final_stats(Stats*) [48] Search::propagate_virtual_swap_1_1(int, int, Sequence*) [159] void std::vector<Node*, std::allocator<Node*> >::_M_realloc_insert<Node* const&>(__gnu_cxx::__normal_iterator<Node**, std::vector<Node*, std::allocator<Node*> > >, Node* const&)
+  [54] Utils::differs(double, double, double) [52] Search::propagate_virtual_swap_1_2(int, int, Sequence*) [177] void std::vector<Instance*, std::allocator<Instance*> >::_M_realloc_insert<Instance* const&>(__gnu_cxx::__normal_iterator<Instance**, std::vector<Instance*, std::allocator<Instance*> > >, Instance* const&)
+  [25] Utils::improves(double, double) [51] Search::propagate_virtual_swap_2_1(int, int, Sequence*, Sequence*) [155] std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > >::reserve(unsigned long long)
+ [162] Utils::tookenize(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [55] Search::propagate_virtual_swap_2_2(int, int, Sequence*, Sequence*) [40] std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > >::operator=(std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > > const&)
+  [57] Vrppl::buildInstance(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [153] Search::run() [27] void std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > >::_M_realloc_insert<std::tuple<int, int, Sequence, double> const&>(__gnu_cxx::__normal_iterator<std::tuple<int, int, Sequence, double>*, std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > > >, std::tuple<int, int, Sequence, double> const&)
+ [179] Config::print()        [33] Search::is_viable()    [50] std::vector<bool, std::allocator<bool> >::_M_insert_aux(std::_Bit_iterator, bool)
+   [5] Search::rvnd_inter()   [20] Search::propagate(int, int) [167] void std::vector<double, std::allocator<double> >::_M_realloc_insert<double const&>(__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, double const&)
+  [14] Search::rvnd_intra()   [45] Search::propagate(int, int) [clone .constprop.210] [154] void std::vector<int, std::allocator<int> >::_M_realloc_insert<int const&>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, int const&)
+  [35] Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*) [60] Search::Search(Instance*, Config*) [178] void std::vector<long, std::allocator<long> >::_M_realloc_insert<long>(__gnu_cxx::__normal_iterator<long*, std::vector<long, std::allocator<long> > >, long&&)
+  [31] Search::ls_intra_2opt() [165] Search::~Search()    [10] void std::__introsort_loop<__gnu_cxx::__normal_iterator<std::tuple<int, int, Sequence, double>*, std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > > >, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::build_candidate_list()::{lambda(std::tuple<int, int, Sequence, double>, std::tuple<int, int, Sequence, double>)#1}> >(__gnu_cxx::__normal_iterator<std::tuple<int, int, Sequence, double>*, std::vector<std::tuple<int, int, Sequence, double>, std::allocator<std::tuple<int, int, Sequence, double> > > >, __gnu_cxx::__ops::_Iter_comp_iter<Search::build_candidate_list()::{lambda(std::tuple<int, int, Sequence, double>, std::tuple<int, int, Sequence, double>)#1}>, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::build_candidate_list()::{lambda(std::tuple<int, int, Sequence, double>, std::tuple<int, int, Sequence, double>)#1}>)
+  [41] Search::insert_sequency(std::tuple<int, int, Sequence, double>) [157] Factory::defineNodeIndexes(Instance*) [13] void std::__introsort_loop<__gnu_cxx::__normal_iterator<std::vector<Sequence, std::allocator<Sequence> >*, std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > > >, long long, __gnu_cxx::__ops::_Iter_comp_iter<Solution::sort_routes()::{lambda(std::vector<Sequence, std::allocator<Sequence> >, std::vector<Sequence, std::allocator<Sequence> >)#1}> >(__gnu_cxx::__normal_iterator<std::vector<Sequence, std::allocator<Sequence> >*, std::vector<std::vector<Sequence, std::allocator<Sequence> >, std::allocator<std::vector<Sequence, std::allocator<Sequence> > > > >, __gnu_cxx::__ops::_Iter_comp_iter<Solution::sort_routes()::{lambda(std::vector<Sequence, std::allocator<Sequence> >, std::vector<Sequence, std::allocator<Sequence> >)#1}>, long long, __gnu_cxx::__ops::_Iter_comp_iter<Solution::sort_routes()::{lambda(std::vector<Sequence, std::allocator<Sequence> >, std::vector<Sequence, std::allocator<Sequence> >)#1}>)
+  [30] Search::iterated_greedy() [58] Instance::calculate_distances() [22] void std::__introsort_loop<__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*)::{lambda(int, int)#1}> >(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__ops::_Iter_comp_iter<Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*)::{lambda(int, int)#1}>, long long, __gnu_cxx::__ops::_Iter_comp_iter<Search::deconstruct(int, std::vector<Node*, std::allocator<Node*> >*)::{lambda(int, int)#1}>)
+  [15] Search::ls_inter_swap_1_1() [176] Instance::print() [38] operator delete(void*)
+  [11] Search::ls_inter_swap_2_1() [173] Instance::Instance() [46] operator new(unsigned long long)
+  [18] Search::ls_inter_swap_2_2() [44] Solution::sort_routes() [12] __fentry__
+  [16] Search::ls_intra_exchange() [166] Solution::print_is_viable(long) [2] __tcf_0
+   [7] Search::propagate_virtual(int, int, Sequence*) [42] Solution::initialize_routes() [9] _mcount_private
+  [19] Search::ls_inter_shift_1_0() [34] Solution::calculate_total_cost() [53] memmove
+  [21] Search::ls_inter_shift_2_0() [32] Solution::clone() [1] <cycle 1>

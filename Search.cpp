@@ -35,7 +35,6 @@ void Search::run() {
 
 void Search::construct() {
     this->insertion_heuristic();
-    this->solution->sort_routes();
 }
 
 void Search::insertion_heuristic() {
@@ -352,7 +351,6 @@ void Search::rvnd_inter() {
             if(this->solution->total_cost < cost_backup) {
                 this->rvnd_intra();
                 cost_backup = this->solution->total_cost;
-                this->solution->sort_routes();
                 last_improved_neighb = neighb[i];
                 i=-1;
             }
@@ -435,8 +433,8 @@ void Search::ls_inter_shift_1_0() {
 
         if(route_a->size() == 2) {
             (route_a->end()-1)->current_distance = 0.0;
+            iter_swap(this->solution->routes.begin()+coordinates[0],this->solution->routes.begin()+this->solution->used_routes-1);
             this->solution->used_routes--;
-            this->solution->sort_routes();
         }
 
         //Reajustando a demanda mínima da rota que foi reduzida
@@ -539,8 +537,8 @@ void Search::ls_inter_shift_2_0() {
 
         if(route_a->size() == 2) {
             (route_a->end()-1)->current_distance = 0.0;
+            iter_swap(this->solution->routes.begin()+coordinates[0],this->solution->routes.begin()+this->solution->used_routes-1);
             this->solution->used_routes--;
-            this->solution->sort_routes();
         }
 
         //Reajustando a demanda mínima da rota que foi reduzida
@@ -764,12 +762,6 @@ void Search::ls_inter_swap_2_1() {
         route_a->erase(route_a->begin()+coordinates[1],route_a->begin()+coordinates[1]+2);
         propagate(coordinates[0],coordinates[1]-1);
 
-        if(route_a->size() == 2) {
-            (route_a->end()-1)->current_distance = 0.0;
-            this->solution->used_routes--;
-            this->solution->sort_routes();
-        }
-
         //Reajustando a demanda mínima da rota que foi reduzida
         if((seq_a_1->customer->load_demand == (route_a->end()-1)->minimun_route_load || seq_a_2->customer->load_demand == (route_a->end()-1)->minimun_route_load) && seq_b->customer->load_demand != (route_a->end()-1)->minimun_route_load) {
             (route_a->end()-1)->minimun_route_load = route_a->at(1).customer->load_demand;
@@ -949,11 +941,11 @@ void Search::deconstruct(int dec_size) {
         route->erase(route->begin()+i_seq,route->begin()+i_seq+1);
 
         if(route->size() == 2) {
-            this->solution->used_routes--;
             (route->end()-1)->current_distance = 0.0;
+            iter_swap(this->solution->routes.begin()+i_route,this->solution->routes.begin()+this->solution->used_routes-1);
+            this->solution->used_routes--;
         }
 
-        this->solution->sort_routes();
 
     }
 
@@ -1362,6 +1354,10 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *c
 
             }
 
+            if((int)route.size() == 2) {
+                break;
+            }
+
 
             route_index++;
         }
@@ -1408,6 +1404,11 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *can
                 }
             }
         }
+
+        if((int)route.size() == 2) {
+            break;
+        }
+
         route_index++;
     }
 }
@@ -1972,7 +1973,7 @@ void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
         (route->end()-1)->minimun_route_load = candidate_sequence->customer->load_demand;
     }
 
-    if(route->size() == 2){ this->solution->used_routes++; }
+    if((int)route->size() == 2){ this->solution->used_routes++; }
 
     route->insert(route->begin()+previous_sequence_index+1,1, *candidate_sequence);
 
@@ -1980,7 +1981,7 @@ void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
 
     this->solution->visited.at(candidate_sequence->customer->index) = true;
 
-    this->solution->sort_routes();
+    //this->solution->sort_routes();
 
 }
 

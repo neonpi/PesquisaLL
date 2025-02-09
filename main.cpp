@@ -18,7 +18,7 @@ int main()
     vector<Instance*> instances = Utils::buildInstances("vrppl");
     cout<<"LOADING FINISHED"<<endl;
 
-    Config* config = new Config(30,0.03);
+    Config* config = new Config(30,0.8);
     config->print();
 
     cout<<"RUNNING EXPERIMENTS"<<endl;
@@ -50,7 +50,7 @@ void default_run(Instance *instance, Config* config, Stats* stats) {
         srand(config->seeds.at(i));
         //cout<<config->seeds.at(i)<<endl;
         //cout<<config->seeds.at(i)<<endl;
-        //srand(23837);
+        srand(23837);
         config->run = i;
 
         Search* search = new Search(instance,config);

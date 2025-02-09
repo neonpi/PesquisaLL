@@ -20,7 +20,7 @@ public:
     void test_routes_distances();
     void print();
     void print_is_viable(long seed);
-    void sort_routes();
+    //void sort_routes();
     Solution* clone();
 
     Instance* instance;

@@ -1,0 +1,16 @@
+instances\vrppl\25\C101_co_25.txt
+instances\vrppl\25\C201_co_25.txt
+instances\vrppl\25\R101_co_25.txt
+instances\vrppl\25\R201_co_25.txt
+instances\vrppl\25\RC101_co_25.txt
+instances\vrppl\25\RC201_co_25.txt
+instances\vrppl\25\C101_co_50.txt
+instances\vrppl\25\C201_co_50.txt
+instances\vrppl\25\R101_co_50.txt
+instances\vrppl\25\R201_co_50.txt
+instances\vrppl\25\RC101_co_50.txt
+instances\vrppl\25\C101_co_100.txt
+instances\vrppl\25\C201_co_100.txt
+instances\vrppl\25\R101_co_100.txt
+instances\vrppl\25\R201_co_100.txt
+instances\vrppl\25\RC101_co_100.txt

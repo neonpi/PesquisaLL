@@ -6,6 +6,7 @@
 #include "Search.h"
 #include "Stats.h"
 #include "Utils.h"
+#include "instance_factory/Vrppl.h"
 
 using namespace std;
 
@@ -55,9 +56,8 @@ void default_run(Instance *instance, Config* config, Stats* stats) {
     for(int i=0;i<config->runs;i++) {
 
         srand(config->seeds.at(i));
-        //cout<<config->seeds.at(i)<<endl;
-        //cout<<config->seeds.at(i)<<endl;
-        //srand(25680);// TODO inviabilidade com alpha em 0.8
+
+        //srand(25680);
         config->run = i;
 
         Search* search = new Search(instance,config);
@@ -111,10 +111,19 @@ void grasp_run(Instance *instance, Config* config, Stats* stats) {
 
 
 void irace_run(int argc, char *argv[]) {
-    string instance = argv[2];
+    string instance_name = argv[2];
     long seed = stol(argv[4]);
     double alpha = stod(argv[6]);
 
-    //srand(time(NULL));
-    cout<<1<<endl;
+    Config* config = new Config(1,alpha);
+    Instance* instance = Vrppl::buildInstance(instance_name);
+
+    Search* search = new Search(instance,config);
+
+    search->construct();
+    cout<<search->solution->total_cost<<endl;
+
+    delete config;
+    delete instance;
+    delete search;
 }

@@ -63,5 +63,5 @@ for /f "tokens=1" %%F in ('more +%lastline% %stdout%') do set COST=%%F
 echo %COST%
 
 :: Un-comment this if you want to delete temporary files.
-:: del %stdout% %stderr%
+del %stdout% %stderr%
 exit 0

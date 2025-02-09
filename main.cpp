@@ -11,36 +11,43 @@ using namespace std;
 
 void default_run(Instance *instance, Config* config, Stats* stats);
 void grasp_run(Instance *instance, Config* config, Stats* stats);
+void irace_run(int argc, char *argv[]);
 
-int main()
+
+int main(int argc, char *argv[])
 {
-    cout<<"LOADING INSTANCES"<<endl;
-    vector<Instance*> instances = Utils::buildInstances("vrppl");
-    cout<<"LOADING FINISHED"<<endl;
+    if(argc < 2) {
 
-    Config* config = new Config(30,0.8);
-    config->print();
+        cout<<"LOADING INSTANCES"<<endl;
+        vector<Instance*> instances = Utils::buildInstances("vrppl");
+        cout<<"LOADING FINISHED"<<endl;
 
-    cout<<"RUNNING EXPERIMENTS"<<endl;
+        Config* config = new Config(30,0.8);
+        config->print();
 
-    for(Instance* instance: instances) {
+        cout<<"RUNNING EXPERIMENTS"<<endl;
 
-        //if(instance->inst_name == "RC103_co_50.txt") {
-            cout<<"Instance "<< instance->inst_name<<endl;
-            Stats* stats = new Stats(instance, config);
-            default_run(instance, config, stats);
+        for(Instance* instance: instances) {
 
-            stats->finish_stats();
-            cout<<"AVG_COST: "<<stats->avg_cost<<" - AVG_TIME: "<<stats->avg_time<<" - BEST_COST: "<<stats->best_cost<<" - BEST_TIME: "<<stats->best_time<<endl;
-            Utils::print_stats_file(stats);
-            Utils::print_final_stats(stats);
-            delete stats;
-        //}
+            //if(instance->inst_name == "RC103_co_25.txt") {
+                cout<<"Instance "<< instance->inst_name<<endl;
+                Stats* stats = new Stats(instance, config);
+                default_run(instance, config, stats);
 
+                stats->finish_stats();
+                cout<<"AVG_COST: "<<stats->avg_cost<<" - AVG_TIME: "<<stats->avg_time<<" - BEST_COST: "<<stats->best_cost<<" - BEST_TIME: "<<stats->best_time<<endl;
+                Utils::print_stats_file(stats);
+                Utils::print_final_stats(stats);
+                delete stats;
+            //}
+
+        }
+
+        delete config;
+        cout<<"EXPERIMENTS FINISHED"<<endl;
+    }else {
+        irace_run(argc, argv);
     }
-
-    delete config;
-    cout<<"EXPERIMENTS FINISHED"<<endl;
     return 0;
 }
 
@@ -50,7 +57,7 @@ void default_run(Instance *instance, Config* config, Stats* stats) {
         srand(config->seeds.at(i));
         //cout<<config->seeds.at(i)<<endl;
         //cout<<config->seeds.at(i)<<endl;
-        srand(23837);
+        //srand(25680);// TODO inviabilidade com alpha em 0.8
         config->run = i;
 
         Search* search = new Search(instance,config);
@@ -100,4 +107,14 @@ void grasp_run(Instance *instance, Config* config, Stats* stats) {
 
 
     }
+}
+
+
+void irace_run(int argc, char *argv[]) {
+    string instance = argv[2];
+    long seed = stol(argv[4]);
+    double alpha = stod(argv[6]);
+
+    //srand(time(NULL));
+    cout<<1<<endl;
 }

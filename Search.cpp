@@ -31,6 +31,7 @@ void Search::run() {
     this->construct();
     this->rvnd_inter();
     this->iterated_greedy();
+
 }
 
 void Search::construct() {
@@ -433,6 +434,8 @@ void Search::ls_inter_shift_1_0() {
 
         if(route_a->size() == 2) {
             (route_a->end()-1)->current_distance = 0.0;
+            (route_a->end()-1)->current_time = 0.0;
+            (route_a->end()-1)->current_load = 0.0;
             iter_swap(this->solution->routes.begin()+coordinates[0],this->solution->routes.begin()+this->solution->used_routes-1);
             this->solution->used_routes--;
         }
@@ -537,6 +540,8 @@ void Search::ls_inter_shift_2_0() {
 
         if(route_a->size() == 2) {
             (route_a->end()-1)->current_distance = 0.0;
+            (route_a->end()-1)->current_time = 0.0;
+            (route_a->end()-1)->current_load = 0.0;
             iter_swap(this->solution->routes.begin()+coordinates[0],this->solution->routes.begin()+this->solution->used_routes-1);
             this->solution->used_routes--;
         }
@@ -907,8 +912,8 @@ void Search::iterated_greedy() {
     Solution* bestSolution = this->solution->clone();
     int dec_size = 1;
     int dec_size_limit = this->instance->customers_qty * 0.4;
-
     while(dec_size<dec_size_limit) {
+
         deconstruct(dec_size);
         insertion_heuristic();
         this->rvnd_inter();
@@ -922,6 +927,7 @@ void Search::iterated_greedy() {
             this->solution = bestSolution->clone();
             dec_size++;
         }
+
     }
 
 }
@@ -942,6 +948,8 @@ void Search::deconstruct(int dec_size) {
 
         if(route->size() == 2) {
             (route->end()-1)->current_distance = 0.0;
+            (route->end()-1)->current_time = 0.0;
+            (route->end()-1)->current_load = 0.0;
             iter_swap(this->solution->routes.begin()+i_route,this->solution->routes.begin()+this->solution->used_routes-1);
             this->solution->used_routes--;
         }
@@ -951,7 +959,6 @@ void Search::deconstruct(int dec_size) {
 
     for(int i=0;i<this->solution->routes.size()
         && (int)this->solution->routes.at(i).size() > 2;i++) {
-
         propagate(i,0);
 
     }

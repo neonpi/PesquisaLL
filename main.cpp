@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         vector<Instance*> instances = Utils::buildInstances("vrppl");
         cout<<"LOADING FINISHED"<<endl;
 
-        Config* config = new Config(30,0.8);
+        Config* config = new Config(30,0.2);
         config->print();
 
         cout<<"RUNNING EXPERIMENTS"<<endl;

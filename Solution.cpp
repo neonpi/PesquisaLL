@@ -7,7 +7,7 @@
 #include <algorithm>
 
 Solution::Solution(Instance* instance) {
-    this->total_cost = 0.0;
+    this->cost = 0.0;
     for (int i=0;i<instance->n_node;i++) {
         this->visited.push_back(false);
     }
@@ -41,9 +41,9 @@ void Solution::initialize_routes() {
 }
 
 void Solution::calculate_total_cost() {
-    this->total_cost = 0.0;
+    this->cost = 0.0;
     for (vector<Sequence> route : this->routes) {
-        this->total_cost += (route.end()-1)->current_distance;
+        this->cost += (route.end()-1)->current_distance;
     }
 }
 
@@ -91,7 +91,7 @@ void Solution::print() {
         }
     }
 
-    cout<<"TOTAL COST: "<<this->total_cost<<endl;
+    cout<<"TOTAL COST: "<<this->cost<<endl;
     cout<<"MAX_V: "<<this->instance->max_vehicle<<endl;
     cout<<"USED_V: "<<used_vehicles<<endl;
     cout<<"PATHS: "<<endl;
@@ -142,8 +142,6 @@ void Solution::print_is_viable(long seed) {
         }
     }
 
-
-
     if (!load_viable) {
         cout<<"Load inviability, seed="<<to_string(seed)<<endl;
         exit(10);
@@ -178,19 +176,29 @@ void Solution::print_is_viable(long seed) {
 
     }
 
+    int n_vehicles = 0;
+    for(vector<Sequence> route: this->routes) {
+        if((int)route.size()>2) {
+            n_vehicles++;
+        }else {
+            break;
+        }
+    }
+
+    if(n_vehicles != this->used_routes) {
+        cout<<"#vehicles differs"<<endl;
+        exit(10);
+    }
 
 }
 
-/*void Solution::sort_routes() {
-    sort(this->routes.begin(), this->routes.end(), [this](vector<Sequence> seq_a, vector<Sequence> seq_b){return seq_a.size() > seq_b.size();});
-}*/
 
 Solution * Solution::clone() {
 
     Solution *s = new Solution(this->instance);
     s->routes = this->routes;
     s->visited = this->visited;
-    s->total_cost = this->total_cost;
+    s->cost = this->cost;
     s->used_routes = this->used_routes;
 
     return s;

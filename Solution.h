@@ -26,7 +26,7 @@ public:
     Instance* instance;
     vector<vector<Sequence>> routes;
     vector<bool> visited;
-    double total_cost;
+    double cost;
     int used_routes;
 };
 

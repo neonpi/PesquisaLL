@@ -57,7 +57,6 @@ void default_run(Instance *instance, Config* config, Stats* stats) {
 
         srand(config->seeds.at(i));
 
-        //srand(25680);
         config->run = i;
 
         Search* search = new Search(instance,config);
@@ -65,7 +64,7 @@ void default_run(Instance *instance, Config* config, Stats* stats) {
         search->run();
         time = clock() - time;
 
-        stats->set_result(search->solution->total_cost,((double) time / CLOCKS_PER_SEC));
+        stats->set_result(search->solution,((double) time / CLOCKS_PER_SEC));
         Utils::print_route_file(search,i==0, config->seeds.at(i));
         search->solution->print_is_viable(config->seeds.at(i));
         delete search;
@@ -88,7 +87,7 @@ void grasp_run(Instance *instance, Config* config, Stats* stats) {
             search->run();
             time = clock() - time;
 
-            if(bestSearch == nullptr || search->solution->total_cost < bestSearch->solution->total_cost) {
+            if(bestSearch == nullptr || search->solution->cost < bestSearch->solution->cost) {
                 delete bestSearch;
                 bestSearch = search;
                 bestSearchTime = time;
@@ -100,7 +99,7 @@ void grasp_run(Instance *instance, Config* config, Stats* stats) {
 
         }
 
-        stats->set_result(bestSearch->solution->total_cost,((double) bestSearchTime / CLOCKS_PER_SEC));
+        stats->set_result(bestSearch->solution,((double) bestSearchTime / CLOCKS_PER_SEC));
         Utils::print_route_file(bestSearch,i==0, config->seeds.at(i));
         delete bestSearch;
 
@@ -121,7 +120,7 @@ void irace_run(int argc, char *argv[]) {
     Search* search = new Search(instance,config);
 
     search->construct();
-    cout<<search->solution->total_cost<<endl;
+    cout<<search->solution->cost<<endl;
 
     delete config;
     delete instance;

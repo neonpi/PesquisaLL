@@ -1248,6 +1248,8 @@ CMakeFiles/prj_evrp.dir/Stats.cpp.obj
  D:/Estudos/Mestrado/VRP/prj_vrppl/Config.h
  D:/Estudos/Mestrado/VRP/prj_vrppl/Instance.h
  D:/Estudos/Mestrado/VRP/prj_vrppl/Node.h
+ D:/Estudos/Mestrado/VRP/prj_vrppl/Sequence.h
+ D:/Estudos/Mestrado/VRP/prj_vrppl/Solution.h
  D:/Estudos/Mestrado/VRP/prj_vrppl/Stats.h
 
 CMakeFiles/prj_evrp.dir/Utils.cpp.obj
@@ -2228,6 +2230,8 @@ CMakeFiles/prj_evrp.dir/main.cpp.obj
  C:/Program Files/JetBrains/CLion 2024.1/bin/mingw/x86_64-w64-mingw32/include/vadefs.h
  C:/Program Files/JetBrains/CLion 2024.1/bin/mingw/x86_64-w64-mingw32/include/wchar.h
  C:/Program Files/JetBrains/CLion 2024.1/bin/mingw/x86_64-w64-mingw32/include/wctype.h
+ D:/Estudos/Mestrado/VRP/prj_vrppl/Instance.h
+ D:/Estudos/Mestrado/VRP/prj_vrppl/Utils.h
  D:/Estudos/Mestrado/VRP/prj_vrppl/Config.h
  D:/Estudos/Mestrado/VRP/prj_vrppl/Instance.h
  D:/Estudos/Mestrado/VRP/prj_vrppl/Node.h
@@ -2236,4 +2240,6 @@ CMakeFiles/prj_evrp.dir/main.cpp.obj
  D:/Estudos/Mestrado/VRP/prj_vrppl/Solution.h
  D:/Estudos/Mestrado/VRP/prj_vrppl/Stats.h
  D:/Estudos/Mestrado/VRP/prj_vrppl/Utils.h
+ D:/Estudos/Mestrado/VRP/prj_vrppl/instance_factory/Factory.h
+ D:/Estudos/Mestrado/VRP/prj_vrppl/instance_factory/Vrppl.h
 

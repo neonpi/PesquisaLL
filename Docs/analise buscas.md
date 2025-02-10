@@ -71,8 +71,14 @@ V_5: D0 -> C10 -> C13 -> C34(P1) -> Dt ->
 V_6: D0 -> C18(P0) -> C12(P0) -> Dt ->
 
 Colocar na saida o custo da solucao
-colocar na tabela de resultados a qtd de veiculos
-melhorar o construtivo (lista de candidatos)
-Usar ig multi start (tipo o grasp)
-afrouxar os parametros pra instancia que ta dando 16% de gap
+OK - colocar na tabela de resultados a qtd de veiculos
+OK - melhorar o construtivo (lista de candidatos)
+    Rodando - Parametrizar alpha do construtivo no irace
+Aguardando parametrização - Usar ig multi start (tipo o grasp)
+Aguardando parametrização - afrouxar os parametros pra instancia que ta dando 16% de gap
 Procurar algum artigo do anand para substituir alguma citação dele referente a rvnd
+
+
+
+
+Desde o final da década de 50 a literatura apresenta estudos envolvendo logística de última milha.

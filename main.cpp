@@ -33,11 +33,12 @@ int main(int argc, char *argv[])
             //if(instance->inst_name == "RC103_co_25.txt") {
                 cout<<"Instance "<< instance->inst_name<<endl;
                 Stats* stats = new Stats(instance, config);
+                Utils::print_result_file(nullptr, instance, 0, 0.0, 0.0);
+
                 default_run(instance, config, stats);
 
                 stats->finish_stats();
-                cout<<"AVG_COST: "<<stats->avg_cost<<" - AVG_TIME: "<<stats->avg_time<<" - BEST_COST: "<<stats->best_cost<<" - BEST_TIME: "<<stats->best_time<<endl;
-                Utils::print_stats_file(stats);
+                Utils::print_screen_run(stats);
                 Utils::print_final_stats(stats);
                 delete stats;
             //}
@@ -65,7 +66,7 @@ void default_run(Instance *instance, Config* config, Stats* stats) {
         time = clock() - time;
 
         stats->set_result(search->solution,((double) time / CLOCKS_PER_SEC));
-        Utils::print_route_file(search,i==0, config->seeds.at(i));
+        Utils::print_result_file(search, instance, i, (double) time / CLOCKS_PER_SEC, config->seeds.at(i));
         search->solution->print_is_viable(config->seeds.at(i));
         delete search;
 
@@ -100,7 +101,7 @@ void grasp_run(Instance *instance, Config* config, Stats* stats) {
         }
 
         stats->set_result(bestSearch->solution,((double) bestSearchTime / CLOCKS_PER_SEC));
-        Utils::print_route_file(bestSearch,i==0, config->seeds.at(i));
+        Utils::print_result_file(bestSearch, instance, i, (double) bestSearchTime / CLOCKS_PER_SEC, config->seeds.at(i));
         delete bestSearch;
 
 

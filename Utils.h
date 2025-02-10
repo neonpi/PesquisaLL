@@ -14,13 +14,13 @@
 class Utils {
 public:
     static vector<Instance*> buildInstances(string problem);
-    static void print_route_file(Search* search, bool reset, long seed);
-    static void print_stats_file(Stats* stats);
+    static void print_result_file(Search *search, Instance *instance, int run, double time, long seed);
     static vector<string> tookenize(string str, string symbol);
 
     static bool differs(double a, double b, double epsilon = 0.001);
     static bool improves(double best, double current);
     static void print_final_stats(Stats* stats);
+    static void print_screen_run(Stats* stats);
 
 };
 

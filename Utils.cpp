@@ -34,49 +34,45 @@ vector<Instance *> Utils::buildInstances(string problem) {
     return instances;
 }
 
-void Utils::print_route_file(Search *search, bool reset, long seed) {
+
+void Utils::print_result_file(Search *search, Instance *instance, int run, double time, long seed) {
     ofstream file;
-    if(reset) {
-        file.open("Output/"+search->instance->inst_name+"_routes", ofstream::out);
-        file<<"route"<<endl;
-    }else {
-        file.open("Output/"+search->instance->inst_name+"_routes", ofstream::app);
-    }
-    if (!file.is_open()) {
-        cout<<"Output file not opened"<<endl;
-    }
 
-    for (vector<Sequence> route: search->solution->routes) {
-        if(route.size()>2) {
-            string route_string = "";
-
-            for (Sequence sequence: route) {
-                route_string+=sequence.node->id;
-
-                if (sequence.node->id != "Dt") {
-                    if(sequence.node->type == "p") {
-                        route_string+= "("+sequence.customer->id+")";
-                    }
-                    route_string+=" ";
-                }
-            }
-            file<<route_string<<endl;
+    if(search == nullptr) {
+        file.open("Output/"+instance->inst_name+"_stats", ofstream::out);
+        if (!file.is_open()) {
+            cout<<"Output file not opened"<<endl;
         }
+        file<<"run,cost,#_vehicles,time,seed"<<endl;
+    }else{
+        file.open("Output/"+search->instance->inst_name+"_stats", ofstream::app);
+        if (!file.is_open()) {
+            cout<<"Output file not opened"<<endl;
+        }
+        file<<"--- "<<to_string(run)<<","<<to_string(search->solution->cost)<<","<<to_string(search->solution->used_routes)<<","<<to_string(time)<<","<<to_string(seed)<<endl;
+
+        for (vector<Sequence> route: search->solution->routes) {
+            if(route.size()>2) {
+                string route_string = "";
+
+                for (Sequence sequence: route) {
+                    route_string+=sequence.node->id;
+
+                    if (sequence.node->id != "Dt") {
+                        if(sequence.node->type == "p") {
+                            route_string+= "("+sequence.customer->id+")";
+                        }
+                        route_string+=" ";
+                    }
+                }
+                file<<route_string<<endl;
+            }
+
+        }
+        file<<endl;
 
     }
-    file<<"--- "<<to_string(seed)<<endl;
 
-    file.close();
-}
-
-void Utils::print_stats_file(Stats *stats) {
-    ofstream file;
-    file.open("Output/"+stats->instance->inst_name+"_stats", ofstream::out);
-
-    file<<"run,cost,time,seed"<<endl;
-    for(int i=0;i<stats->config->runs;i++) {
-        file<<to_string(i)<<","<<to_string(stats->costs.at(i))<<","<<to_string(stats->times.at(i))<<","<<to_string(stats->config->seeds.at(i))<<endl;
-    }
 
     file.close();
 
@@ -111,14 +107,18 @@ void Utils::print_final_stats(Stats *stats) {
 
     if(stats->instance->inst_name == "C101_co_25.txt") {
         file.open("Output/0_final",ios::out);
-        file<<"instance,avg_time,avg_cost,best_cost"<<endl;
+        file<<"instance,avg_time,avg_cost,#_vehicles,best_cost"<<endl;
         file.close();
     }
 
     file.open("Output/0_final",ios::app);
 
-    file<<stats->instance->inst_name<<","<<to_string(stats->avg_time)<<","<<to_string(stats->avg_cost)<<","<<to_string(stats->best_cost)<<endl;
+    file<<stats->instance->inst_name<<","<<to_string(stats->avg_time)<<","<<to_string(stats->avg_cost)<<","<<to_string(stats->best_solution->used_routes)<<","<<to_string(stats->best_solution->cost)<<endl;
 
     file.close();
+}
+
+void Utils::print_screen_run(Stats *stats) {
+    cout<<"AVG_COST: "<<stats->avg_cost<<" - AVG_TIME: "<<stats->avg_time<<" - BEST_COST: "<<stats->best_solution->cost<<" - BEST_TIME: "<<stats->best_time<<endl;
 }
 

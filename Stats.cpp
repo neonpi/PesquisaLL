@@ -15,9 +15,8 @@ void Stats::set_result(Solution* solution, double time) {
     this->costs.push_back(solution->cost);
     this->times.push_back(time);
 
-    if(this->best_cost == -1.0 || solution->cost < this->best_cost) {
-        this->best_cost = solution->cost;
-        this->best_n_vechicle = solution->used_routes;
+    if(this->best_solution == nullptr || solution->cost < this->best_solution->cost) {
+        this->best_solution = solution;
     }
 
     if(this->best_time == -1.0 || time < this->best_time) {

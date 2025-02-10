@@ -19,11 +19,11 @@ public:
     Config* config;
     vector<double> costs;
     vector<double> times;
-    double best_cost = -1.0;
-    double best_time = -1.0;
-    int best_n_vechicle = 0;
-    double avg_cost = 0;
-    double avg_time = 0;
+
+    Solution* best_solution = nullptr;
+    double best_time = 0.0;
+    double avg_cost = 0.0;
+    double avg_time = 0.0;
 
 
 };

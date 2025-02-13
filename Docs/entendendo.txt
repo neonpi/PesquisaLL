@@ -1,0 +1,4 @@
+Idéia de busca local:
+testar trocar o atendimento via locker para atendimento via home, e vice versa
+
+na reconstrução, a lista de candidatos fica muito populada e sem diferença se o nó for de um locker e o destido for uma sequencia do mesmo locker. Tratar isso

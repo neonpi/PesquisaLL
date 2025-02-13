@@ -44,8 +44,6 @@ void Search::insertion_heuristic() {
 
     while(!cand_list.empty()) {
 
-        //tuple<int,int,Sequence,double> candidate = cand_list.at(0); //GULOSO
-
         //Randomizado
         int candidates = int((int)cand_list.size()*this->config->alpha);
 
@@ -62,6 +60,43 @@ void Search::insertion_heuristic() {
         cand_list.erase(cand_list.begin(),cand_list.end());
 
         cand_list = build_candidate_list();
+    }
+
+    this->solution->calculate_total_cost();
+}
+
+void Search::insertion_heuristic_ig() {
+
+    vector<vector<tuple<int,int,Sequence,double>>> cand_list = build_candidate_list_ig(); //(rota,antecessor,cliente destino)
+
+    while(!cand_list.empty()) {
+        //tuple<int,int,Sequence,double> candidate = cand_list.at(0); //GULOSO
+
+        //Randomizado
+        int qty_groups = int((int)cand_list.size()*this->config->alpha);
+
+        int rand_index = 0;
+        if(qty_groups>2) {
+            rand_index = rand()%qty_groups;
+        }
+
+        vector<tuple<int,int,Sequence,double>> group = cand_list.at(rand_index);
+
+        int candidates = (int)group.size();
+
+        rand_index = 0;
+        if(candidates>2) {
+            rand_index = rand()%candidates;
+        }
+
+        tuple<int,int,Sequence,double> candidate = group.at(rand_index);
+
+        insert_sequency(candidate);
+
+
+        cand_list.erase(cand_list.begin(),cand_list.end());
+
+        cand_list = build_candidate_list_ig();
     }
 
     this->solution->calculate_total_cost();
@@ -932,7 +967,7 @@ void Search::iterated_greedy() {
                 deconstruct_route(iter-iter_random_limit);
             }
 
-            insertion_heuristic();
+            insertion_heuristic_ig();
 
             this->rvnd_inter();
 
@@ -1368,6 +1403,14 @@ vector<tuple<int, int, Sequence, double>> Search::build_candidate_list() {
     sort(cand_list.begin(),cand_list.end(),[this](const tuple<int,int,Sequence, double> cus_a, const tuple<int,int,Sequence, double> cus_b){return get<3>(cus_a) < get<3>(cus_b);});
 
     return cand_list;
+}
+
+vector<vector<tuple<int, int, Sequence, double>>> Search::build_candidate_list_ig() {
+
+    vector<tuple<int,int,Sequence, double>> cand_list = build_candidate_list();
+
+    vector<vector<tuple<int, int, Sequence, double>>> parsed_list = group_by_delta(&cand_list);
+    return parsed_list;
 }
 
 void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node *cand_node) {
@@ -1976,29 +2019,31 @@ bool Search::broke_time_window() {
         this->virtual_sequence->current_time > this->virtual_sequence->node->time_window[1];
 }
 
-bool Search::sort_function(const tuple<int, int, Sequence> cus_a, const tuple<int, int, Sequence> cus_b) {
-    Sequence a_previous_sequence = this->solution->routes.at(get<0>(cus_a)).at(get<1>(cus_a));
-    Sequence a_next_sequence = this->solution->routes.at(get<0>(cus_a)).at(get<1>(cus_a)+1);
+vector<vector<tuple<int, int, Sequence, double>>> Search::group_by_delta(
+    vector<tuple<int, int, Sequence, double>> *cand_list) {
 
-    double distance_prev_next = this->instance->distances[a_previous_sequence.node->index][a_next_sequence.node->index];
-    double distance_prev_cus = this->instance->distances[a_previous_sequence.node->index][get<2>(cus_a).node->index];
-    double distance_cus_next = this->instance->distances[get<2>(cus_a).node->index][a_next_sequence.node->index];
+    vector<vector<tuple<int, int, Sequence, double>>> all_group_list;
+
+    for(int i_cand_list = 0;i_cand_list<(int)cand_list->size();i_cand_list++) {
+        vector<tuple<int, int, Sequence, double>> group_list;
+
+        group_list.push_back(cand_list->at(i_cand_list++));
+
+        while(i_cand_list < (int) cand_list->size() &&
+            get<3>(*(group_list.end()-1)) == get<3>(cand_list->at(i_cand_list))) {
+                group_list.push_back(cand_list->at(i_cand_list++));
+        }
+
+        all_group_list.push_back(group_list);
+
+        i_cand_list--;
+
+    }
 
 
-    double delta_cus_a = distance_prev_cus + distance_cus_next - distance_prev_next;
-
-
-    Sequence b_previous_sequence = this->solution->routes.at(get<0>(cus_b)).at(get<1>(cus_b));
-    Sequence b_next_sequence = this->solution->routes.at(get<0>(cus_b)).at(get<1>(cus_b)+1);
-
-    distance_prev_next = this->instance->distances[b_previous_sequence.node->index][b_next_sequence.node->index];
-    distance_prev_cus = this->instance->distances[b_previous_sequence.node->index][get<2>(cus_b).node->index];
-    distance_cus_next = this->instance->distances[get<2>(cus_b).node->index][b_next_sequence.node->index];
-
-    double delta_cus_b = distance_prev_cus + distance_cus_next - distance_prev_next;
-
-   return delta_cus_a < delta_cus_b;
+    return all_group_list;
 }
+
 
 void Search::calculate_delta_distance(tuple<int, int, Sequence, double> *cus) {
     Sequence a_previous_sequence = this->solution->routes.at(get<0>(*cus)).at(get<1>(*cus));
@@ -2044,7 +2089,30 @@ void Search::print_candidate_list(vector<tuple<int, int, Sequence, double>> *can
         int cand_route = get<0>(cand);
         int cand_index = get<1>(cand);
         Sequence *cand_sequence = &get<2>(cand);
-        cout<<cand_route<<" - "<<cand_index<<" - "<<cand_sequence->node->id<<" - "<<get<3>(cand)<<endl;;
+
+        if(cand_sequence->node!=cand_sequence->customer) {
+            cout<<cand_route<<" - "<<cand_index<<" - ("<<cand_sequence->customer->id<<")"<<cand_sequence->node->id<<" - "<<get<3>(cand)<<endl;;
+        }else {
+            cout<<cand_route<<" - "<<cand_index<<" - "<<cand_sequence->node->id<<" - "<<get<3>(cand)<<endl;;
+        }
+    }
+    cout<<endl;
+}
+
+void Search::print_ig_candidate_list(vector<vector<tuple<int, int, Sequence, double>>> *cand_list) {
+    for(vector<tuple<int,int,Sequence, double>> cand_group: *cand_list) {
+        for(tuple<int,int,Sequence, double> cand: cand_group) {
+            int cand_route = get<0>(cand);
+            int cand_index = get<1>(cand);
+            Sequence *cand_sequence = &get<2>(cand);
+
+            if(cand_sequence->node!=cand_sequence->customer) {
+                cout<<cand_route<<" - "<<cand_index<<" - ("<<cand_sequence->customer->id<<")"<<cand_sequence->node->id<<" - "<<get<3>(cand)<<" | ";
+            }else {
+                cout<<cand_route<<" - "<<cand_index<<" - "<<cand_sequence->node->id<<" - "<<get<3>(cand)<<" | ";
+            }
+        }
+        cout<<endl;
     }
     cout<<endl;
 }

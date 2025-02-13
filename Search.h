@@ -28,6 +28,7 @@ public:
     //Construtivo
     void construct();
     void insertion_heuristic();
+    void insertion_heuristic_ig();
 
     //Busca local
     void rvnd_intra();
@@ -35,6 +36,7 @@ public:
     void ls_intra_2opt();
     void ls_intra_or_opt_1();
     void ls_intra_or_opt_k(int k);
+
 
     void rvnd_inter();
     void ls_inter_shift_1_0();
@@ -68,6 +70,7 @@ public:
     bool is_viable();
 
     vector<tuple<int, int, Sequence, double>> build_candidate_list();
+    vector<vector<tuple<int, int, Sequence, double>>> build_candidate_list_ig();
     void insert_sequency(tuple<int, int, Sequence, double> candidate);
 
     void try_customer_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node* cand_node);
@@ -91,7 +94,7 @@ public:
     void fill_forward(Sequence *previous_sequence, Sequence* current_sequence);
 
     bool broke_time_window();
-    bool sort_function(const tuple<int, int, Sequence> cus_a, const tuple<int, int, Sequence> cus_b);
+    vector<vector<tuple<int, int, Sequence, double>>> group_by_delta(vector<tuple<int, int, Sequence, double>> *cand_list);
 
 
 
@@ -104,6 +107,7 @@ public:
 
     void calculate_delta_distance(tuple<int, int, Sequence, double> *cus);
     void print_candidate_list(vector<tuple<int, int, Sequence, double>> *cand_list);
+    void print_ig_candidate_list(vector<vector<tuple<int, int, Sequence, double>>> *cand_list);
 
     void shift(vector<Sequence> *route, int i_seq_a, int i_seq_b);
     void shift_k(int k,vector<Sequence> *route, int i_seq_a, int i_seq_b);

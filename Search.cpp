@@ -350,9 +350,14 @@ void Search::rvnd_inter() {
                     cout<<"Unknown LS"<<endl;
             }
             if(this->solution->cost < cost_backup) {
+                double cost_before_intra = this->solution->cost;
                 this->rvnd_intra();
                 cost_backup = this->solution->cost;
-                last_improved_neighb = neighb[i];
+                if(this->solution->cost < cost_before_intra) {
+                    last_improved_neighb = -1;
+                }else {
+                    last_improved_neighb = neighb[i];
+                }
                 i=-1;
             }
         }
@@ -912,28 +917,39 @@ void Search::iterated_greedy() {
     Solution* bestSolution = this->solution->clone();
     int dec_size = 1;
     int dec_size_limit = this->instance->customers_qty*0.4;
-    int iter_limit = this->solution->used_routes;
-    int iter=0;
+
+    int iter_random_limit = 10;
+    int iter_total_limit = this->solution->used_routes + iter_random_limit;
+
 
     while(dec_size<dec_size_limit) {
 
-        //deconstruct_random(dec_size);
-        deconstruct_route(0);
-        insertion_heuristic();
-        this->rvnd_inter();
+        for(int iter=0; iter<iter_total_limit;iter++) {
 
-        if(this->solution->cost < bestSolution->cost) {
-            delete bestSolution;
-            bestSolution = this->solution->clone();
-            dec_size = 1;
-        }else {
-            delete this->solution;
-            this->solution = bestSolution->clone();
-            dec_size++;
+            if(iter<iter_random_limit) {
+                deconstruct_random(dec_size);
+            }else {
+                deconstruct_route(iter-iter_random_limit);
+            }
 
+            insertion_heuristic();
 
+            this->rvnd_inter();
+
+            if(this->solution->cost < bestSolution->cost) {
+                delete bestSolution;
+                bestSolution = this->solution->clone();
+                iter_total_limit = this->solution->used_routes + iter_random_limit;
+                dec_size = 0;
+                break;
+            }else {
+                delete this->solution;
+                this->solution = bestSolution->clone();
+            }
 
         }
+
+        dec_size++;
 
     }
 

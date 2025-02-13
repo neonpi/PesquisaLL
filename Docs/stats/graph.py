@@ -141,7 +141,7 @@ def build_nodes(G,node_size):
             # text= [G.nodes[node]['node_data'].id if (G.nodes[node]['node_data'].id !='Dt' and G.nodes[node]['node_data'].id !='S0') else "" for node in G.nodes()  ],
             text= build_node_text(G),
             textposition='top center',
-            textfont= dict(color='#A7C7E7',
+            textfont= dict(color='black',
                         weight='bold',
                         size=max(10,node_size*0.3)),
             marker = dict(color=[choose_node_color(G.nodes[node]['node_data']) for node in G.nodes()],
@@ -151,7 +151,7 @@ def build_nodes(G,node_size):
                         symbol=[choose_node_symbol(G.nodes[node]['node_data']) for node in G.nodes()])
             
         )
-
+# TODO Está quebrando pq os arquivos de saida estão diferentes 
 def choose_node_symbol(node):
     if node.type == 'd':
         return 'square-x'

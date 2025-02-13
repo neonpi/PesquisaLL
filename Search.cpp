@@ -911,10 +911,14 @@ void Search::ls_inter_swap_2_2() {
 void Search::iterated_greedy() {
     Solution* bestSolution = this->solution->clone();
     int dec_size = 1;
-    int dec_size_limit = this->instance->customers_qty * 0.4;
+    int dec_size_limit = this->instance->customers_qty*0.4;
+    int iter_limit = this->solution->used_routes;
+    int iter=0;
+
     while(dec_size<dec_size_limit) {
 
-        deconstruct(dec_size);
+        //deconstruct_random(dec_size);
+        deconstruct_route(0);
         insertion_heuristic();
         this->rvnd_inter();
 
@@ -926,13 +930,16 @@ void Search::iterated_greedy() {
             delete this->solution;
             this->solution = bestSolution->clone();
             dec_size++;
+
+
+
         }
 
     }
 
 }
 
-void Search::deconstruct(int dec_size) {
+void Search::deconstruct_random(int dec_size) {
 
 
     for(int i=0;i<dec_size;i++) {
@@ -957,14 +964,32 @@ void Search::deconstruct(int dec_size) {
 
     }
 
-    for(int i=0;i<this->solution->routes.size()
-        && (int)this->solution->routes.at(i).size() > 2;i++) {
+    for(int i=0;i<this->solution->used_routes;i++) {
         propagate(i,0);
-
     }
 
+    //this->solution->calculate_total_cost();
 
 
+
+
+
+}
+
+void Search::deconstruct_route(int i_route) {
+    vector<Sequence> *route = &this->solution->routes.at(i_route);
+
+    for(int i_seq = 1; i_seq<(route->size()-1);i_seq++) {
+        this->solution->visited.at(route->at(i_seq).customer->index) = false;
+    }
+
+    route->erase(route->begin()+1,route->end()-1);
+
+    route->at(1).current_distance = 0.0;
+    route->at(1).current_time = 0.0;
+    route->at(1).current_load = 0.0;
+    iter_swap(this->solution->routes.begin()+i_route,this->solution->routes.begin()+this->solution->used_routes-1);
+    this->solution->used_routes--;
 
 
 }
@@ -1988,7 +2013,6 @@ void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
 
     this->solution->visited.at(candidate_sequence->customer->index) = true;
 
-    //this->solution->sort_routes();
 
 }
 

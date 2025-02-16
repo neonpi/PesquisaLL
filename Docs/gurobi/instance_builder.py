@@ -1,5 +1,5 @@
 def build_instance(file_name):
-    print(f"BUILDING INSTANCE {file_name.split("/")[5]}")
+    print(f"BUILDING INSTANCE {file_name.split("/")[len(file_name.split("/"))-1]}")
     instance_file = open(file_name,"r")
     
     lines = [line.strip() for line in instance_file.readlines()]
@@ -34,6 +34,7 @@ def build_instance(file_name):
         'earliest' : float(lines[current_line].split(" ")[2]),
         'latest' : float(lines[current_line].split(" ")[3]),
         'service_time' : float(lines[current_line].split(" ")[4]),
+        'demand': 0,
         'type' : lines[current_line].split(" ")[5]
     }
     nodes.append(depot)
@@ -68,6 +69,7 @@ def build_instance(file_name):
         'earliest' : float(lines[i].split(" ")[2]),
         'latest' : float(lines[current_line].split(" ")[3]),
         'service_time' : float(lines[i].split(" ")[4]),
+        'demand': 0,
         'type' : lines[i].split(" ")[5],
         }
         locker_count+=1
@@ -92,11 +94,12 @@ def build_instance(file_name):
     return {
         'qty_customer': qty_customer,
         'qty_locker': qty_locker,
+        'qty_nodes': qty_locker + qty_customer + 1,
         'max_vehicle': max_vehicle,
         'vehicle_capacity': vehicle_capacity,
         'nodes': nodes,
         'customers': customers,
         'lockers': lockers,
         'depot': depot,
-        'distance': distances
+        'distances': distances
     }

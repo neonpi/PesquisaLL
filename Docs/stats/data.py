@@ -92,7 +92,7 @@ def build_instances_vrppl():
         instance_file = open(instance_name,"r")
 
         new_instance = Instance()
-        new_instance.name = instance_name.split("\\")[5]
+        new_instance.name = instance_name.split("\\")[len(instance_name.split("\\"))-1]
 
         #Numero de clientes e lockers
         line = instance_file.readline()

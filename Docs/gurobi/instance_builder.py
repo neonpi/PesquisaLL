@@ -24,7 +24,7 @@ def build_instance(file_name):
     current_line += qty_customer
     
     #Preenchendo nos
-    nodes = list()
+    nodes = dict()
     
     #Deposito
     depot = {
@@ -37,10 +37,10 @@ def build_instance(file_name):
         'demand': 0,
         'type' : lines[current_line].split(" ")[5]
     }
-    nodes.append(depot)
+    nodes['D']=depot
     current_line += 1
     
-    customers = list()
+    customers = dict()
     customer_count = 1
     for i in range(current_line, current_line + qty_customer):
         customer = {
@@ -54,8 +54,8 @@ def build_instance(file_name):
         'type' : lines[i].split(" ")[5],
         }
         customer_count+=1
-        customers.append(customer)
-        nodes.append(customer)
+        customer[customer['label']]=customer
+        nodes[customer['label']]=customer
     
     current_line += qty_customer
     
@@ -74,18 +74,17 @@ def build_instance(file_name):
         }
         locker_count+=1
         lockers.append(locker)
-        nodes.append(locker)
+        nodes[locker['label']]=locker
     
-    distances = list()
+    costs = dict()
     for i,node_i in enumerate(nodes):
-         line_distance = []
-         node_i['index'] = i
+         current_node_i = nodes[node_i]
+         current_node_i['index'] = i
          for j,node_j in enumerate(nodes):
-             line_distance.append(((node_i['x']-node_j['x'])**2 + (node_i['y']-node_j['y'])**2)**(1/2))
-         distances.append(line_distance)
+             current_node_j = nodes[node_j]
+             distance = ((current_node_i['x']-current_node_j['x'])**2 + (current_node_i['y']-current_node_j['y'])**2)**(1/2)
+             costs[f"c_{current_node_i['label']}{current_node_j['label']}"] = distance
                 
-    
-    # print('u' in depot)
     print(f"Qty customer:{qty_customer}")
     print(f"Qty locker:{qty_locker}")
     print(f"Max vehicles:{max_vehicle}")
@@ -94,12 +93,12 @@ def build_instance(file_name):
     return {
         'qty_customer': qty_customer,
         'qty_locker': qty_locker,
-        'qty_nodes': qty_locker + qty_customer + 1,
+        'qty_nodes': qty_locker,
         'max_vehicle': max_vehicle,
         'vehicle_capacity': vehicle_capacity,
         'nodes': nodes,
         'customers': customers,
         'lockers': lockers,
         'depot': depot,
-        'distances': distances
+        'costs': costs
     }

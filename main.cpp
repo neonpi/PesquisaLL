@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 
+#include "vector"
 #include "Config.h"
 #include "Instance.h"
 #include "Search.h"
@@ -12,6 +13,7 @@ using namespace std;
 
 void default_run(Instance *instance, Config* config, Stats* stats);
 void grasp_run(Instance *instance, Config* config, Stats* stats);
+void test_solution(Instance *instance, Config* config, Stats* stats);
 void irace_run(int argc, char *argv[]);
 
 
@@ -30,18 +32,19 @@ int main(int argc, char *argv[])
 
         for(Instance* instance: instances) {
 
-            //if(instance->inst_name == "RC103_co_25.txt") {
+            if(instance->inst_name == "R101_co_25.txt") {
                 cout<<"Instance "<< instance->inst_name<<endl;
                 Stats* stats = new Stats(instance, config);
                 Utils::print_result_file(nullptr, instance, 0, 0.0, 0.0);
 
-                default_run(instance, config, stats);
+                test_solution(instance, config, stats);
+                //default_run(instance, config, stats);
 
                 stats->finish_stats();
                 Utils::print_screen_run(stats);
                 Utils::print_final_stats(stats);
                 delete stats;
-            //}
+            }
 
         }
 
@@ -126,4 +129,19 @@ void irace_run(int argc, char *argv[]) {
     delete config;
     delete instance;
     delete search;
+}
+
+void test_solution(Instance *instance, Config* config, Stats* stats) {
+    vector<vector<string>> routes = {
+        {"C14","P1-C1","P1-C3","P1-C4","P1-C5","P1-C12","P1-C13","P1-C15","P1-C20","P1-C21","P1-C22","P1-C24","C16"},
+        {"C0","C9","P0-C2","P0-C6","P0-C7","P0-C8","P0-C10","P0-C11","P0-C17","P0-C19","P0-C23","C18"}
+    };
+
+    Search *s = new Search(instance,config);
+
+    s->build_predefined_solution(routes);
+
+    delete s;
+
+
 }

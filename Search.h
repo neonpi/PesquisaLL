@@ -112,7 +112,7 @@ public:
     void shift(vector<Sequence> *route, int i_seq_a, int i_seq_b);
     void shift_k(int k,vector<Sequence> *route, int i_seq_a, int i_seq_b);
     void test_cost();
-
+    void build_predefined_solution(vector<vector<string>> solution);
     Instance* instance;
     Solution* solution;
     Sequence* virtual_sequence;

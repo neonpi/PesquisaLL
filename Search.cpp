@@ -2149,3 +2149,39 @@ void Search::test_cost() {
     }
 }
 
+void Search::build_predefined_solution(vector<vector<string>> solution) {
+
+    for(int i_pred_route = 0; i_pred_route < (int)solution.size(); i_pred_route++) {
+        vector<string> pred_route = solution.at(i_pred_route);
+        for(int i_pred_node = 0; i_pred_node < (int)pred_route.size(); i_pred_node++) {
+            string route_el = pred_route.at(i_pred_node);
+            vector<string> parsed_route_el = Utils::tookenize(route_el,"-");
+
+            Node* node = this->instance->find_node_per_id(parsed_route_el.at(0));
+            Node* customer = nullptr;
+            if((int) parsed_route_el.size() > 1) {
+                customer = this->instance->find_node_per_id(parsed_route_el.at(1));
+            }else {
+                customer = node;
+            }
+
+            Sequence s;
+            s.node = node;
+            s.customer = customer;
+            this->solution->visited[customer->index] = true;
+            vector<Sequence>* route = &this->solution->routes.at(i_pred_route);
+            route->insert(route->begin() + i_pred_node + 1,1,s);
+
+            cout<<endl;
+        }
+
+        propagate(i_pred_route,0);
+    }
+    this->solution->calculate_total_cost();
+    this->solution->print();
+    cout<<"-----------AGORA VAI TESTAR:--------"<<endl<<endl;
+    this->solution->print_is_viable(2);
+    cout<<endl;
+
+}
+

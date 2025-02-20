@@ -75,3 +75,11 @@ void Instance::print() {
         cout<<endl;
     }
 }
+
+Node * Instance::find_node_per_id(string id) {
+    for(int i=0; i<(int)this->nodes.size(); i++) {
+        if(this->nodes.at(i).id == id) {
+            return &this->nodes.at(i);
+        }
+    }
+}

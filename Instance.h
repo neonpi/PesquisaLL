@@ -30,6 +30,7 @@ public:
 
     void calculate_distances();
     void print();
+    Node* find_node_per_id(string id);
 };
 
 

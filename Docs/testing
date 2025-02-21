@@ -1,0 +1,8 @@
+V_0: D0 -> C18 -> C2(P0) -> C6(P0) -> C7(P0) -> C8(P0) -> C10(P0) -> C11(P0) -> C17(P0) -> C19(P0) -> C23(P0) -> C9 -> C0 -> Dt ->
+V_1: D0 -> C14 -> C1(P1) -> C3(P1) -> C4(P1) -> C5(P1) -> C12(P1) -> C13(P1) -> C15(P1) -> C20(P1) -> C21(P1) -> C22(P1) -> C24(P1) -> C16 -> Dt ->
+
+Variavel vl_k
+vl_v_0= 161.0 vl_v_1= 157.0
+
+Time window inviability (2): (C9, C0), seed=2
+

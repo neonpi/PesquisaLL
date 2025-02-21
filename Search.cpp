@@ -2178,7 +2178,7 @@ void Search::build_predefined_solution(vector<vector<string>> solution) {
         propagate(i_pred_route,0);
     }
     this->solution->calculate_total_cost();
-    this->solution->print();
+    //this->solution->print();
     cout<<"-----------AGORA VAI TESTAR:--------"<<endl<<endl;
     this->solution->print_is_viable(2);
     cout<<endl;

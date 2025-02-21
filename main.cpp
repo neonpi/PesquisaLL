@@ -132,9 +132,12 @@ void irace_run(int argc, char *argv[]) {
 }
 
 void test_solution(Instance *instance, Config* config, Stats* stats) {
+        /*{"C18", "P0-C2","P0-C6","P0-C7","P0-C8","P0-C10","P0-C11","P0-C17","P0-C19","P0-C23", "C9", "C0"},
+        {"C14", "P1-C1", "P1-C3", "P1-C4", "P1-C5", "P1-C12", "P1-C13", "P1-C15", "P1-C20", "P1-C21", "P1-C22", "P1-C24", "C16"}
+    */
     vector<vector<string>> routes = {
-        {"C14","P1-C1","P1-C3","P1-C4","P1-C5","P1-C12","P1-C13","P1-C15","P1-C20","P1-C21","P1-C22","P1-C24","C16"},
-        {"C0","C9","P0-C2","P0-C6","P0-C7","P0-C8","P0-C10","P0-C11","P0-C17","P0-C19","P0-C23","C18"}
+    {"C18","P0-C2","P0-C6","P0-C7","P0-C8","P0-C10","P0-C11","P0-C17","P0-C19","P0-C23","C9","C0"},
+    {"C14","P1-C1", "P1-C3", "P1-C4", "P1-C5", "P1-C12", "P1-C13", "P1-C15", "P1-C20", "P1-C21", "P1-C22", "P1-C24","C16"}
     };
 
     Search *s = new Search(instance,config);

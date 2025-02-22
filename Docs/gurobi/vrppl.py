@@ -16,6 +16,10 @@ def run_all(instance):
         print(f" - {qty_vehicles} - cost: {'Infeasible' if m.status == gp.GRB.INFEASIBLE else round(m.ObjVal,2)} - time: {round(time,2)}s" )
         qty_vehicles += 1
 
+        #TODO tirar isso aqui depois. É pra priorizar instâncias mais rapidas
+        if qty_vehicles == 2 and m.status == gp.GRB.INFEASIBLE:
+            break
+
     print(f"Best cost found")
 
 
@@ -245,7 +249,7 @@ def run_exp(instance, qty_vehicles):
             if v_is_empty:
                 has_empty_vehicle = True
                 break
-
-    ut.print_h_i_file(x_ijk,h_i,l_i, y_ij, psi_jk, delta_k, vl_k, customers, lockers, locker_attrib, vehicles, qty_vehicles, instance,m,nodes, time)    
+                
+            ut.print_h_i_file(x_ijk,h_i,l_i, y_ij, psi_jk, delta_k, vl_k, customers, lockers, locker_attrib, vehicles, qty_vehicles, instance,m,nodes, time)    
         
     return m, time, has_empty_vehicle

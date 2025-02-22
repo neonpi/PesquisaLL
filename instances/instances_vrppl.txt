@@ -1,4 +1,3 @@
-instances\vrppl\inst_test
 instances\vrppl\25\C101_co_25.txt
 instances\vrppl\25\C102_co_25.txt
 instances\vrppl\25\C103_co_25.txt

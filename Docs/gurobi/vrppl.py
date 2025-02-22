@@ -3,7 +3,11 @@ import utils as ut
 import timeit as tm
 def run_all(instance):
 
-    qty_vehicles = 1
+    instance = ut.build_instance(instance)
+    min_qty_vehicles = round(instance['total_demands']/instance['vehicle_capacity'])
+    qty_vehicles = min_qty_vehicles
+    print(f"Running instance {instance['inst_name'].split('/')[-1]} (min_v = {min_qty_vehicles})")
+    
     m = None
     best_m = None
     has_empty_vehicle = False
@@ -16,15 +20,11 @@ def run_all(instance):
         print(f" - {qty_vehicles} - cost: {'Infeasible' if m.status == gp.GRB.INFEASIBLE else round(m.ObjVal,2)} - time: {round(time,2)}s" )
         qty_vehicles += 1
 
-        #TODO tirar isso aqui depois. É pra priorizar instâncias mais rapidas
-        if qty_vehicles == 2 and m.status == gp.GRB.INFEASIBLE:
-            break
 
     print(f"Best cost found")
 
 
 def run_exp(instance, qty_vehicles):
-    instance = ut.build_instance(instance)
 
     #-------------------------------------------------------------#
 

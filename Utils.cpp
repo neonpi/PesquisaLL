@@ -60,7 +60,17 @@ void Utils::print_result_file(Search *search, Instance *instance, int run, doubl
 
                     if (sequence.node->id != "Dt") {
                         if(sequence.node->type == "p") {
-                            route_string+= "("+sequence.customer->id+")";
+                            route_string+="(";
+
+                            for(int i_customer=0; i_customer < (int)sequence.customers.size();i_customer++) {
+                                Node* customer = sequence.customers.at(i_customer);
+                                route_string+= customer->id;
+                                if(i_customer < (int)sequence.customers.size() -1) {
+                                    route_string+=", ";
+                                }
+                            }
+
+                            route_string+=")";
                         }
                         route_string+=" ";
                     }

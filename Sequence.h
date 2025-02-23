@@ -5,13 +5,14 @@
 #ifndef SEQUENCE_H
 #define SEQUENCE_H
 #include "Node.h"
+#include "vector"
 
 
 class Sequence {
 
 public:
     Node* node = nullptr;
-    Node* customer = nullptr;
+    vector<Node*> customers;
     char method = 'u';
     double time_off = 0.0;
     double current_distance = 0.0;
@@ -21,7 +22,7 @@ public:
 
     void clone_this_to(Sequence* clone) {
         clone->node = this->node;
-        clone->customer = this->customer;
+        //TODO refatorar clone->customer = this->customer;
         clone->method = this->method;
         clone->time_off = this->time_off;
         clone->current_distance = this->current_distance;

@@ -29,9 +29,9 @@ void Solution::initialize_routes() {
 
         Sequence depot_0, depot_t;
         depot_0.node = &this->instance->nodes.at(0);
-        depot_0.customer = &this->instance->nodes.at(0);
+        depot_0.customers = {};
         depot_t.node = &this->instance->nodes.at(1);
-        depot_t.customer = &this->instance->nodes.at(1);
+        depot_t.customers = {};
         depot_0.current_load = 0;
         depot_t.current_load = 0;
         vector<Sequence> route ={depot_0, depot_t};
@@ -57,6 +57,7 @@ void Solution::print_detailed_total_cost() {
     }
     cout<<totals<<endl;
 }
+// TODO testar
 void Solution::print() {
     int used_vehicles = 0;
     vector<string> routes_string;
@@ -65,9 +66,19 @@ void Solution::print() {
         if((int)this->routes.at(i).size()>2) {
             string s= "V_"+to_string(i)+": ";
             for (Sequence sequence: this->routes.at(i)) {
-                s+=sequence.customer->id;
+                s+=sequence.node->id;
                 if (sequence.node->type == "p") {
-                    s+="("+sequence.node->id+")";
+                    s+="(";
+
+                    for(int i_customer=0; i_customer < (int)sequence.customers.size();i_customer++) {
+                        Node* customer = sequence.customers.at(i_customer);
+                        s+= customer->id;
+                        if(i_customer < (int)sequence.customers.size() -1) {
+                            s+=", ";
+                        }
+                    }
+
+                    s+=")";
                 }
                 s+=" -> ";
             }

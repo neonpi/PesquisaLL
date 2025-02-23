@@ -18,7 +18,6 @@ add_executable(prj_evrp main.cpp
         instance_factory/Factory.h
         instance_factory/Vrppl.cpp
         instance_factory/Vrppl.h
-        Sequence.cpp
         Sequence.h
         Config.cpp
         Config.h

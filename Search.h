@@ -25,6 +25,7 @@ public:
     ~Search();
 
     void run();
+    void debug_run();
     //Construtivo
     void construct();
     void insertion_heuristic();

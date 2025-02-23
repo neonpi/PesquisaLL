@@ -10,14 +10,11 @@ def run_all(instance):
     print(f"Running instance {instance['inst_name'].split('/')[-1]} (min_v = {min_qty_vehicles})")
     
     m = None
-    best_m = None
     has_empty_vehicle = False
     while(m is None or m.status == gp.GRB.INFEASIBLE or not has_empty_vehicle):
         
         m, time, has_empty_vehicle = run_exp(instance, qty_vehicles)
 
-        if not has_empty_vehicle:
-            best_m = m
         print(f" - {qty_vehicles} - cost: {'Infeasible' if m.status == gp.GRB.INFEASIBLE else round(m.ObjVal,2)} - time: {round(time,2)}s" )
         qty_vehicles += 1
 

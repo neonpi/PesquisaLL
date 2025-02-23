@@ -1,10 +1,11 @@
 import gurobipy as gp
 import utils as ut
 import timeit as tm
+import math
 def run_all(instance):
-
+    
     instance = ut.build_instance(instance)
-    min_qty_vehicles = round(instance['total_demands']/instance['vehicle_capacity'])
+    min_qty_vehicles = math.ceil(instance['total_demands']/instance['vehicle_capacity'])
     qty_vehicles = min_qty_vehicles
     print(f"Running instance {instance['inst_name'].split('/')[-1]} (min_v = {min_qty_vehicles})")
     

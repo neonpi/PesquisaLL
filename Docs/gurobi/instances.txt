@@ -1,16 +1,3 @@
-#../../instances/vrppl/25/R101_co_25.txt
-#../../instances/vrppl/25/R105_co_25.txt
-#../../instances/vrppl/25/C201_co_25.txt
-#../../instances/vrppl/25/C202_co_25.txt
-#../../instances/vrppl/25/R211_co_25.txt
-#../../instances/vrppl/25/R201_co_25.txt
-#../../instances/vrppl/25/R204_co_25.txt
-#../../instances/vrppl/25/C101_co_25.txt
-#../../instances/vrppl/25/R209_co_25.txt
-#$ ../../instances/vrppl/50/R101_co_50.txt
-#../../instances/vrppl/25/R206_co_25.txt
-../../instances/vrppl/50/R105_co_50.txt
-../../instances/vrppl/50/C205_co_50.txt
 ../../instances/vrppl/25/C102_co_25.txt
 ../../instances/vrppl/25/C103_co_25.txt
 ../../instances/vrppl/25/C104_co_25.txt
@@ -19,12 +6,6 @@
 ../../instances/vrppl/25/C107_co_25.txt
 ../../instances/vrppl/25/C108_co_25.txt
 ../../instances/vrppl/25/C109_co_25.txt
-#../../instances/vrppl/25/C203_co_25.txt
-#../../instances/vrppl/25/C204_co_25.txt
-../../instances/vrppl/25/C205_co_25.txt
-../../instances/vrppl/25/C206_co_25.txt
-../../instances/vrppl/25/C207_co_25.txt
-../../instances/vrppl/25/C208_co_25.txt
 ../../instances/vrppl/25/R102_co_25.txt
 ../../instances/vrppl/25/R103_co_25.txt
 ../../instances/vrppl/25/R104_co_25.txt
@@ -35,12 +16,6 @@
 ../../instances/vrppl/25/R110_co_25.txt
 ../../instances/vrppl/25/R111_co_25.txt
 ../../instances/vrppl/25/R112_co_25.txt
-../../instances/vrppl/25/R202_co_25.txt
-../../instances/vrppl/25/R203_co_25.txt
-../../instances/vrppl/25/R205_co_25.txt
-../../instances/vrppl/25/R207_co_25.txt
-../../instances/vrppl/25/R208_co_25.txt
-../../instances/vrppl/25/R210_co_25.txt
 ../../instances/vrppl/25/RC101_co_25.txt
 ../../instances/vrppl/25/RC102_co_25.txt
 ../../instances/vrppl/25/RC103_co_25.txt
@@ -49,7 +24,6 @@
 ../../instances/vrppl/25/RC106_co_25.txt
 ../../instances/vrppl/25/RC107_co_25.txt
 ../../instances/vrppl/25/RC108_co_25.txt
-../../instances/vrppl/25/RC201_co_25.txt
 ../../instances/vrppl/25/RC202_co_25.txt
 ../../instances/vrppl/25/RC203_co_25.txt
 ../../instances/vrppl/25/RC204_co_25.txt

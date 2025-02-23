@@ -43,12 +43,15 @@ void Instance::calculate_distances() {
             if(i==j) {
                 this->distances[i][j] = 0.0;
             }else {
-                this->distances[i][j] =
-                    sqrt(
+                double distance = sqrt(
                         pow(this->nodes.at(i).coord[0]-this->nodes.at(j).coord[0],2)
                         +
                         pow(this->nodes.at(i).coord[1]-this->nodes.at(j).coord[1],2)
                         );
+                distance = floor(distance*10);
+                distance/=10;
+                this->distances[i][j] = distance;
+
                 this->distances[j][i] = this->distances[i][j];
             }
         }

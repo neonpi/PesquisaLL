@@ -6,6 +6,8 @@
 
 #include <algorithm>
 
+#include "Utils.h"
+
 Solution::Solution(Instance* instance) {
     this->cost = 0.0;
     for (int i=0;i<instance->n_node;i++) {
@@ -131,7 +133,9 @@ void Solution::print_is_viable(long seed) {
         }
 
         for (Sequence sequence: route) {
-            if (sequence.current_time < sequence.node->time_window[0] || sequence.current_time > sequence.node->time_window[1]) {
+            if ((sequence.current_time < sequence.node->time_window[0] && Utils::differs(sequence.current_time,sequence.node->time_window[0]))
+                ||
+                sequence.current_time > sequence.node->time_window[1] && Utils::differs(sequence.current_time,sequence.node->time_window[1])) {
                 time_window_viable = false;
                 time_window.push_back(sequence.node->id);
             }

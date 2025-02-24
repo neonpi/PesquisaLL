@@ -85,4 +85,5 @@ Node * Instance::find_node_per_id(string id) {
             return &this->nodes.at(i);
         }
     }
+    return nullptr;
 }

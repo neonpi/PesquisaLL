@@ -32,19 +32,19 @@ int main(int argc, char *argv[])
 
         for(Instance* instance: instances) {
 
-            if(instance->inst_name == "R101_co_25.txt") {
+            //if(instance->inst_name == "C106_co_100.txt") {
                 cout<<"Instance "<< instance->inst_name<<endl;
                 Stats* stats = new Stats(instance, config);
                 Utils::print_result_file(nullptr, instance, 0, 0.0, 0.0);
 
-                test_solution(instance, config, stats);
-                //default_run(instance, config, stats);
+                //test_solution(instance, config, stats);
+                default_run(instance, config, stats);
 
                 stats->finish_stats();
                 Utils::print_screen_run(stats);
                 Utils::print_final_stats(stats);
                 delete stats;
-            }
+            //}
 
         }
 
@@ -60,12 +60,14 @@ void default_run(Instance *instance, Config* config, Stats* stats) {
     for(int i=0;i<config->runs;i++) {
 
         srand(config->seeds.at(i));
-        //srand(0);
+        //srand(19360);
         config->run = i;
 
         Search* search = new Search(instance,config);
         clock_t time = clock();
-        search->run();
+        search->debug_run();
+        //search->solution->print();
+        //search->run();
         time = clock() - time;
 
         stats->set_result(search->solution,((double) time / CLOCKS_PER_SEC));

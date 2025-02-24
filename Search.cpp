@@ -35,6 +35,7 @@ void Search::run() {
 }
 
 void Search::debug_run() {
+    this->construct();
 }
 
 void Search::construct() {
@@ -57,7 +58,7 @@ void Search::insertion_heuristic() {
 
         tuple<int,int,Sequence,double> candidate = cand_list.at(rand_index);
 
-        //TODO insert_sequency(candidate);
+        insert_sequency(candidate);
 
 
         cand_list.erase(cand_list.begin(),cand_list.end());
@@ -1432,7 +1433,7 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *c
 
                         Sequence cand_sequence;
                         cand_sequence.node = cand_node;
-                        //TODO cand_sequence.customer = cand_node;
+                        cand_sequence.customers.push_back(cand_node);
 
                         bool is_insertion_viable = propagate_virtual(route_index, previous_sequence_index, &cand_sequence);
 
@@ -1459,14 +1460,15 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *c
     }
 }
 
-
+//TODO testar
 void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node* cand_node) {
 
     int route_index = 0;
     for (vector<Sequence> route : this->solution->routes) {
 
         Sequence* last_sequence = &(*(route.end()-1));
-        //Pra cada cliente
+
+        //Pra cada cliente do locker
         for (Node* customer_node: cand_node->designated_customers) {
             if (!this->solution->visited.at(customer_node->index)) {
 
@@ -1474,24 +1476,38 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *can
                 if (is_load_viable(route_index,customer_node)) {
 
                     int previous_sequence_index = 0;
+                    int next_sequence_index = 1;
                     for (Sequence previous_sequence : route) {
                         //TODO da pra otimizar não alterando muito a cand_sequence. O que muda é só o load do customer
                         if (previous_sequence.node->id != "Dt") {
+                            Sequence next_sequence = route.at(next_sequence_index);
 
                             Sequence cand_sequence;
                             cand_sequence.node = cand_node;
-                            //TODO cand_sequence.customer = customer_node;
+                            cand_sequence.customers.push_back(customer_node);
 
-                            bool is_insertion_viable = propagate_virtual(route_index, previous_sequence_index, &cand_sequence);
+                            bool next_is_self_locker = next_sequence.node->id == cand_node->id;
+                            //Se o proximo nó for o próprio locker, não fazer nada, nem entra na lista
+                            if(!next_is_self_locker) {
+                                bool previous_is_self_locker = previous_sequence.node->id == cand_node->id;
+                                bool is_insertion_viable = false;
+                                if(!previous_is_self_locker) {
+                                    is_insertion_viable = propagate_virtual(route_index, previous_sequence_index, &cand_sequence);
+                                }
 
-                            if(is_insertion_viable) {
-                                tuple<int, int, Sequence, double> cand_tuple = {route_index,previous_sequence_index,cand_sequence, 0.0};
-                                calculate_delta_distance(&cand_tuple);
-                                cand_list->push_back(cand_tuple);
+
+                                if(previous_is_self_locker || is_insertion_viable) {
+                                    tuple<int, int, Sequence, double> cand_tuple = {route_index,previous_sequence_index,cand_sequence, 0.0};
+                                    if(!previous_is_self_locker) {
+                                        calculate_delta_distance(&cand_tuple);
+                                    }
+                                    cand_list->push_back(cand_tuple);
+                                }
                             }
 
                         }
                         previous_sequence_index++;
+                        next_sequence_index++;
                     }
 
 
@@ -1526,7 +1542,16 @@ void Search::fill_forward_virtual(Sequence *previous_sequence, Sequence *current
 
 void Search::fill_forward(Sequence *previous_sequence, Sequence *current_sequence) {
 
-    //TODO current_sequence->current_load = previous_sequence->current_load + current_sequence->customer->load_demand;
+
+    current_sequence->current_load = previous_sequence->current_load;
+
+    if(current_sequence->node->type == "p") {
+        for(Node* customer : current_sequence->customers) {
+            current_sequence->current_load+= customer->load_demand;
+        }
+    }else {
+        current_sequence->current_load += current_sequence->node->load_demand;
+    }
 
     double distance = this->instance->distances[previous_sequence->node->index][current_sequence->node->index];
     current_sequence->current_distance = previous_sequence->current_distance + distance;
@@ -2060,25 +2085,32 @@ void Search::calculate_delta_distance(tuple<int, int, Sequence, double> *cus) {
     get<3>(*cus) = delta_distance;
 }
 
-// void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
-//     vector<Sequence>* route = &this->solution->routes.at(get<0>(candidate));
-//     int previous_sequence_index = get<1>(candidate);
-//     Sequence* candidate_sequence = &get<2>(candidate);
+void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
+    vector<Sequence>* route = &this->solution->routes.at(get<0>(candidate));
+    int previous_sequence_index = get<1>(candidate);
+    Sequence* previous_sequence = &route->at(previous_sequence_index);
+    Sequence* candidate_sequence = &get<2>(candidate);
 
-//     if(route->size() == 2 || candidate_sequence->customer->load_demand < (route->end()-1)->minimun_route_load) {
-//         (route->end()-1)->minimun_route_load = candidate_sequence->customer->load_demand;
-//     }
+    //Atualizando o load minimo da rota
+    if(route->size() == 2 || candidate_sequence->customers.at(0)->load_demand < (route->end()-1)->minimun_route_load) {
+        (route->end()-1)->minimun_route_load = candidate_sequence->customers.at(0)->load_demand;
+    }
 
-//     if((int)route->size() == 2){ this->solution->used_routes++; }
+    if((int)route->size() == 2){ this->solution->used_routes++; }
+    //TODO TODO tem que tratar tambem o forward sequence, caso o nó locker seja colocado ANTES de um locker que seja igual
+    if(previous_sequence->node->id == candidate_sequence->node->id) {
+        previous_sequence->customers.push_back(candidate_sequence->customers.at(0));
+        propagate(get<0>(candidate), previous_sequence_index-1);
+    }else {
+        route->insert(route->begin()+previous_sequence_index+1,1, *candidate_sequence);
+        propagate(get<0>(candidate), previous_sequence_index);
+    }
 
-//     route->insert(route->begin()+previous_sequence_index+1,1, *candidate_sequence);
 
-//     propagate(get<0>(candidate), previous_sequence_index);
-
-//     this->solution->visited.at(candidate_sequence->customer->index) = true;
+    this->solution->visited.at(candidate_sequence->customers.at(0)->index) = true;
 
 
-// }
+}
 
 bool Search::is_customer(int node_index) {
     return this->instance->nodes.at(node_index).type[0] == 'c';
@@ -2093,11 +2125,11 @@ void Search::print_candidate_list(vector<tuple<int, int, Sequence, double>> *can
         int cand_index = get<1>(cand);
         Sequence *cand_sequence = &get<2>(cand);
 
-        /*TODO if(cand_sequence->node!=cand_sequence->customer) {
-            cout<<cand_route<<" - "<<cand_index<<" - ("<<cand_sequence->customer->id<<")"<<cand_sequence->node->id<<" - "<<get<3>(cand)<<endl;;
+        if(cand_sequence->node!=cand_sequence->customers.at(0)) {
+            cout<<cand_route<<" - "<<cand_index<<" - ("<<cand_sequence->customers.at(0)->id<<")"<<cand_sequence->node->id<<" - "<<get<3>(cand)<<endl;;
         }else {
             cout<<cand_route<<" - "<<cand_index<<" - "<<cand_sequence->node->id<<" - "<<get<3>(cand)<<endl;;
-        }*/
+        }
     }
     cout<<endl;
 }

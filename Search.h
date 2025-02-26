@@ -98,15 +98,12 @@ public:
     vector<vector<tuple<int, int, Sequence, double>>> group_by_delta(vector<tuple<int, int, Sequence, double>> *cand_list);
 
 
-
-
-
     bool is_customer(int node_index);
     bool is_locker(int node_index);
 
     bool is_load_viable(int route_index, Node* cand_node){return this->instance->load_capacity > (this->solution->routes.at(route_index).end()-1)->current_load + cand_node->load_demand;}
 
-    void calculate_delta_distance(tuple<int, int, Sequence, double> *cus);
+    double calculate_delta_distance(int route_index, int previous_sequence_index, Sequence *cand_sequence);
     void print_candidate_list(vector<tuple<int, int, Sequence, double>> *cand_list);
     void print_ig_candidate_list(vector<vector<tuple<int, int, Sequence, double>>> *cand_list);
 

@@ -1394,10 +1394,9 @@ vector<tuple<int, int, Sequence, double>> Search::build_candidate_list() {
 
         Node* cand_node = &this->instance->nodes.at(i);
         if (this->instance->nodes.at(i).type == "p") {
-            try_locker_candidate(&cand_list,cand_node);
+            //try_locker_candidate(&cand_list,cand_node);
         }else if (this->instance->nodes.at(i).type != "c2") {
             try_customer_candidate(&cand_list,cand_node);
-
         }
 
     }
@@ -1420,6 +1419,12 @@ vector<vector<tuple<int, int, Sequence, double>>> Search::build_candidate_list_i
 void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node *cand_node) {
     if(!this->solution->visited.at(cand_node->index)) {
 
+        Sequence cand_sequence;
+        cand_sequence.node = cand_node;
+        cand_sequence.customers.push_back(cand_node);
+        tuple<int, int, Sequence, double> cand_tuple = {-1,-1,cand_sequence, -1.0};
+        double delta = -1.0;
+
         int route_index = 0;
         for (vector<Sequence> route : this->solution->routes) {
 
@@ -1431,16 +1436,17 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *c
                 for (Sequence previous_sequence : route) {
                     if (previous_sequence.node->id != "Dt") {
 
-                        Sequence cand_sequence;
-                        cand_sequence.node = cand_node;
-                        cand_sequence.customers.push_back(cand_node);
+                        delta = calculate_delta_distance(route_index, previous_sequence_index, &cand_sequence);
 
-                        bool is_insertion_viable = propagate_virtual(route_index, previous_sequence_index, &cand_sequence);
+                        if(get<3>(cand_tuple) == -1.0 || delta < get<3>(cand_tuple)) {
 
-                        if(is_insertion_viable) {
-                            tuple<int, int, Sequence, double> cand_tuple = {route_index,previous_sequence_index,cand_sequence, 0.0};
-                            calculate_delta_distance(&cand_tuple);
-                            cand_list->push_back(cand_tuple);
+                            bool is_insertion_viable = propagate_virtual(route_index, previous_sequence_index, &cand_sequence);
+
+                            if(is_insertion_viable) {
+                                get<0>(cand_tuple) = route_index;
+                                get<1>(cand_tuple) = previous_sequence_index;
+                                get<3>(cand_tuple) = delta;
+                            }
                         }
 
                     }
@@ -1455,6 +1461,10 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *c
 
 
             route_index++;
+        }
+
+        if(get<0>(cand_tuple) != -1.0) {
+            cand_list->push_back(cand_tuple);
         }
 
     }
@@ -1499,7 +1509,7 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *can
                                 if(previous_is_self_locker || is_insertion_viable) {
                                     tuple<int, int, Sequence, double> cand_tuple = {route_index,previous_sequence_index,cand_sequence, 0.0};
                                     if(!previous_is_self_locker) {
-                                        calculate_delta_distance(&cand_tuple);
+                                        //calculate_delta_distance(TODO, TODO, TODO);
                                     }
                                     cand_list->push_back(cand_tuple);
                                 }
@@ -2073,16 +2083,16 @@ vector<vector<tuple<int, int, Sequence, double>>> Search::group_by_delta(
 }
 
 
-void Search::calculate_delta_distance(tuple<int, int, Sequence, double> *cus) {
-    Sequence a_previous_sequence = this->solution->routes.at(get<0>(*cus)).at(get<1>(*cus));
-    Sequence a_next_sequence = this->solution->routes.at(get<0>(*cus)).at(get<1>(*cus)+1);
+double Search::calculate_delta_distance(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
+    Sequence a_previous_sequence = this->solution->routes.at(route_index).at(previous_sequence_index);
+    Sequence a_next_sequence = this->solution->routes.at(route_index).at(previous_sequence_index+1);
 
     double distance_prev_next = this->instance->distances[a_previous_sequence.node->index][a_next_sequence.node->index];
-    double distance_prev_cus = this->instance->distances[a_previous_sequence.node->index][get<2>(*cus).node->index];
-    double distance_cus_next = this->instance->distances[get<2>(*cus).node->index][a_next_sequence.node->index];
+    double distance_prev_cus = this->instance->distances[a_previous_sequence.node->index][cand_sequence->node->index];
+    double distance_cus_next = this->instance->distances[cand_sequence->node->index][a_next_sequence.node->index];
 
     double delta_distance = distance_prev_cus + distance_cus_next - distance_prev_next;
-    get<3>(*cus) = delta_distance;
+    return delta_distance;
 }
 
 void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {

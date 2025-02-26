@@ -60,7 +60,7 @@ void default_run(Instance *instance, Config* config, Stats* stats) {
     for(int i=0;i<config->runs;i++) {
 
         srand(config->seeds.at(i));
-        //srand(19360);
+        srand(7106);
         config->run = i;
 
         Search* search = new Search(instance,config);

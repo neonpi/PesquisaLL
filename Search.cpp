@@ -60,7 +60,6 @@ void Search::insertion_heuristic() {
 
         insert_sequency(candidate);
 
-
         cand_list.erase(cand_list.begin(),cand_list.end());
 
         cand_list = build_candidate_list();
@@ -1394,7 +1393,7 @@ vector<tuple<int, int, Sequence, double>> Search::build_candidate_list() {
 
         Node* cand_node = &this->instance->nodes.at(i);
         if (this->instance->nodes.at(i).type == "p") {
-            //try_locker_candidate(&cand_list,cand_node);
+            try_locker_candidate(&cand_list,cand_node);
         }else if (this->instance->nodes.at(i).type != "c2") {
             try_customer_candidate(&cand_list,cand_node);
         }
@@ -1415,7 +1414,7 @@ vector<vector<tuple<int, int, Sequence, double>>> Search::build_candidate_list_i
     vector<vector<tuple<int, int, Sequence, double>>> parsed_list = group_by_delta(&cand_list);
     return parsed_list;
 }
-
+//TODO TESTAR EM DEBUG
 void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node *cand_node) {
     if(!this->solution->visited.at(cand_node->index)) {
 
@@ -1470,58 +1469,81 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *c
     }
 }
 
-//TODO testar
+
+//TODO TESTAR EM DEBUG
 void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node* cand_node) {
+
+    Sequence cand_sequence;
+    cand_sequence.node = cand_node;
+    tuple<int, int, Sequence, double> cand_tuple = {-1,-1,cand_sequence,-1};
+    vector<Node*> cand_customers;
+    double delta = -1.0;
 
     int route_index = 0;
     for (vector<Sequence> route : this->solution->routes) {
 
-        Sequence* last_sequence = &(*(route.end()-1));
+        tuple<int, double> route_cand_tuple = {-1,-1.0};
+        vector<Node*> route_cand_customers;
 
-        //Pra cada cliente do locker
-        for (Node* customer_node: cand_node->designated_customers) {
-            if (!this->solution->visited.at(customer_node->index)) {
+        //Inserindo todos os clientes que podem caber na rota
+        double accum_demand = 0;
+        for(Node* customer: cand_sequence.node->designated_customers) {
+            if(!this->solution->visited[customer->index]) {
+                if((accum_demand + customer->load_demand + (route.end()-1)->current_load) <= this->instance->load_capacity) {
+                    route_cand_customers.push_back(customer);
+                    accum_demand += customer->load_demand;
+                }else {
+                    break;
+                }
+            }
+        }
 
-                //O load fica viável??
-                if (is_load_viable(route_index,customer_node)) {
+        // Só prossegue se couber pelo menos um cliente
+        if((int)route_cand_customers.size() > 0) {
 
-                    int previous_sequence_index = 0;
-                    int next_sequence_index = 1;
-                    for (Sequence previous_sequence : route) {
-                        //TODO da pra otimizar não alterando muito a cand_sequence. O que muda é só o load do customer
-                        if (previous_sequence.node->id != "Dt") {
-                            Sequence next_sequence = route.at(next_sequence_index);
+            int previous_sequence_index = 0;
+            for (const Sequence& previous_sequence : route) {
 
-                            Sequence cand_sequence;
-                            cand_sequence.node = cand_node;
-                            cand_sequence.customers.push_back(customer_node);
-
-                            bool next_is_self_locker = next_sequence.node->id == cand_node->id;
-                            //Se o proximo nó for o próprio locker, não fazer nada, nem entra na lista
-                            if(!next_is_self_locker) {
-                                bool previous_is_self_locker = previous_sequence.node->id == cand_node->id;
-                                bool is_insertion_viable = false;
-                                if(!previous_is_self_locker) {
-                                    is_insertion_viable = propagate_virtual(route_index, previous_sequence_index, &cand_sequence);
-                                }
-
-
-                                if(previous_is_self_locker || is_insertion_viable) {
-                                    tuple<int, int, Sequence, double> cand_tuple = {route_index,previous_sequence_index,cand_sequence, 0.0};
-                                    if(!previous_is_self_locker) {
-                                        //calculate_delta_distance(TODO, TODO, TODO);
-                                    }
-                                    cand_list->push_back(cand_tuple);
-                                }
-                            }
-
+                if(previous_sequence.node->id != "Dt") {
+                    //Se o locker ja estiver nessa rota, cai fora
+                    if(previous_sequence.node->id == cand_node->id) {
+                        //Se uma inserção tambem tiver sido considerada, desiste
+                        if(get<0>(route_cand_tuple) != 1) {
+                            get<0>(route_cand_tuple) = -1;
                         }
-                        previous_sequence_index++;
-                        next_sequence_index++;
+                        break;
+                    }else {
+                        bool is_insertion_viable = propagate_virtual(route_index,previous_sequence_index,&cand_sequence);
+
+                        if(is_insertion_viable) {
+                            delta = calculate_delta_distance(route_index,previous_sequence_index,&cand_sequence);
+                            //O delta é melhor que o melhor?
+                            if (get<0>(cand_tuple) == -1 || delta < get<3>(cand_tuple)) {
+
+                                //A inserção do route_cand_tuple pode estar ainda melhor
+                                if(get<0>(route_cand_tuple) == -1 || delta < get<1>(route_cand_tuple)) {
+
+                                    get<0>(route_cand_tuple) = previous_sequence_index;
+                                    get<1>(route_cand_tuple) = delta;
+
+                                }
+
+                            }
+                        }
+
                     }
 
-
+                    previous_sequence_index++;
                 }
+
+            }
+
+            //Se != de -1 ele achou um candidato melhor, atribuir na tupla mãe
+            if(get<0>(route_cand_tuple) != -1) {
+                get<0>(cand_tuple) = route_index;
+                get<1>(cand_tuple) = get<0>(route_cand_tuple);
+                get<3>(cand_tuple) = get<1>(route_cand_tuple);
+                cand_customers = route_cand_customers;
             }
         }
 
@@ -1531,6 +1553,17 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *can
 
         route_index++;
     }
+
+    //Se uma boa inserção viável de locker foi encontrada, incluir na lista
+    if(get<0>(cand_tuple) != -1) {
+
+        for(Node* customer : cand_customers) {
+            get<2>(cand_tuple).customers.push_back(customer);
+        }
+        cand_list->push_back(cand_tuple);
+    }
+
+
 }
 
 void Search::fill_forward_virtual(Sequence *previous_sequence, Sequence *current_sequence) {
@@ -1557,6 +1590,7 @@ void Search::fill_forward(Sequence *previous_sequence, Sequence *current_sequenc
 
     if(current_sequence->node->type == "p") {
         for(Node* customer : current_sequence->customers) {
+
             current_sequence->current_load+= customer->load_demand;
         }
     }else {
@@ -2116,8 +2150,9 @@ void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
         propagate(get<0>(candidate), previous_sequence_index);
     }
 
-
-    this->solution->visited.at(candidate_sequence->customers.at(0)->index) = true;
+    for(Node* customer : candidate_sequence->customers) {
+        this->solution->visited.at(customer->index) = true;
+    }
 
 
 }

@@ -126,10 +126,10 @@ void Search::rvnd_intra() {
                     this->ls_intra_or_opt_1();
                 break;
                 case 3:
-                    //this->ls_intra_or_opt_k(2);
+                    this->ls_intra_or_opt_k(2);
                 break;
                 case 4:
-                    //this->ls_intra_or_opt_k(3);
+                    this->ls_intra_or_opt_k(3);
                 break;
                 default:
                     cout<<"Unknown LS"<<endl;
@@ -301,65 +301,65 @@ void Search::ls_intra_or_opt_1() {
     }
 }
 
-// void Search::ls_intra_or_opt_k(int k) {
+void Search::ls_intra_or_opt_k(int k) {
 
-//     for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
-//         vector<Sequence>* route = &this->solution->routes.at(i_route);
+    for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
+        vector<Sequence>* route = &this->solution->routes.at(i_route);
 
-//         if (route->size()>(k+2)) {
+        if (route->size()>(k+2)) {
 
-//             double best_delta = 0.0;
-//             int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
+            double best_delta = 0.0;
+            int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
 
-//             for(int i_seq_a = 1; i_seq_a<((int)(route->size())-k);i_seq_a++) {
-//                 Sequence* seq_a = &route->at(i_seq_a);
-//                 Sequence* seq_b = nullptr;
-//                 //Pra traz
-//                 for (int i_seq_b = i_seq_a-1; i_seq_b>0;i_seq_b--) {
-//                     seq_b = &route->at(i_seq_b);
-//                     double delta = calculate_delta_or_opt_k(k,route,i_seq_a,i_seq_b);
-//                     if(Utils::improves(0.0,delta) &&
-//                         Utils::improves(best_delta,delta)) {
-//                         if (propagate_virtual_or_opt_k_down(k,i_route,i_seq_a,i_seq_b)) {
-//                             best_delta = delta;
-//                             coordinates[0] = i_seq_a;
-//                             coordinates[1] = i_seq_b;
-//                         }
+            for(int i_seq_a = 1; i_seq_a<((int)(route->size())-k);i_seq_a++) {
+                Sequence* seq_a = &route->at(i_seq_a);
+                Sequence* seq_b = nullptr;
+                //Pra traz
+                for (int i_seq_b = i_seq_a-1; i_seq_b>0;i_seq_b--) {
+                    seq_b = &route->at(i_seq_b);
+                    double delta = calculate_delta_or_opt_k(k,route,i_seq_a,i_seq_b);
+                    if(Utils::improves(0.0,delta) &&
+                        Utils::improves(best_delta,delta)) {
+                        if (propagate_virtual_or_opt_k_down(k,i_route,i_seq_a,i_seq_b)) {
+                            best_delta = delta;
+                            coordinates[0] = i_seq_a;
+                            coordinates[1] = i_seq_b;
+                        }
 
-//                     }
-//                 }
-//                 //Pra frente
-//                 for(int i_seq_b = i_seq_a+k+1; i_seq_b<(int)route->size();i_seq_b++) {
-//                     seq_b = &route->at(i_seq_b);
-//                     double delta = calculate_delta_or_opt_k(k,route,i_seq_a,i_seq_b);
-//                     if(Utils::improves(0.0,delta) &&
-//                         Utils::improves(best_delta,delta)) {
-//                         if (propagate_virtual_or_opt_k_up(k,i_route,i_seq_a,i_seq_b)) {
-//                             best_delta = delta;
-//                             coordinates[0] = i_seq_a;
-//                             coordinates[1] = i_seq_b;
-//                         }
-//                     }
+                    }
+                }
+                //Pra frente
+                for(int i_seq_b = i_seq_a+k+1; i_seq_b<(int)route->size();i_seq_b++) {
+                    seq_b = &route->at(i_seq_b);
+                    double delta = calculate_delta_or_opt_k(k,route,i_seq_a,i_seq_b);
+                    if(Utils::improves(0.0,delta) &&
+                        Utils::improves(best_delta,delta)) {
+                        if (propagate_virtual_or_opt_k_up(k,i_route,i_seq_a,i_seq_b)) {
+                            best_delta = delta;
+                            coordinates[0] = i_seq_a;
+                            coordinates[1] = i_seq_b;
+                        }
+                    }
 
-//                 }
-//             }
-//             if (best_delta < 0.0) {
-//                 shift_k(k,route,coordinates[0],coordinates[1]);
-//                 propagate(i_route,min(coordinates[0],coordinates[1])-1);
+                }
+            }
+            if (best_delta < 0.0) {
+                shift_k(k,route,coordinates[0],coordinates[1]);
+                propagate(i_route,min(coordinates[0],coordinates[1])-1);
 
-//                 double estimated = this->solution->cost + best_delta;
-//                 this->solution->calculate_total_cost();
-//                 if (Utils::differs(estimated,this->solution->cost)) {
-//                     cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
-//                     exit(20);
-//                 }
-//                 i_route--;
-//             }
-//         }
+                double estimated = this->solution->cost + best_delta;
+                this->solution->calculate_total_cost();
+                if (Utils::differs(estimated,this->solution->cost)) {
+                    cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
+                    exit(20);
+                }
+                i_route--;
+            }
+        }
 
 
-//     }
-// }
+    }
+}
 
 // void Search::rvnd_inter() {
 //     vector<int> neighb = {0,1,2,3,4};
@@ -1085,28 +1085,28 @@ double Search::calculate_delta_or_opt_1(vector<Sequence> *route, int i_seq_a, in
     return delta;
 }
 
-// double Search::calculate_delta_or_opt_k(int k, vector<Sequence> *route, int i_seq_a, int i_seq_b) {
-//     Sequence* seq_a_previous = &route->at(i_seq_a-1);
-//     Sequence* seq_a_begin = &route->at(i_seq_a);
-//     Sequence* seq_a_end = &route->at(i_seq_a+k-1);
-//     Sequence* seq_a_next = &route->at(i_seq_a+k);
+double Search::calculate_delta_or_opt_k(int k, vector<Sequence> *route, int i_seq_a, int i_seq_b) {
+    Sequence* seq_a_previous = &route->at(i_seq_a-1);
+    Sequence* seq_a_begin = &route->at(i_seq_a);
+    Sequence* seq_a_end = &route->at(i_seq_a+k-1);
+    Sequence* seq_a_next = &route->at(i_seq_a+k);
 
-//     Sequence* seq_b_previous = &route->at(i_seq_b-1);
-//     Sequence* seq_b = &route->at(i_seq_b);
+    Sequence* seq_b_previous = &route->at(i_seq_b-1);
+    Sequence* seq_b = &route->at(i_seq_b);
 
-//     double delta = 0.0;
+    double delta = 0.0;
 
-//     delta+=this->instance->distances[seq_a_previous->node->index][seq_a_next->node->index];
-//     delta-=this->instance->distances[seq_a_previous->node->index][seq_a_begin->node->index];
-//     delta-=this->instance->distances[seq_a_end->node->index][seq_a_next->node->index];
+    delta+=this->instance->distances[seq_a_previous->node->index][seq_a_next->node->index];
+    delta-=this->instance->distances[seq_a_previous->node->index][seq_a_begin->node->index];
+    delta-=this->instance->distances[seq_a_end->node->index][seq_a_next->node->index];
 
-//     delta+=this->instance->distances[seq_b_previous->node->index][seq_a_begin->node->index];
-//     delta+=this->instance->distances[seq_a_end->node->index][seq_b->node->index];
-//     delta-=this->instance->distances[seq_b_previous->node->index][seq_b->node->index];
+    delta+=this->instance->distances[seq_b_previous->node->index][seq_a_begin->node->index];
+    delta+=this->instance->distances[seq_a_end->node->index][seq_b->node->index];
+    delta-=this->instance->distances[seq_b_previous->node->index][seq_b->node->index];
 
 
-//     return delta;
-// }
+    return delta;
+}
 
 double Search::calculate_delta_exchange(vector<Sequence> *route, int i_seq_a, int i_seq_b) {
 
@@ -1815,51 +1815,51 @@ bool Search::propagate_virtual_or_opt_1_up(int route_index, int i_seq_a, int i_s
 
 }
 
-// bool Search::propagate_virtual_or_opt_k_up(int k, int route_index, int i_seq_a, int i_seq_b) {
-//     vector<Sequence>* route = &this->solution->routes.at(route_index);
+bool Search::propagate_virtual_or_opt_k_up(int k, int route_index, int i_seq_a, int i_seq_b) {
+    vector<Sequence>* route = &this->solution->routes.at(route_index);
 
-//     route->at(i_seq_a-1).clone_this_to(this->virtual_sequence);
+    route->at(i_seq_a-1).clone_this_to(this->virtual_sequence);
 
-//     Sequence* previous_sequence = &route->at(i_seq_a-1);
-//     Sequence* current_sequence = &route->at(i_seq_a+k);
-//     fill_forward_virtual(previous_sequence,current_sequence);
-//     if(broke_time_window()) {
-//         return false;
-//     }
+    Sequence* previous_sequence = &route->at(i_seq_a-1);
+    Sequence* current_sequence = &route->at(i_seq_a+k);
+    fill_forward_virtual(previous_sequence,current_sequence);
+    if(broke_time_window()) {
+        return false;
+    }
 
-//     for (int i=i_seq_a+k+1; i<i_seq_b; i++) {
-//         previous_sequence = current_sequence;
-//         current_sequence = &route->at(i);
+    for (int i=i_seq_a+k+1; i<i_seq_b; i++) {
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
 
-//         fill_forward_virtual(previous_sequence,current_sequence);
-//         if(broke_time_window()) {
-//             return false;
-//         }
+        fill_forward_virtual(previous_sequence,current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
 
-//     }
+    }
 
-//     for (int i=i_seq_a; i<(i_seq_a+k+1);i++) {
-//         previous_sequence = current_sequence;
-//         current_sequence = &route->at(i);
+    for (int i=i_seq_a; i<(i_seq_a+k+1);i++) {
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
 
-//         fill_forward_virtual(previous_sequence,current_sequence);
-//         if(broke_time_window()) {
-//             return false;
-//         }
-//     }
+        fill_forward_virtual(previous_sequence,current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
+    }
 
-//     for (int i= i_seq_b; i<(int)route->size(); i++) {
-//         previous_sequence = current_sequence;
-//         current_sequence = &route->at(i);
+    for (int i= i_seq_b; i<(int)route->size(); i++) {
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
 
-//         fill_forward_virtual(previous_sequence,current_sequence);
-//         if(broke_time_window()) {
-//             return false;
-//         }
-//     }
+        fill_forward_virtual(previous_sequence,current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
+    }
 
-//     return true;
-// }
+    return true;
+}
 
 bool Search::propagate_virtual_or_opt_1_down(int route_index, int i_seq_a, int i_seq_b) {
     vector<Sequence>* route = &this->solution->routes.at(route_index);
@@ -1904,53 +1904,53 @@ bool Search::propagate_virtual_or_opt_1_down(int route_index, int i_seq_a, int i
     return true;
 }
 
-// bool Search::propagate_virtual_or_opt_k_down(int k, int route_index, int i_seq_a, int i_seq_b) {
-//     vector<Sequence>* route = &this->solution->routes.at(route_index);
+bool Search::propagate_virtual_or_opt_k_down(int k, int route_index, int i_seq_a, int i_seq_b) {
+    vector<Sequence>* route = &this->solution->routes.at(route_index);
 
-//     route->at(i_seq_b-1).clone_this_to(this->virtual_sequence);
+    route->at(i_seq_b-1).clone_this_to(this->virtual_sequence);
 
-//     Sequence* previous_sequence = &route->at(i_seq_b-1);
-//     Sequence* current_sequence = &route->at(i_seq_a);
-//     fill_forward_virtual(previous_sequence,current_sequence);
-//     if(broke_time_window()) {
-//         return false;
-//     }
+    Sequence* previous_sequence = &route->at(i_seq_b-1);
+    Sequence* current_sequence = &route->at(i_seq_a);
+    fill_forward_virtual(previous_sequence,current_sequence);
+    if(broke_time_window()) {
+        return false;
+    }
 
-//     for (int i = i_seq_a+1; i<i_seq_a+k; i++) {
+    for (int i = i_seq_a+1; i<i_seq_a+k; i++) {
 
-//         previous_sequence = current_sequence;
-//         current_sequence = &route->at(i);
-//         fill_forward_virtual(previous_sequence,current_sequence);
-//         if(broke_time_window()) {
-//             return false;
-//         }
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
+        fill_forward_virtual(previous_sequence,current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
 
-//     }
+    }
 
-//     for (int i = i_seq_b; i<i_seq_a; i++) {
+    for (int i = i_seq_b; i<i_seq_a; i++) {
 
-//         previous_sequence = current_sequence;
-//         current_sequence = &route->at(i);
-//         fill_forward_virtual(previous_sequence,current_sequence);
-//         if(broke_time_window()) {
-//             return false;
-//         }
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
+        fill_forward_virtual(previous_sequence,current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
 
-//     }
+    }
 
-//     for (int i = i_seq_a + k; i<(int)route->size(); i++) {
+    for (int i = i_seq_a + k; i<(int)route->size(); i++) {
 
-//         previous_sequence = current_sequence;
-//         current_sequence = &route->at(i);
-//         fill_forward_virtual(previous_sequence,current_sequence);
-//         if(broke_time_window()) {
-//             return false;
-//         }
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
+        fill_forward_virtual(previous_sequence,current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
 
-//     }
+    }
 
-//     return true;
-// }
+    return true;
+}
 
 // bool Search::propagate_virtual_swap_1_1(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
 //     vector<Sequence>* route = &this->solution->routes.at(route_index);

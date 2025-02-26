@@ -1,1 +1,6 @@
-Talvez tenha que passar a referenciar a demana do node, ao inves do customer, 
+
+Gurobi solução inicial para aproveitar a solução anterior. Solução de entrada. Start solution
+
+Gerar uma solução heurística com o ig, depois pegar os dados e jogar no gurobi
+
+Construtivo: Priorizar os obrigatorios (SERA?)

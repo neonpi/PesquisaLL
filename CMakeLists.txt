@@ -24,4 +24,5 @@ add_executable(prj_evrp main.cpp
         Stats.cpp
         Stats.h
         Solution.cpp
-        Solution.h)
+        Solution.h
+)

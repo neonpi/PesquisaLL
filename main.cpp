@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
                 default_run(instance, config, stats);
 
                 stats->finish_stats();
+
                 Utils::print_screen_run(stats);
                 Utils::print_final_stats(stats);
                 delete stats;

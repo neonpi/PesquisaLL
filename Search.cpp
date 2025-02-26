@@ -36,7 +36,7 @@ void Search::run() {
 
 void Search::debug_run() {
     this->construct();
-    this->ls_intra_exchange();
+    this->rvnd_intra();
 }
 
 void Search::construct() {
@@ -106,42 +106,42 @@ void Search::insertion_heuristic() {
 //     this->solution->calculate_total_cost();
 // }
 
-// void Search::rvnd_intra() {
+void Search::rvnd_intra() {
 
-//     vector<int> neighb = {0,1,2,3,4};
-//     int last_improved_neighb = -1;
-//     random_shuffle(neighb.begin(),neighb.end());
-//     double cost_backup = this->solution->cost;
+    vector<int> neighb = {0,1,2,3,4};
+    int last_improved_neighb = -1;
+    random_shuffle(neighb.begin(),neighb.end());
+    double cost_backup = this->solution->cost;
 
-//     for(int i=0;i<5;i++) {
-//         if(neighb[i] != last_improved_neighb) {
-//             switch (neighb[i]) {
-//                 case 0:
-//                     this->ls_intra_2opt();
-//                 break;
-//                 case 1:
-//                     this->ls_intra_exchange();
-//                 break;
-//                 case 2:
-//                     this->ls_intra_or_opt_1();
-//                 break;
-//                 case 3:
-//                     this->ls_intra_or_opt_k(2);
-//                 break;
-//                 case 4:
-//                     this->ls_intra_or_opt_k(3);
-//                 break;
-//                 default:
-//                     cout<<"Unknown LS"<<endl;
-//             }
-//             if(this->solution->cost < cost_backup) {
-//                 cost_backup = this->solution->cost;
-//                 last_improved_neighb = neighb[i];
-//                 i=-1;
-//             }
-//         }
-//     }
-// }
+    for(int i=0;i<5;i++) {
+        if(neighb[i] != last_improved_neighb) {
+            switch (neighb[i]) {
+                case 0:
+                    this->ls_intra_2opt();
+                break;
+                case 1:
+                    this->ls_intra_exchange();
+                break;
+                case 2:
+                    //this->ls_intra_or_opt_1();
+                break;
+                case 3:
+                    //this->ls_intra_or_opt_k(2);
+                break;
+                case 4:
+                    //this->ls_intra_or_opt_k(3);
+                break;
+                default:
+                    cout<<"Unknown LS"<<endl;
+            }
+            if(this->solution->cost < cost_backup) {
+                cost_backup = this->solution->cost;
+                last_improved_neighb = neighb[i];
+                i=-1;
+            }
+        }
+    }
+}
 
 
 void Search::ls_intra_exchange() {
@@ -194,56 +194,56 @@ void Search::ls_intra_exchange() {
     }
 }
 
-// void Search::ls_intra_2opt() {
+void Search::ls_intra_2opt() {
 
 
-//     for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
+    for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
 
-//         double best_delta = 0.0;
-//         int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
+        double best_delta = 0.0;
+        int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
 
-//         vector<Sequence>* route = &this->solution->routes.at(i_route);
-//            for(int i_seq_a = 0; i_seq_a<((int)(route->size())-3);i_seq_a++) {
-//                Sequence* seq_a = &route->at(i_seq_a);
+        vector<Sequence>* route = &this->solution->routes.at(i_route);
+           for(int i_seq_a = 0; i_seq_a<((int)(route->size())-3);i_seq_a++) {
+               Sequence* seq_a = &route->at(i_seq_a);
 
-//                for(int i_seq_b = i_seq_a+3; i_seq_b<(int)route->size();i_seq_b++) {
-//                    Sequence* seq_b = &route->at(i_seq_b);
+               for(int i_seq_b = i_seq_a+5; i_seq_b<(int)route->size();i_seq_b++) {
+                   Sequence* seq_b = &route->at(i_seq_b);
 
-//                    //Inverter a rota inteira não faz efeito algum
-//                    if(seq_a->node->id =="D0" && seq_b->node->id == "Dt") {break;}
+                   //Inverter a rota inteira não faz efeito algum
+                   if(seq_a->node->id =="D0" && seq_b->node->id == "Dt") {break;}
 
-//                    double delta = calculate_delta_2opt(route,i_seq_a, i_seq_b);
+                   double delta = calculate_delta_2opt(route,i_seq_a, i_seq_b);
 
-//                    if(Utils::improves(0.0,delta) &&
-//                        Utils::improves(best_delta,delta)) {
-//                         //Testar viabilidade
-//                        if(propagate_virtual_2opt(i_route,i_seq_a,i_seq_b)) {
-//                            best_delta = delta;
-//                            coordinates[0] = i_seq_a;
-//                            coordinates[1] = i_seq_b;
-//                        }
-//                    }
+                   if(Utils::improves(0.0,delta) &&
+                       Utils::improves(best_delta,delta)) {
+                        //Testar viabilidade
+                       if(propagate_virtual_2opt(i_route,i_seq_a,i_seq_b)) {
+                           best_delta = delta;
+                           coordinates[0] = i_seq_a;
+                           coordinates[1] = i_seq_b;
+                       }
+                   }
 
-//                }
+               }
 
 
-//            }
+           }
 
-//             if(best_delta<0.0) {
-//                 reverse(route->begin()+coordinates[0]+1,route->begin()+coordinates[1]);
-//                 propagate(i_route,coordinates[0]);
-//                 double estimated = this->solution->cost + best_delta;
-//                 this->solution->calculate_total_cost();
-//                 if (Utils::differs(estimated,this->solution->cost)) {
-//                     cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
-//                     exit(20);
-//                 }
-//                 i_route--;
-//             }
+            if(best_delta<0.0) {
+                reverse(route->begin()+coordinates[0]+1,route->begin()+coordinates[1]);
+                propagate(i_route,coordinates[0]);
+                double estimated = this->solution->cost + best_delta;
+                this->solution->calculate_total_cost();
+                if (Utils::differs(estimated,this->solution->cost)) {
+                    cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
+                    exit(20);
+                }
+                i_route--;
+            }
 
-//     }
+    }
 
-// }
+}
 
 // void Search::ls_intra_or_opt_1() {
 //     for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
@@ -1049,19 +1049,19 @@ void Search::ls_intra_exchange() {
 
 // }
 
-// double Search::calculate_delta_2opt(vector<Sequence>* route, int i_seq_a, int i_seq_b) {
-//     Sequence* seq_a = &route->at(i_seq_a);
-//     Sequence* slice_first = &route->at(i_seq_a+1);
-//     Sequence* seq_b = &route->at(i_seq_b);
-//     Sequence* slice_last = &route->at(i_seq_b-1);
-//     double delta = 0.0;
-//     delta += this->instance->distances[seq_a->node->index][slice_last->node->index];
-//     delta += this->instance->distances[slice_first->node->index][seq_b->node->index];
-//     delta -= this->instance->distances[seq_a->node->index][slice_first->node->index];
-//     delta -= this->instance->distances[slice_last->node->index][seq_b->node->index];
+double Search::calculate_delta_2opt(vector<Sequence>* route, int i_seq_a, int i_seq_b) {
+    Sequence* seq_a = &route->at(i_seq_a);
+    Sequence* slice_first = &route->at(i_seq_a+1);
+    Sequence* seq_b = &route->at(i_seq_b);
+    Sequence* slice_last = &route->at(i_seq_b-1);
+    double delta = 0.0;
+    delta += this->instance->distances[seq_a->node->index][slice_last->node->index];
+    delta += this->instance->distances[slice_first->node->index][seq_b->node->index];
+    delta -= this->instance->distances[seq_a->node->index][slice_first->node->index];
+    delta -= this->instance->distances[slice_last->node->index][seq_b->node->index];
 
-//     return delta;
-// }
+    return delta;
+}
 
 // double Search::calculate_delta_or_opt_1(vector<Sequence> *route, int i_seq_a, int i_seq_b) {
 //     Sequence* seq_a_previous = &route->at(i_seq_a-1);
@@ -1733,42 +1733,42 @@ bool Search::propagate_virtual_exchange(int route_index, int i_seq_a, int i_seq_
 //     return true;
 // }
 
-// bool Search::propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b) {
-//     vector<Sequence>* route = &this->solution->routes.at(route_index);
+bool Search::propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b) {
+    vector<Sequence>* route = &this->solution->routes.at(route_index);
 
-//     route->at(i_seq_a).clone_this_to(this->virtual_sequence);
+    route->at(i_seq_a).clone_this_to(this->virtual_sequence);
 
-//     //Trocando o proximo cliente de i_seq_a pelo último do intervalo (i_seq_b)
-//     Sequence* previous_sequence = &route->at(i_seq_a);
-//     Sequence* current_sequence = &route->at(i_seq_b-1);
-//     fill_forward_virtual(previous_sequence,current_sequence);
-//     if(broke_time_window()) {
-//         return false;
-//     }
+    //Trocando o proximo cliente de i_seq_a pelo último do intervalo (i_seq_b)
+    Sequence* previous_sequence = &route->at(i_seq_a);
+    Sequence* current_sequence = &route->at(i_seq_b-1);
+    fill_forward_virtual(previous_sequence,current_sequence);
+    if(broke_time_window()) {
+        return false;
+    }
 
-//     //Calculando o propagate para o intervalo de forma inversa
-//     for(int i = i_seq_b-2;i>i_seq_a;i--) {
-//         previous_sequence = current_sequence;
-//         current_sequence = &route->at(i);
-//         fill_forward_virtual(previous_sequence, current_sequence);
-//         if(broke_time_window()) {
-//             return false;
-//         }
-//     }
+    //Calculando o propagate para o intervalo de forma inversa
+    for(int i = i_seq_b-2;i>i_seq_a;i--) {
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
+        fill_forward_virtual(previous_sequence, current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
+    }
 
-//     //Calculando de i_seq_b em diante
-//     for(int i=i_seq_b;i<(int)route->size();i++) {
-//         previous_sequence = current_sequence;
-//         current_sequence = &route->at(i);
-//         fill_forward_virtual(previous_sequence, current_sequence);
-//         if(broke_time_window()) {
-//             return false;
-//         }
+    //Calculando de i_seq_b em diante
+    for(int i=i_seq_b;i<(int)route->size();i++) {
+        previous_sequence = current_sequence;
+        current_sequence = &route->at(i);
+        fill_forward_virtual(previous_sequence, current_sequence);
+        if(broke_time_window()) {
+            return false;
+        }
 
-//     }
+    }
 
-//     return true;
-// }
+    return true;
+}
 
 // bool Search::propagate_virtual_or_opt_1_up(int route_index, int i_seq_a, int i_seq_b) {
 //     vector<Sequence>* route = &this->solution->routes.at(route_index);

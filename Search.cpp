@@ -36,7 +36,6 @@ void Search::run() {
 
 void Search::debug_run() {
     this->construct();
-    this->solution->print();
 
     /*
     Node* locker = &this->instance->nodes.at(this->instance->locker_indexes[0]);
@@ -48,7 +47,8 @@ void Search::debug_run() {
         cout<<endl;
 
     }*/
-    this->rvnd_inter();
+    //this->rvnd_inter();
+    this->rvnd_intra();
 }
 
 void Search::construct() {
@@ -1628,7 +1628,7 @@ void Search::propagate(int route_index, int previous_sequence_index) {
     Sequence* current_sequence = &route->at(previous_sequence_index);
 
     if(current_sequence->node->type == "p") {
-        (route->end()-1)->visited_lockers[current_sequence->node] = previous_sequence_index+1;
+        (route->end()-1)->visited_lockers[current_sequence->node] = previous_sequence_index;
     }
 
     for(int i=previous_sequence_index+1; i<(int)route->size(); i++) {
@@ -1637,7 +1637,7 @@ void Search::propagate(int route_index, int previous_sequence_index) {
         fill_forward(previous_sequence,current_sequence);
 
         if(current_sequence->node->type == "p") {
-            (route->end()-1)->visited_lockers[current_sequence->node] = previous_sequence_index+1;
+            (route->end()-1)->visited_lockers[current_sequence->node] = i;
         }
 
     }

@@ -6,7 +6,6 @@
 #define SOLUTION_H
 #include "Instance.h"
 #include "Sequence.h"
-//#include "Utils.h"
 
 
 class Solution {
@@ -19,7 +18,6 @@ public:
     void print_detailed_total_cost();
     void print();
     void print_is_viable(long seed);
-    //void sort_routes();
     Solution* clone();
 
     Instance* instance;

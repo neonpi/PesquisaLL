@@ -6,6 +6,7 @@
 #define SEQUENCE_H
 #include "Node.h"
 #include "vector"
+#include <unordered_map>
 
 
 class Sequence {
@@ -13,6 +14,7 @@ class Sequence {
 public:
     Node* node = nullptr;
     vector<Node*> customers;
+    unordered_map<Node*,int> visited_lockers; //<locker, indice>
     char method = 'u';
     double time_off = 0.0;
     double current_distance = 0.0;
@@ -40,7 +42,6 @@ public:
         this->minimun_route_load = 0.0;
     }
 };
-
 
 
 #endif //SEQUENCE_H

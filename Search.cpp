@@ -36,7 +36,19 @@ void Search::run() {
 
 void Search::debug_run() {
     this->construct();
-    this->rvnd_intra();
+    this->solution->print();
+
+    /*
+    Node* locker = &this->instance->nodes.at(this->instance->locker_indexes[0]);
+    vector<Sequence> route = this->solution->routes.at(0);
+    auto it = (route.end()-1)->visited_lockers.find(locker);
+    if(it == (route.end()-1)->visited_lockers.end()) {
+        cout<<endl;
+    }else {
+        cout<<endl;
+
+    }*/
+    this->rvnd_inter();
 }
 
 void Search::construct() {
@@ -361,47 +373,47 @@ void Search::ls_intra_or_opt_k(int k) {
     }
 }
 
-// void Search::rvnd_inter() {
-//     vector<int> neighb = {0,1,2,3,4};
-//     int last_improved_neighb = -1;
-//     random_shuffle(neighb.begin(),neighb.end());
-//     double cost_backup = this->solution->cost;
+void Search::rvnd_inter() {
+    vector<int> neighb = {0,1,2,3,4};
+    int last_improved_neighb = -1;
+    random_shuffle(neighb.begin(),neighb.end());
+    double cost_backup = this->solution->cost;
 
-//     for(int i=0;i<5;i++) {
-//         if(neighb[i] != last_improved_neighb) {
-//             switch (neighb[i]) {
-//                 case 0:
-//                     this->ls_inter_shift_1_0();
-//                 break;
-//                 case 1:
-//                     this->ls_inter_shift_2_0();
-//                 break;
-//                 case 2:
-//                     this->ls_inter_swap_1_1();
-//                 break;
-//                 case 3:
-//                     this->ls_inter_swap_2_1();
-//                 break;
-//                 case 4:
-//                     this->ls_inter_swap_2_2();
-//                 break;
-//                 default:
-//                     cout<<"Unknown LS"<<endl;
-//             }
-//             if(this->solution->cost < cost_backup) {
-//                 double cost_before_intra = this->solution->cost;
-//                 this->rvnd_intra();
-//                 cost_backup = this->solution->cost;
-//                 if(this->solution->cost < cost_before_intra) {
-//                     last_improved_neighb = -1;
-//                 }else {
-//                     last_improved_neighb = neighb[i];
-//                 }
-//                 i=-1;
-//             }
-//         }
-//     }
-// }
+    for(int i=0;i<5;i++) {
+        if(neighb[i] != last_improved_neighb) {
+            switch (neighb[i]) {
+                case 0:
+                    //this->ls_inter_swap_1_1();
+                    break;
+                case 1:
+                    //this->ls_inter_swap_2_1();
+                    break;
+                case 2:
+                    //this->ls_inter_swap_2_2();
+                    break;
+                case 3:
+                    //this->ls_inter_shift_1_0();
+                    break;
+                case 4:
+                    //this->ls_inter_shift_2_0();
+                    break;
+                default:
+                    cout<<"Unknown LS"<<endl;
+            }
+            if(this->solution->cost < cost_backup) {
+                double cost_before_intra = this->solution->cost;
+                this->rvnd_intra();
+                cost_backup = this->solution->cost;
+                if(this->solution->cost < cost_before_intra) {
+                    last_improved_neighb = -1;
+                }else {
+                    last_improved_neighb = neighb[i];
+                }
+                i=-1;
+            }
+        }
+    }
+}
 
 // void Search::ls_inter_shift_1_0() {
 //     double best_delta = 0.0;
@@ -722,7 +734,7 @@ void Search::ls_intra_or_opt_k(int k) {
 //         }
 //     }
 
-// }
+//}
 // bool Search::swap_2_1_broke_load(vector<Sequence>* route_a, Sequence* seq_a_1, Sequence *seq_a_2, vector<Sequence>* route_b, Sequence* seq_b) {
 
 //     bool broke_a = (route_a->end()-1)->current_load  - seq_a_1->customer->load_demand - seq_a_2->customer->load_demand + seq_b->customer->load_demand > this->instance->load_capacity;
@@ -1615,11 +1627,18 @@ void Search::propagate(int route_index, int previous_sequence_index) {
     Sequence* previous_sequence = nullptr;
     Sequence* current_sequence = &route->at(previous_sequence_index);
 
-    for(int i=previous_sequence_index+1; i<(int)route->size(); i++) {
+    if(current_sequence->node->type == "p") {
+        (route->end()-1)->visited_lockers[current_sequence->node] = previous_sequence_index+1;
+    }
 
+    for(int i=previous_sequence_index+1; i<(int)route->size(); i++) {
         previous_sequence = current_sequence;
         current_sequence = &route->at(i);
         fill_forward(previous_sequence,current_sequence);
+
+        if(current_sequence->node->type == "p") {
+            (route->end()-1)->visited_lockers[current_sequence->node] = previous_sequence_index+1;
+        }
 
     }
 
@@ -2150,7 +2169,6 @@ void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
     for(Node* customer : candidate_sequence->customers) {
         this->solution->visited.at(customer->index) = true;
     }
-
 
 }
 

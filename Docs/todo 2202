@@ -4,3 +4,14 @@ Gurobi solução inicial para aproveitar a solução anterior. Solução de entr
 Gerar uma solução heurística com o ig, depois pegar os dados e jogar no gurobi
 
 Construtivo: Priorizar os obrigatorios (SERA?)
+
+------------------------------------------
+Como é melhor aprimorante, ja é suficiente para ignorar a inconsistencia Se for locker locker tentar juntar
+analizar somatório de clientes por locker
+
+Deixar repetir locker no inter, o intra vai fundir. Vai ter que mudar 
+
+Criar estrutura route. load e dist do lado de fora
+
+LS intrarota pra fundir locker. Rodar ela antes do rvnd intra
+RVND intra antes de rodar o RVND inter pelo menos uma vez

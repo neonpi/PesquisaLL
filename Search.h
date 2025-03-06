@@ -9,14 +9,15 @@
 #define EARLY_TW 1
 #define INVIABLE_TW 2
 
-#include "Instance.h"
-#include "Sequence.h"
-#include <algorithm>
 #include <tuple>
 #include <vector>
-
+#include <algorithm>
+#include "Instance.h"
+#include "Sequence.h"
+#include "Counter.h"
 #include "Config.h"
 #include "Solution.h"
+
 using namespace std;
 
 class Search {
@@ -101,22 +102,19 @@ public:
     bool is_customer(int node_index);
     bool is_locker(int node_index);
 
-    bool is_load_viable(int route_index, Node* cand_node){return this->instance->load_capacity > (this->solution->routes.at(route_index).end()-1)->current_load + cand_node->load_demand;}
+    bool is_load_viable(int route_index, Node* cand_node){return this->instance->load_capacity > this->solution->routes.at(route_index)->load + cand_node->load_demand;}
 
     double calculate_delta_distance(int route_index, int previous_sequence_index, Sequence *cand_sequence);
-    void print_candidate_list(vector<tuple<int, int, Sequence, double>> *cand_list);
     void print_ig_candidate_list(vector<vector<tuple<int, int, Sequence, double>>> *cand_list);
 
-    void shift(vector<Sequence> *route, int i_seq_a, int i_seq_b);
-    void shift_k(int k,vector<Sequence> *route, int i_seq_a, int i_seq_b);
-    void test_cost();
+    void shift(vector<Sequence> *route_sequences, int i_seq_a, int i_seq_b);
+    void shift_k(int k,vector<Sequence> *route_sequences, int i_seq_a, int i_seq_b);
     void build_predefined_solution(vector<vector<string>> solution);
+
     Instance* instance;
     Solution* solution;
     Sequence* virtual_sequence;
-    int customer_served;
     Search* best;
-
     Config* config;
 
 

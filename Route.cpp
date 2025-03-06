@@ -3,3 +3,39 @@
 //
 
 #include "Route.h"
+
+Route::Route(Instance* instance) {
+    this->instance = instance;
+    this->sequences.reserve(this->instance->n_node);
+
+    Sequence depot_0, depot_t;
+    depot_0.node = &this->instance->nodes.at(0);
+    depot_0.customers = {};
+    depot_t.node = &this->instance->nodes.at(1);
+    depot_t.customers = {};
+    this->sequences = {depot_0,depot_t};
+}
+
+string Route::get_route_string(int route_label) {
+    string s= "V_"+to_string(route_label)+": ";
+    for (int i_seq=0; i_seq < (int)this->sequences.size(); i_seq++) {
+        Sequence* sequence = &this->sequences.at(i_seq);
+        s+=sequence->node->id;
+        if (sequence->node->type == "p") {
+            s+="(";
+
+            for(int i_customer=0; i_customer < (int)sequence->customers.size();i_customer++) {
+                Node* customer = sequence->customers.at(i_customer);
+                s+= customer->id;
+                if(i_customer < (int)sequence->customers.size() -1) {
+                    s+=", ";
+                }
+            }
+
+            s+=")";
+        }
+        s+=" -> ";
+    }
+
+    return s;
+}

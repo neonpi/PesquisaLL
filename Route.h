@@ -4,10 +4,24 @@
 
 #ifndef ROUTE_H
 #define ROUTE_H
+#include <vector>
+#include "Instance.h"
+#include "Sequence.h"
 
-
-
+using namespace std;
 class Route {
+public:
+    Route(Instance* instance);
+
+    string get_route_string(int route_label);
+
+    Instance* instance;
+    vector<Sequence> sequences;
+    unordered_map<Node*,int> visited_lockers; //<locker, indice>
+    double traveled_distance = 0.0;
+    double load = 0.0;
+    double minimun_route_load = 0.0;
+
 
 };
 

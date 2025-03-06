@@ -4,12 +4,10 @@
 
 #include "Search.h"
 
-#include "Utils.h"
 
 Search::Search(Instance *instance, Config* config) {
     this->instance = instance;
     this->config = config;
-    this->customer_served = 0;
     this->best = nullptr;
     
     this->solution = new Solution(instance);
@@ -143,28 +141,29 @@ void Search::rvnd_intra() {
     }
 }
 
-
+//TODO testar
 void Search::ls_intra_exchange() {
 
     for(int i_route=0; i_route<(int)this->solution->routes.size();i_route++) {
-        vector<Sequence>* route = &this->solution->routes.at(i_route);
-        if(route->size()>4) {
+        Route* route = this->solution->routes.at(i_route);
+        vector<Sequence> *route_sequences = &route->sequences;
+        if(route->sequences.size()>4) {
 
             double best_delta = 0.0;
             int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
 
-            for(int i_seq_a=1;i_seq_a<(route->size()-2);i_seq_a++) {
+            for(int i_seq_a=1;i_seq_a<(int)(route_sequences->size()-2);i_seq_a++) {
 
-                Sequence* seq_a = &route->at(i_seq_a);
+                Sequence* seq_a = &route_sequences->at(i_seq_a);
 
-                for(int i_seq_b = i_seq_a+1; i_seq_b<(route->size()-1);i_seq_b++) {
-                    Sequence* seq_b = &route->at(i_seq_b);
+                for(int i_seq_b = i_seq_a+1; i_seq_b<(int)(route_sequences->size()-1);i_seq_b++) {
+                    Sequence* seq_b = &route_sequences->at(i_seq_b);
 
                     if(seq_a->node->id != seq_b->node->id) {
-                        double delta = calculate_delta_exchange(route, i_seq_a,i_seq_b);
+                        double delta = calculate_delta_exchange(route_sequences, i_seq_a,i_seq_b);
 
-                        if(Utils::improves(0.0,delta) &&
-                        Utils::improves(best_delta,delta)) {
+                        if(Count::improves(0.0,delta) &&
+                        Count::improves(best_delta,delta)) {
                             //Testar viabilidade
                             if(propagate_virtual_exchange(i_route,i_seq_a,i_seq_b)) {
                                 best_delta = delta;
@@ -184,7 +183,7 @@ void Search::ls_intra_exchange() {
                 propagate(i_route,coordinates[0]-1);
                 double estimated = this->solution->cost + best_delta;
                 this->solution->calculate_total_cost();
-                if (Utils::differs(estimated,this->solution->cost)) {
+                if (Count::differs(estimated,this->solution->cost)) {
                     cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
                     exit(20);
                 }
@@ -194,28 +193,29 @@ void Search::ls_intra_exchange() {
     }
 }
 
+//TODO testar
 void Search::ls_intra_2opt() {
-
 
     for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
 
         double best_delta = 0.0;
         int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
 
-        vector<Sequence>* route = &this->solution->routes.at(i_route);
-           for(int i_seq_a = 0; i_seq_a<((int)(route->size())-3);i_seq_a++) {
-               Sequence* seq_a = &route->at(i_seq_a);
+        Route* route = this->solution->routes.at(i_route);
+        vector<Sequence>* route_sequences = &route->sequences;
+           for(int i_seq_a = 0; i_seq_a<((int)(route_sequences->size())-3);i_seq_a++) {
+               Sequence* seq_a = &route_sequences->at(i_seq_a);
 
-               for(int i_seq_b = i_seq_a+5; i_seq_b<(int)route->size();i_seq_b++) {
-                   Sequence* seq_b = &route->at(i_seq_b);
+               for(int i_seq_b = i_seq_a+5; i_seq_b<(int)route_sequences->size();i_seq_b++) {
+                   Sequence* seq_b = &route_sequences->at(i_seq_b);
 
                    //Inverter a rota inteira não faz efeito algum
                    if(seq_a->node->id =="D0" && seq_b->node->id == "Dt") {break;}
 
-                   double delta = calculate_delta_2opt(route,i_seq_a, i_seq_b);
+                   double delta = calculate_delta_2opt(route_sequences,i_seq_a, i_seq_b);
 
-                   if(Utils::improves(0.0,delta) &&
-                       Utils::improves(best_delta,delta)) {
+                   if(Count::improves(0.0,delta) &&
+                       Count::improves(best_delta,delta)) {
                         //Testar viabilidade
                        if(propagate_virtual_2opt(i_route,i_seq_a,i_seq_b)) {
                            best_delta = delta;
@@ -230,11 +230,11 @@ void Search::ls_intra_2opt() {
            }
 
             if(best_delta<0.0) {
-                reverse(route->begin()+coordinates[0]+1,route->begin()+coordinates[1]);
+                reverse(route_sequences->begin()+coordinates[0]+1,route_sequences->begin()+coordinates[1]);
                 propagate(i_route,coordinates[0]);
                 double estimated = this->solution->cost + best_delta;
                 this->solution->calculate_total_cost();
-                if (Utils::differs(estimated,this->solution->cost)) {
+                if (Count::differs(estimated,this->solution->cost)) {
                     cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
                     exit(20);
                 }
@@ -245,25 +245,27 @@ void Search::ls_intra_2opt() {
 
 }
 
+//TODO testar
 void Search::ls_intra_or_opt_1() {
     for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
 
         double best_delta = 0.0;
         int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
 
-        vector<Sequence>* route = &this->solution->routes.at(i_route);
-        for(int i_seq_a = 1; i_seq_a<((int)(route->size())-2);i_seq_a++) {
-            Sequence* seq_a = &route->at(i_seq_a);
+        Route* route = this->solution->routes.at(i_route);
+        vector<Sequence>* route_sequences = &route->sequences;
+        for(int i_seq_a = 1; i_seq_a<((int)(route_sequences->size())-2);i_seq_a++) {
+            Sequence* seq_a = &route_sequences->at(i_seq_a);
             Sequence* seq_b = nullptr;
             //Seq_b é o indice do cara que vem depois do novo destino do seq_a. Seq_b eh empurrado
 
-            for(int i_seq_b = 1; i_seq_b<(int)(route->size());i_seq_b++) {
+            for(int i_seq_b = 1; i_seq_b<(int)(route_sequences->size());i_seq_b++) {
                 //Não faz sentido testar com i=j ou com o vizinho mais proximo (Vizinhança ja eh contemplada pelo exchange)
                 if (abs(i_seq_a-i_seq_b)>1) {
-                    seq_b = &route->at(i_seq_b);
-                    double delta = calculate_delta_or_opt_1(route,i_seq_a,i_seq_b);
-                    if(Utils::improves(0.0,delta) &&
-                        Utils::improves(best_delta,delta)) {
+                    seq_b = &route_sequences->at(i_seq_b);
+                    double delta = calculate_delta_or_opt_1(route_sequences,i_seq_a,i_seq_b);
+                    if(Count::improves(0.0,delta) &&
+                        Count::improves(best_delta,delta)) {
 
                         if (i_seq_a<i_seq_b) {
                             if (propagate_virtual_or_opt_1_up(i_route,i_seq_a,i_seq_b)) {
@@ -287,11 +289,11 @@ void Search::ls_intra_or_opt_1() {
 
 
         if (best_delta < 0.0) {
-            shift(route,coordinates[0],coordinates[1]);
+            shift(route_sequences,coordinates[0],coordinates[1]);
             propagate(i_route,min(coordinates[0],coordinates[1])-1);
             double estimated = this->solution->cost + best_delta;
             this->solution->calculate_total_cost();
-            if (Utils::differs(estimated,this->solution->cost)) {
+            if (Count::differs(estimated,this->solution->cost)) {
                 cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
                 exit(20);
             }
@@ -301,25 +303,30 @@ void Search::ls_intra_or_opt_1() {
     }
 }
 
+//TODO testar
 void Search::ls_intra_or_opt_k(int k) {
 
     for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
-        vector<Sequence>* route = &this->solution->routes.at(i_route);
 
-        if (route->size()>(k+2)) {
+        Route* route = this->solution->routes.at(i_route);
+        vector<Sequence>* route_sequences = &route->sequences;
+
+        if (route_sequences->size()>(k+2)) {
 
             double best_delta = 0.0;
             int coordinates[2] = {-1,-1}; //i_seq_a,i_seq_b
 
-            for(int i_seq_a = 1; i_seq_a<((int)(route->size())-k);i_seq_a++) {
-                Sequence* seq_a = &route->at(i_seq_a);
+            for(int i_seq_a = 1; i_seq_a<((int)(route_sequences->size())-k);i_seq_a++) {
+                Sequence* seq_a = &route_sequences->at(i_seq_a);
                 Sequence* seq_b = nullptr;
                 //Pra traz
                 for (int i_seq_b = i_seq_a-1; i_seq_b>0;i_seq_b--) {
-                    seq_b = &route->at(i_seq_b);
-                    double delta = calculate_delta_or_opt_k(k,route,i_seq_a,i_seq_b);
-                    if(Utils::improves(0.0,delta) &&
-                        Utils::improves(best_delta,delta)) {
+                    seq_b = &route_sequences->at(i_seq_b);
+
+                    double delta = calculate_delta_or_opt_k(k,route_sequences,i_seq_a,i_seq_b);
+
+                    if(Count::improves(0.0,delta) &&
+                        Count::improves(best_delta,delta)) {
                         if (propagate_virtual_or_opt_k_down(k,i_route,i_seq_a,i_seq_b)) {
                             best_delta = delta;
                             coordinates[0] = i_seq_a;
@@ -328,12 +335,15 @@ void Search::ls_intra_or_opt_k(int k) {
 
                     }
                 }
+
                 //Pra frente
-                for(int i_seq_b = i_seq_a+k+1; i_seq_b<(int)route->size();i_seq_b++) {
-                    seq_b = &route->at(i_seq_b);
-                    double delta = calculate_delta_or_opt_k(k,route,i_seq_a,i_seq_b);
-                    if(Utils::improves(0.0,delta) &&
-                        Utils::improves(best_delta,delta)) {
+                for(int i_seq_b = i_seq_a+k+1; i_seq_b<(int)route_sequences->size();i_seq_b++) {
+                    seq_b = &route_sequences->at(i_seq_b);
+
+                    double delta = calculate_delta_or_opt_k(k,route_sequences,i_seq_a,i_seq_b);
+
+                    if(Count::improves(0.0,delta) &&
+                        Count::improves(best_delta,delta)) {
                         if (propagate_virtual_or_opt_k_up(k,i_route,i_seq_a,i_seq_b)) {
                             best_delta = delta;
                             coordinates[0] = i_seq_a;
@@ -344,12 +354,12 @@ void Search::ls_intra_or_opt_k(int k) {
                 }
             }
             if (best_delta < 0.0) {
-                shift_k(k,route,coordinates[0],coordinates[1]);
+                shift_k(k,route_sequences,coordinates[0],coordinates[1]);
                 propagate(i_route,min(coordinates[0],coordinates[1])-1);
 
                 double estimated = this->solution->cost + best_delta;
                 this->solution->calculate_total_cost();
-                if (Utils::differs(estimated,this->solution->cost)) {
+                if (Count::differs(estimated,this->solution->cost)) {
                     cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
                     exit(20);
                 }
@@ -433,8 +443,8 @@ void Search::rvnd_inter() {
 
 //                                     seq_b = &route_b->at(i_seq_b); //TODO depois remover
 //                                     double delta = calculate_delta_shift_1_0(route_a,i_seq_a,route_b,i_seq_b);
-//                                     if(Utils::improves(0.0,delta) &&
-//                                         Utils::improves(best_delta,delta)) {
+//                                     if(Count::improves(0.0,delta) &&
+//                                         Count::improves(best_delta,delta)) {
 
 //                                         if(propagate_virtual(i_route_b,i_seq_b,seq_a)) {
 //                                             best_delta = delta;
@@ -496,7 +506,7 @@ void Search::rvnd_inter() {
 
 //         double estimated = this->solution->cost + best_delta;
 //         this->solution->calculate_total_cost();
-//         if (Utils::differs(estimated,this->solution->cost)) {
+//         if (Count::differs(estimated,this->solution->cost)) {
 //             cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
 //             exit(20);
 //         }
@@ -535,8 +545,8 @@ void Search::rvnd_inter() {
 
 //                                     seq_b = &route_b->at(i_seq_b); //TODO depois remover
 //                                     double delta = calculate_delta_shift_2_0(route_a,i_seq_a,route_b,i_seq_b);
-//                                     if(Utils::improves(0.0,delta) &&
-//                                         Utils::improves(best_delta,delta)) {
+//                                     if(Count::improves(0.0,delta) &&
+//                                         Count::improves(best_delta,delta)) {
 
 //                                         if(propagate_virtual_segment(i_route_b,i_seq_b,seq_a_1,seq_a_2)) {
 //                                             best_delta = delta;
@@ -602,7 +612,7 @@ void Search::rvnd_inter() {
 
 //         double estimated = this->solution->cost + best_delta;
 //         this->solution->calculate_total_cost();
-//         if (Utils::differs(estimated,this->solution->cost)) {
+//         if (Count::differs(estimated,this->solution->cost)) {
 //             cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
 //             exit(20);
 //         }
@@ -642,8 +652,8 @@ void Search::rvnd_inter() {
 
 //                                 if(!swap_1_1_broke_load(route_a,seq_a,route_b,seq_b)) {
 //                                     double delta = calculate_delta_swap_1_1(route_a,i_seq_a,route_b,i_seq_b);
-//                                     if(Utils::improves(0.0,delta) &&
-//                                         Utils::improves(best_delta,delta)) {
+//                                     if(Count::improves(0.0,delta) &&
+//                                         Count::improves(best_delta,delta)) {
 //                                         if(propagate_virtual_swap_1_1(i_route_b,i_seq_b-1,seq_a) &&
 //                                             propagate_virtual_swap_1_1(i_route_a,i_seq_a-1,seq_b)) {
 //                                             best_delta = delta;
@@ -716,7 +726,7 @@ void Search::rvnd_inter() {
 
 //         double estimated = this->solution->cost + best_delta;
 //         this->solution->calculate_total_cost();
-//         if (Utils::differs(estimated,this->solution->cost)) {
+//         if (Count::differs(estimated,this->solution->cost)) {
 //             cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
 //             exit(20);
 //         }
@@ -765,8 +775,8 @@ void Search::rvnd_inter() {
 //                                 //Trocar locker com locker não faz efeito TODO testar depois
 //                                     if(!swap_2_1_broke_load(route_a,seq_a_1,seq_a_2,route_b,seq_b)) {
 //                                         double delta = calculate_delta_swap_2_1(route_a,i_seq_a,route_b,i_seq_b);
-//                                         if(Utils::improves(0.0,delta) &&
-//                                             Utils::improves(best_delta,delta)) {
+//                                         if(Count::improves(0.0,delta) &&
+//                                             Count::improves(best_delta,delta)) {
 //                                             if(propagate_virtual_swap_1_2(i_route_a,i_seq_a-1,seq_b) &&
 //                                                 propagate_virtual_swap_2_1(i_route_b,i_seq_b-1,seq_a_1,seq_a_2)) {
 //                                                 best_delta = delta;
@@ -836,7 +846,7 @@ void Search::rvnd_inter() {
 
 //         double estimated = this->solution->cost + best_delta;
 //         this->solution->calculate_total_cost();
-//         if (Utils::differs(estimated,this->solution->cost)) {
+//         if (Count::differs(estimated,this->solution->cost)) {
 //             cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
 //             exit(20);
 //         }
@@ -872,8 +882,8 @@ void Search::rvnd_inter() {
 //                                 //Trocar locker com locker não faz efeito TODO testar depois
 //                                     if(!swap_2_2_broke_load(route_a,seq_a_1,seq_a_2,route_b,seq_b_1,seq_b_2)) {
 //                                         double delta = calculate_delta_swap_2_2(route_a,i_seq_a,route_b,i_seq_b);
-//                                         if(Utils::improves(0.0,delta) &&
-//                                             Utils::improves(best_delta,delta)) {
+//                                         if(Count::improves(0.0,delta) &&
+//                                             Count::improves(best_delta,delta)) {
 //                                             if(propagate_virtual_swap_2_2(i_route_a,i_seq_a-1,seq_b_1,seq_b_2) &&
 //                                                 propagate_virtual_swap_2_2(i_route_b,i_seq_b-1,seq_a_1,seq_a_2)) {
 //                                                 best_delta = delta;
@@ -944,7 +954,7 @@ void Search::rvnd_inter() {
 
 //         double estimated = this->solution->cost + best_delta;
 //         this->solution->calculate_total_cost();
-//         if (Utils::differs(estimated,this->solution->cost)) {
+//         if (Count::differs(estimated,this->solution->cost)) {
 //             cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
 //             exit(20);
 //         }
@@ -1250,9 +1260,10 @@ void Search::rvnd_inter() {
 
 // }
 
+//TODO testar
 void Search::swap_sequence_intraroute(int route_index, int seq_a_index, int seq_b_index) {
-    Sequence* sequence_a = &this->solution->routes.at(route_index).at(seq_a_index);
-    Sequence* sequence_b = &this->solution->routes.at(route_index).at(seq_b_index);
+    Sequence* sequence_a = &this->solution->routes.at(route_index)->sequences.at(seq_a_index);
+    Sequence* sequence_b = &this->solution->routes.at(route_index)->sequences.at(seq_b_index);
 
     Node* node_a = sequence_a->node;
     vector<Node*> customers_a = sequence_a->customers;
@@ -1267,15 +1278,20 @@ void Search::swap_sequence_intraroute(int route_index, int seq_a_index, int seq_
     sequence_a->customers = customers_b;
 }
 
+//TODO testar
 bool Search::is_viable() {
-    for(vector<Sequence> seq: this->solution->routes) {
+    for(Route* route: this->solution->routes) {
+
         //Load
-        if(seq.at((int)seq.size()-1).current_load > this->instance->load_capacity) {
+        if(route->load > this->instance->load_capacity) {
             return false;
         }
+
         //TW
-        for(Sequence s: seq) {
-            if(s.current_time<s.node->time_window[0] ||  s.current_time>s.node->time_window[1]) {
+        for(int i_seq=0; i_seq<(int)route->sequences.size();i_seq++) {
+            Sequence* s = &route->sequences.at(i_seq);
+            //TODO verificar se precisa considerar o Differs aqui
+            if(s->current_time < s->node->time_window[0] ||  s->current_time > s->node->time_window[1]) {
                 return false;
             }
         }
@@ -1283,7 +1299,7 @@ bool Search::is_viable() {
 
     return true;
 }
-
+//TODO testar
 vector<tuple<int, int, Sequence, double>> Search::build_candidate_list() {
 
     vector<tuple<int,int,Sequence, double>> cand_list;
@@ -1313,9 +1329,10 @@ vector<vector<tuple<int, int, Sequence, double>>> Search::build_candidate_list_i
     vector<vector<tuple<int, int, Sequence, double>>> parsed_list = group_by_delta(&cand_list);
     return parsed_list;
 }
-//TODO TESTAR EM DEBUG
+
+//TODO testar
 void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node *cand_node) {
-    if(!this->solution->visited.at(cand_node->index)) {
+    if(!this->solution->served.at(cand_node->index)) {
 
         Sequence cand_sequence;
         cand_sequence.node = cand_node;
@@ -1323,42 +1340,40 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *c
         tuple<int, int, Sequence, double> cand_tuple = {-1,-1,cand_sequence, -1.0};
         double delta = -1.0;
 
-        int route_index = 0;
-        for (vector<Sequence> route : this->solution->routes) {
 
+        for (int i_route = 0; i_route<(int)this->solution->routes.size();i_route++) {
+            Route* route = this->solution->routes.at(i_route);
             //O Load é viável?
-            if (is_load_viable(route_index,cand_node)) {
+            if (is_load_viable(i_route,cand_node)) {
 
-
-                int previous_sequence_index = 0;
-                for (Sequence previous_sequence : route) {
-                    if (previous_sequence.node->id != "Dt") {
-
-                        delta = calculate_delta_distance(route_index, previous_sequence_index, &cand_sequence);
+                for (int i_prev_seq = 0; i_prev_seq<(int)route->sequences.size();i_prev_seq++) {
+                    Sequence* previous_sequence = &route->sequences.at(i_prev_seq);
+                    if (previous_sequence->node->id != "Dt") {
+                        delta = calculate_delta_distance(i_route, i_prev_seq, &cand_sequence);
 
                         if(get<3>(cand_tuple) == -1.0 || delta < get<3>(cand_tuple)) {
 
-                            bool is_insertion_viable = propagate_virtual(route_index, previous_sequence_index, &cand_sequence);
+                            bool is_insertion_viable = propagate_virtual(i_route, i_prev_seq, &cand_sequence);
 
                             if(is_insertion_viable) {
-                                get<0>(cand_tuple) = route_index;
-                                get<1>(cand_tuple) = previous_sequence_index;
+                                get<0>(cand_tuple) = i_route;
+                                get<1>(cand_tuple) = i_prev_seq;
                                 get<3>(cand_tuple) = delta;
                             }
                         }
 
                     }
-                    previous_sequence_index++;
+                    i_prev_seq++;
                 }
 
             }
 
-            if((int)route.size() == 2) {
+            if((int)route->sequences.size() == 2) {
                 break;
             }
 
 
-            route_index++;
+            i_route++;
         }
 
         if(get<0>(cand_tuple) != -1.0) {
@@ -1369,7 +1384,7 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *c
 }
 
 
-//TODO TESTAR EM DEBUG
+//TODO testar
 void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node* cand_node) {
 
     Sequence cand_sequence;
@@ -1379,7 +1394,7 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *can
     double delta = -1.0;
 
     int route_index = 0;
-    for (vector<Sequence> route : this->solution->routes) {
+    for (Route* route : this->solution->routes) {
 
         tuple<int, double> route_cand_tuple = {-1,-1.0};
         vector<Node*> route_cand_customers;
@@ -1387,8 +1402,8 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *can
         //Inserindo todos os clientes que podem caber na rota
         double accum_demand = 0;
         for(Node* customer: cand_sequence.node->designated_customers) {
-            if(!this->solution->visited[customer->index]) {
-                if((accum_demand + customer->load_demand + (route.end()-1)->current_load) <= this->instance->load_capacity) {
+            if(!this->solution->served[customer->index]) {
+                if((accum_demand + customer->load_demand + route->load) <= this->instance->load_capacity) {
                     route_cand_customers.push_back(customer);
                     accum_demand += customer->load_demand;
                 }else {
@@ -1400,29 +1415,28 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *can
         // Só prossegue se couber pelo menos um cliente
         if((int)route_cand_customers.size() > 0) {
 
-            int previous_sequence_index = 0;
-            for (const Sequence& previous_sequence : route) {
-
-                if(previous_sequence.node->id != "Dt") {
+            for (int i_prev_seq = 0; i_prev_seq < (int)route->sequences.size();i_prev_seq++) {
+                Sequence* previous_sequence = &route->sequences.at(i_prev_seq);
+                if(previous_sequence->node->id != "Dt") {
                     //Se o locker ja estiver nessa rota, cai fora
-                    if(previous_sequence.node->id == cand_node->id) {
+                    if(previous_sequence->node->id == cand_node->id) {
                         //Se uma inserção tambem tiver sido considerada, desiste
                         if(get<0>(route_cand_tuple) != 1) {
                             get<0>(route_cand_tuple) = -1;
                         }
                         break;
                     }else {
-                        bool is_insertion_viable = propagate_virtual(route_index,previous_sequence_index,&cand_sequence);
+                        bool is_insertion_viable = propagate_virtual(route_index,i_prev_seq,&cand_sequence);
 
                         if(is_insertion_viable) {
-                            delta = calculate_delta_distance(route_index,previous_sequence_index,&cand_sequence);
+                            delta = calculate_delta_distance(route_index,i_prev_seq,&cand_sequence);
                             //O delta é melhor que o melhor?
                             if (get<0>(cand_tuple) == -1 || delta < get<3>(cand_tuple)) {
 
                                 //A inserção do route_cand_tuple pode estar ainda melhor
                                 if(get<0>(route_cand_tuple) == -1 || delta < get<1>(route_cand_tuple)) {
 
-                                    get<0>(route_cand_tuple) = previous_sequence_index;
+                                    get<0>(route_cand_tuple) = i_prev_seq;
                                     get<1>(route_cand_tuple) = delta;
 
                                 }
@@ -1432,7 +1446,7 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *can
 
                     }
 
-                    previous_sequence_index++;
+                    i_prev_seq++;
                 }
 
             }
@@ -1446,7 +1460,7 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *can
             }
         }
 
-        if((int)route.size() == 2) {
+        if((int)route->sequences.size() == 2) {
             break;
         }
 
@@ -1465,6 +1479,7 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *can
 
 }
 
+//TODO testar
 void Search::fill_forward_virtual(Sequence *previous_sequence, Sequence *current_sequence) {
 
     double distance = this->instance->distances[previous_sequence->node->index][current_sequence->node->index];
@@ -1482,17 +1497,11 @@ void Search::fill_forward_virtual(Sequence *previous_sequence, Sequence *current
 
 }
 
+//TODO testar Agora o fill forward só trata o tw
 void Search::fill_forward(Sequence *previous_sequence, Sequence *current_sequence) {
 
 
-    current_sequence->current_load = previous_sequence->current_load;
-    //TODO isso aqui pode piorar o desempenho, talvez guardar na sequence o quanto ta sendo deixado ali
-    for(Node* customer : current_sequence->customers) {
-        current_sequence->current_load+= customer->load_demand;
-    }
-
     double distance = this->instance->distances[previous_sequence->node->index][current_sequence->node->index];
-    current_sequence->current_distance = previous_sequence->current_distance + distance;
 
     current_sequence->current_time = previous_sequence->current_time + previous_sequence->node->service_time + distance * this->instance->avg_speed;
 
@@ -1506,45 +1515,49 @@ void Search::fill_forward(Sequence *previous_sequence, Sequence *current_sequenc
 
 }
 
+//TODO testar
 void Search::propagate(int route_index, int previous_sequence_index) {
-    vector<Sequence>* route = &this->solution->routes.at(route_index);
+    Route* route = this->solution->routes.at(route_index);
+    vector<Sequence> *route_sequences = &route->sequences;
 
     Sequence* previous_sequence = nullptr;
-    Sequence* current_sequence = &route->at(previous_sequence_index);
+    Sequence* current_sequence = &route_sequences->at(previous_sequence_index);
 
     if(current_sequence->node->type == "p") {
-        (route->end()-1)->visited_lockers[current_sequence->node] = previous_sequence_index;
+        route->visited_lockers[current_sequence->node] = previous_sequence_index;
     }
 
-    for(int i=previous_sequence_index+1; i<(int)route->size(); i++) {
+    for(int i=previous_sequence_index+1; i<(int)route_sequences->size(); i++) {
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
         fill_forward(previous_sequence,current_sequence);
 
         if(current_sequence->node->type == "p") {
-            (route->end()-1)->visited_lockers[current_sequence->node] = i;
+            route->visited_lockers[current_sequence->node] = i;
         }
 
     }
 
 }
-//Retorna false se não for viável
+
+//Retorna false se não for viável TODO testar
 bool Search::propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
-    vector<Sequence>* route = &this->solution->routes.at(route_index);
+    Route* route = this->solution->routes.at(route_index);
+    vector<Sequence> *route_sequences = &route->sequences;
 
-    route->at(previous_sequence_index).clone_this_to(this->virtual_sequence);
+    route_sequences->at(previous_sequence_index).clone_this_to(this->virtual_sequence);
 
-    Sequence* previous_sequence = &route->at(previous_sequence_index);
+    Sequence* previous_sequence = &route_sequences->at(previous_sequence_index);
     Sequence* current_sequence = cand_sequence;
     fill_forward_virtual(previous_sequence, current_sequence);
     if(broke_time_window()) {
         return false;
     }
 
-    for(int i=previous_sequence_index+1; i<(int)route->size(); i++) {
+    for(int i=previous_sequence_index+1; i<(int)route_sequences->size(); i++) {
 
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
 
         fill_forward_virtual(previous_sequence, current_sequence);
         if(broke_time_window()) {
@@ -1556,13 +1569,15 @@ bool Search::propagate_virtual(int route_index, int previous_sequence_index, Seq
     return true;
 }
 
+//TODO testar
 bool Search::propagate_virtual_exchange(int route_index, int i_seq_a, int i_seq_b) {
-    vector<Sequence>* route = &this->solution->routes.at(route_index);
+    Route* route = this->solution->routes.at(route_index);
+    vector<Sequence> *route_sequences = &route->sequences;
 
-    route->at(i_seq_a-1).clone_this_to(this->virtual_sequence);
+    route_sequences->at(i_seq_a-1).clone_this_to(this->virtual_sequence);
 
-    Sequence* previous_sequence = &route->at(i_seq_a-1);
-    Sequence* current_sequence = &route->at(i_seq_b);
+    Sequence* previous_sequence = &route_sequences->at(i_seq_a-1);
+    Sequence* current_sequence = &route_sequences->at(i_seq_b);
     fill_forward_virtual(previous_sequence,current_sequence);
     if(broke_time_window()) {
         return false;
@@ -1571,7 +1586,7 @@ bool Search::propagate_virtual_exchange(int route_index, int i_seq_a, int i_seq_
     //Propagando até o i_seq_b
     for (int i = i_seq_a + 1; i < i_seq_b; i++) {
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
         fill_forward_virtual(previous_sequence,current_sequence);
         if(broke_time_window()) {
             return false;
@@ -1580,7 +1595,7 @@ bool Search::propagate_virtual_exchange(int route_index, int i_seq_a, int i_seq_
 
     //propagando de seq_b_previous pra seq_a
     previous_sequence = current_sequence;
-    current_sequence = &route->at(i_seq_a);
+    current_sequence = &route_sequences->at(i_seq_a);
     fill_forward_virtual(previous_sequence,current_sequence);
     if(broke_time_window()) {
         return false;
@@ -1588,9 +1603,9 @@ bool Search::propagate_virtual_exchange(int route_index, int i_seq_a, int i_seq_
     //TODO Da pra inferir que: Se o tw aqui no virtual, for menor que o real, não vai quebrar a janela de tempo da solução. Não precisa verificar novamente cada tw
 
     //Propagando de i_seq_a até o resto
-    for (int i = i_seq_b + 1; i < (int)route->size(); i++) {
+    for (int i = i_seq_b + 1; i < (int)route_sequences->size(); i++) {
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
         fill_forward_virtual(previous_sequence,current_sequence);
         if(broke_time_window()) {
             return false;
@@ -1636,15 +1651,16 @@ bool Search::propagate_virtual_exchange(int route_index, int i_seq_a, int i_seq_
 
 //     return true;
 // }
-
+//TODO testar
 bool Search::propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b) {
-    vector<Sequence>* route = &this->solution->routes.at(route_index);
+    Route* route = this->solution->routes.at(route_index);
+    vector<Sequence> *route_sequences = &route->sequences;
 
-    route->at(i_seq_a).clone_this_to(this->virtual_sequence);
+    route_sequences->at(i_seq_a).clone_this_to(this->virtual_sequence);
 
     //Trocando o proximo cliente de i_seq_a pelo último do intervalo (i_seq_b)
-    Sequence* previous_sequence = &route->at(i_seq_a);
-    Sequence* current_sequence = &route->at(i_seq_b-1);
+    Sequence* previous_sequence = &route_sequences->at(i_seq_a);
+    Sequence* current_sequence = &route_sequences->at(i_seq_b-1);
     fill_forward_virtual(previous_sequence,current_sequence);
     if(broke_time_window()) {
         return false;
@@ -1653,7 +1669,7 @@ bool Search::propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b) {
     //Calculando o propagate para o intervalo de forma inversa
     for(int i = i_seq_b-2;i>i_seq_a;i--) {
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
         fill_forward_virtual(previous_sequence, current_sequence);
         if(broke_time_window()) {
             return false;
@@ -1661,9 +1677,9 @@ bool Search::propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b) {
     }
 
     //Calculando de i_seq_b em diante
-    for(int i=i_seq_b;i<(int)route->size();i++) {
+    for(int i=i_seq_b;i<(int)route_sequences->size();i++) {
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
         fill_forward_virtual(previous_sequence, current_sequence);
         if(broke_time_window()) {
             return false;
@@ -1674,13 +1690,15 @@ bool Search::propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b) {
     return true;
 }
 
+//TODO testar
 bool Search::propagate_virtual_or_opt_1_up(int route_index, int i_seq_a, int i_seq_b) {
-    vector<Sequence>* route = &this->solution->routes.at(route_index);
+    Route* route = this->solution->routes.at(route_index);
+    vector<Sequence> *route_sequences = &route->sequences;
 
-    route->at(i_seq_a-1).clone_this_to(this->virtual_sequence);
+    route_sequences->at(i_seq_a-1).clone_this_to(this->virtual_sequence);
 
-    Sequence* previous_sequence = &route->at(i_seq_a-1);
-    Sequence* current_sequence = &route->at(i_seq_a+1);
+    Sequence* previous_sequence = &route_sequences->at(i_seq_a-1);
+    Sequence* current_sequence = &route_sequences->at(i_seq_a+1);
     fill_forward_virtual(previous_sequence,current_sequence);
     if(broke_time_window()) {
         return false;
@@ -1688,7 +1706,7 @@ bool Search::propagate_virtual_or_opt_1_up(int route_index, int i_seq_a, int i_s
 
     for (int i=i_seq_a+2; i<i_seq_b; i++) {
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
 
         fill_forward_virtual(previous_sequence,current_sequence);
         if(broke_time_window()) {
@@ -1698,16 +1716,16 @@ bool Search::propagate_virtual_or_opt_1_up(int route_index, int i_seq_a, int i_s
     }
 
     previous_sequence = current_sequence;
-    current_sequence = &route->at(i_seq_a);
+    current_sequence = &route_sequences->at(i_seq_a);
 
     fill_forward_virtual(previous_sequence,current_sequence);
     if(broke_time_window()) {
         return false;
     }
 
-    for (int i= i_seq_b; i<(int)route->size(); i++) {
+    for (int i= i_seq_b; i<(int)route_sequences->size(); i++) {
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
 
         fill_forward_virtual(previous_sequence,current_sequence);
         if(broke_time_window()) {
@@ -1719,13 +1737,15 @@ bool Search::propagate_virtual_or_opt_1_up(int route_index, int i_seq_a, int i_s
 
 }
 
+//TODO testar
 bool Search::propagate_virtual_or_opt_k_up(int k, int route_index, int i_seq_a, int i_seq_b) {
-    vector<Sequence>* route = &this->solution->routes.at(route_index);
+    Route* route = this->solution->routes.at(route_index);
+    vector<Sequence> *route_sequences = &route->sequences;
 
-    route->at(i_seq_a-1).clone_this_to(this->virtual_sequence);
+    route_sequences->at(i_seq_a-1).clone_this_to(this->virtual_sequence);
 
-    Sequence* previous_sequence = &route->at(i_seq_a-1);
-    Sequence* current_sequence = &route->at(i_seq_a+k);
+    Sequence* previous_sequence = &route_sequences->at(i_seq_a-1);
+    Sequence* current_sequence = &route_sequences->at(i_seq_a+k);
     fill_forward_virtual(previous_sequence,current_sequence);
     if(broke_time_window()) {
         return false;
@@ -1733,7 +1753,7 @@ bool Search::propagate_virtual_or_opt_k_up(int k, int route_index, int i_seq_a, 
 
     for (int i=i_seq_a+k+1; i<i_seq_b; i++) {
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
 
         fill_forward_virtual(previous_sequence,current_sequence);
         if(broke_time_window()) {
@@ -1744,7 +1764,7 @@ bool Search::propagate_virtual_or_opt_k_up(int k, int route_index, int i_seq_a, 
 
     for (int i=i_seq_a; i<(i_seq_a+k+1);i++) {
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
 
         fill_forward_virtual(previous_sequence,current_sequence);
         if(broke_time_window()) {
@@ -1752,9 +1772,9 @@ bool Search::propagate_virtual_or_opt_k_up(int k, int route_index, int i_seq_a, 
         }
     }
 
-    for (int i= i_seq_b; i<(int)route->size(); i++) {
+    for (int i= i_seq_b; i<(int)route_sequences->size(); i++) {
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
 
         fill_forward_virtual(previous_sequence,current_sequence);
         if(broke_time_window()) {
@@ -1764,14 +1784,15 @@ bool Search::propagate_virtual_or_opt_k_up(int k, int route_index, int i_seq_a, 
 
     return true;
 }
-
+//TODO testar
 bool Search::propagate_virtual_or_opt_1_down(int route_index, int i_seq_a, int i_seq_b) {
-    vector<Sequence>* route = &this->solution->routes.at(route_index);
+    Route* route = this->solution->routes.at(route_index);
+    vector<Sequence> *route_sequences = &route->sequences;
 
-    route->at(i_seq_b-1).clone_this_to(this->virtual_sequence);
+    route_sequences->at(i_seq_b-1).clone_this_to(this->virtual_sequence);
 
-    Sequence* previous_sequence = &route->at(i_seq_b-1);
-    Sequence* current_sequence = &route->at(i_seq_a);
+    Sequence* previous_sequence = &route_sequences->at(i_seq_b-1);
+    Sequence* current_sequence = &route_sequences->at(i_seq_a);
     fill_forward_virtual(previous_sequence,current_sequence);
     if(broke_time_window()) {
         return false;
@@ -1780,7 +1801,7 @@ bool Search::propagate_virtual_or_opt_1_down(int route_index, int i_seq_a, int i
     for (int i = i_seq_b; i<i_seq_a; i++) {
 
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
         fill_forward_virtual(previous_sequence,current_sequence);
         if(broke_time_window()) {
             return false;
@@ -1789,16 +1810,16 @@ bool Search::propagate_virtual_or_opt_1_down(int route_index, int i_seq_a, int i
     }
 
     previous_sequence = current_sequence;
-    current_sequence = &route->at(i_seq_a + 1);
+    current_sequence = &route_sequences->at(i_seq_a + 1);
     fill_forward_virtual(previous_sequence,current_sequence);
     if(broke_time_window()) {
         return false;
     }
 
-    for (int i = i_seq_a+2; i<(int)route->size(); i++) {
+    for (int i = i_seq_a+2; i<(int)route_sequences->size(); i++) {
 
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
         fill_forward_virtual(previous_sequence,current_sequence);
         if(broke_time_window()) {
             return false;
@@ -1807,14 +1828,15 @@ bool Search::propagate_virtual_or_opt_1_down(int route_index, int i_seq_a, int i
 
     return true;
 }
-
+//TODO testar
 bool Search::propagate_virtual_or_opt_k_down(int k, int route_index, int i_seq_a, int i_seq_b) {
-    vector<Sequence>* route = &this->solution->routes.at(route_index);
+    Route* route = this->solution->routes.at(route_index);
+    vector<Sequence> *route_sequences = &route->sequences;
 
-    route->at(i_seq_b-1).clone_this_to(this->virtual_sequence);
+    route_sequences->at(i_seq_b-1).clone_this_to(this->virtual_sequence);
 
-    Sequence* previous_sequence = &route->at(i_seq_b-1);
-    Sequence* current_sequence = &route->at(i_seq_a);
+    Sequence* previous_sequence = &route_sequences->at(i_seq_b-1);
+    Sequence* current_sequence = &route_sequences->at(i_seq_a);
     fill_forward_virtual(previous_sequence,current_sequence);
     if(broke_time_window()) {
         return false;
@@ -1823,7 +1845,7 @@ bool Search::propagate_virtual_or_opt_k_down(int k, int route_index, int i_seq_a
     for (int i = i_seq_a+1; i<i_seq_a+k; i++) {
 
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
         fill_forward_virtual(previous_sequence,current_sequence);
         if(broke_time_window()) {
             return false;
@@ -1834,7 +1856,7 @@ bool Search::propagate_virtual_or_opt_k_down(int k, int route_index, int i_seq_a
     for (int i = i_seq_b; i<i_seq_a; i++) {
 
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
         fill_forward_virtual(previous_sequence,current_sequence);
         if(broke_time_window()) {
             return false;
@@ -1842,10 +1864,10 @@ bool Search::propagate_virtual_or_opt_k_down(int k, int route_index, int i_seq_a
 
     }
 
-    for (int i = i_seq_a + k; i<(int)route->size(); i++) {
+    for (int i = i_seq_a + k; i<(int)route_sequences->size(); i++) {
 
         previous_sequence = current_sequence;
-        current_sequence = &route->at(i);
+        current_sequence = &route_sequences->at(i);
         fill_forward_virtual(previous_sequence,current_sequence);
         if(broke_time_window()) {
             return false;
@@ -2017,10 +2039,13 @@ vector<vector<tuple<int, int, Sequence, double>>> Search::group_by_delta(
     return all_group_list;
 }
 
-
+//TODO testar
 double Search::calculate_delta_distance(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
-    Sequence a_previous_sequence = this->solution->routes.at(route_index).at(previous_sequence_index);
-    Sequence a_next_sequence = this->solution->routes.at(route_index).at(previous_sequence_index+1);
+    Route* route = this->solution->routes.at(route_index);
+    vector<Sequence> *route_sequences = &route->sequences;
+
+    Sequence a_previous_sequence = route_sequences->at(previous_sequence_index);
+    Sequence a_next_sequence = route_sequences->at(previous_sequence_index+1);
 
     double distance_prev_next = this->instance->distances[a_previous_sequence.node->index][a_next_sequence.node->index];
     double distance_prev_cus = this->instance->distances[a_previous_sequence.node->index][cand_sequence->node->index];
@@ -2030,30 +2055,40 @@ double Search::calculate_delta_distance(int route_index, int previous_sequence_i
     return delta_distance;
 }
 
+//TODO testar
 void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
-    vector<Sequence>* route = &this->solution->routes.at(get<0>(candidate));
+    Route* route = this->solution->routes.at(get<0>(candidate));
+    vector<Sequence> *route_sequences = &route->sequences;
+
+
+
     int previous_sequence_index = get<1>(candidate);
-    Sequence* previous_sequence = &route->at(previous_sequence_index);
+    Sequence* previous_sequence = &route_sequences->at(previous_sequence_index);
     Sequence* candidate_sequence = &get<2>(candidate);
 
     //Atualizando o load minimo da rota
-    if(route->size() == 2 || candidate_sequence->customers.at(0)->load_demand < (route->end()-1)->minimun_route_load) {
-        (route->end()-1)->minimun_route_load = candidate_sequence->customers.at(0)->load_demand;
+    if(route_sequences->size() == 2 || candidate_sequence->customers.at(0)->load_demand < route->minimun_route_load) {
+        route->minimun_route_load = candidate_sequence->customers.at(0)->load_demand;
     }
 
-    if((int)route->size() == 2){ this->solution->used_routes++; }
-    //TODO TODO tem que tratar tambem o forward sequence, caso o nó locker seja colocado ANTES de um locker que seja igual
-    if(previous_sequence->node->id == candidate_sequence->node->id) {
+    if((int)route_sequences->size() == 2){ this->solution->used_routes++; }
+
+    if(previous_sequence->node->id == candidate_sequence->node->id) { //TODO isso aqui provavelmente nunca vai acontecer.
         previous_sequence->customers.push_back(candidate_sequence->customers.at(0));
         propagate(get<0>(candidate), previous_sequence_index-1);
     }else {
-        route->insert(route->begin()+previous_sequence_index+1,1, *candidate_sequence);
+        route_sequences->insert(route_sequences->begin()+previous_sequence_index+1,1, *candidate_sequence);
         propagate(get<0>(candidate), previous_sequence_index);
     }
 
+    //TODO Atualizando aqui agora o load da rota e a distancia. Verificar se vai funcionar
     for(Node* customer : candidate_sequence->customers) {
-        this->solution->visited.at(customer->index) = true;
+        route->load += customer->load_demand;
+        this->solution->served.at(customer->index) = true;
     }
+
+    double delta = get<3>(candidate);
+    route->traveled_distance += delta;
 
 }
 
@@ -2062,21 +2097,6 @@ bool Search::is_customer(int node_index) {
 }
 bool Search::is_locker(int node_index) {
     return this->instance->nodes.at(node_index).type[0] == 'p';
-}
-
-void Search::print_candidate_list(vector<tuple<int, int, Sequence, double>> *cand_list) {
-    for(tuple<int,int,Sequence, double> cand: *cand_list) {
-        int cand_route = get<0>(cand);
-        int cand_index = get<1>(cand);
-        Sequence *cand_sequence = &get<2>(cand);
-
-        if(cand_sequence->node!=cand_sequence->customers.at(0)) {
-            cout<<cand_route<<" - "<<cand_index<<" - ("<<cand_sequence->customers.at(0)->id<<")"<<cand_sequence->node->id<<" - "<<get<3>(cand)<<endl;;
-        }else {
-            cout<<cand_route<<" - "<<cand_index<<" - "<<cand_sequence->node->id<<" - "<<get<3>(cand)<<endl;;
-        }
-    }
-    cout<<endl;
 }
 
 // void Search::print_ig_candidate_list(vector<vector<tuple<int, int, Sequence, double>>> *cand_list) {
@@ -2097,41 +2117,29 @@ void Search::print_candidate_list(vector<tuple<int, int, Sequence, double>> *can
 //     cout<<endl;
 // }
 
-void Search::shift(vector<Sequence> *route, int i_seq_a, int i_seq_b) {
+void Search::shift(vector<Sequence> *route_sequences, int i_seq_a, int i_seq_b) {
 
     if (i_seq_a<i_seq_b) {
-        route->insert(route->begin()+i_seq_b,route->begin()+i_seq_a,route->begin()+i_seq_a+1);
-        route->erase(route->begin()+i_seq_a,route->begin()+i_seq_a+1);
+        route_sequences->insert(route_sequences->begin()+i_seq_b,route_sequences->begin()+i_seq_a,route_sequences->begin()+i_seq_a+1);
+        route_sequences->erase(route_sequences->begin()+i_seq_a,route_sequences->begin()+i_seq_a+1);
     }else {
-        route->insert(route->begin()+i_seq_b,route->begin()+i_seq_a+1,route->begin()+i_seq_a+2);
-        route->erase(route->begin()+i_seq_a+1,route->begin()+i_seq_a+2);
+        route_sequences->insert(route_sequences->begin()+i_seq_b,route_sequences->begin()+i_seq_a+1,route_sequences->begin()+i_seq_a+2);
+        route_sequences->erase(route_sequences->begin()+i_seq_a+1,route_sequences->begin()+i_seq_a+2);
     }
 }
 
-void Search::shift_k(int k, vector<Sequence> *route, int i_seq_a, int i_seq_b) {
+void Search::shift_k(int k, vector<Sequence> *route_sequences, int i_seq_a, int i_seq_b) {
 
     if (i_seq_a<i_seq_b) {
-        rotate(route->begin() + i_seq_a, route->begin() + i_seq_a + k, route->begin() + i_seq_b );
+        rotate(route_sequences->begin() + i_seq_a, route_sequences->begin() + i_seq_a + k, route_sequences->begin() + i_seq_b );
     }else {
-        rotate(route->begin() + i_seq_b, route->begin() + i_seq_a, route->begin() + i_seq_a + k );    }
+        rotate(route_sequences->begin() + i_seq_b, route_sequences->begin() + i_seq_a, route_sequences->begin() + i_seq_a + k );    }
 
-}
-
-void Search::test_cost() {
-    double cost = 0.0;
-    for(vector<Sequence> vs: this->solution->routes) {
-        cost+= vs.at((int)vs.size()-1).current_distance;
-    }
-
-    if( Utils::differs(cost,this->solution->cost)) {
-        cout<<"Erro de custo (E:"<<cost<<" G:"<<this->solution->cost<<")"<< endl;
-        exit(8);
-    }
 }
 
 void Search::build_predefined_solution(vector<vector<string>> solution) {
 
-    for(int i_solution_route = 0; i_solution_route < (int)solution.size(); i_solution_route++) {
+    /*for(int i_solution_route = 0; i_solution_route < (int)solution.size(); i_solution_route++) {
         vector<string> solution_route = solution.at(i_solution_route);
         for(int i_solution_node = 0, i_insertion = 0; i_solution_node < (int)solution_route.size(); i_solution_node++) {
             string route_el = solution_route.at(i_solution_node);
@@ -2145,16 +2153,17 @@ void Search::build_predefined_solution(vector<vector<string>> solution) {
                 customer = node;
             }
 
-            this->solution->visited[customer->index] = true;
-            vector<Sequence>* route = &this->solution->routes.at(i_solution_route);
+            this->solution->served[customer->index] = true;
+            Route* route = this->solution->routes.at(i_solution_route);
+            vector<Sequence>* route_sequences = &route->sequences;
 
-            if((route->end()-2)->node->id == node->id) {
-                (route->end()-2)->customers.push_back(customer);
+            if((route_sequences->end()-2)->node->id == node->id) {
+                (route_sequences->end()-2)->customers.push_back(customer);
             }else {
                 Sequence s;
                 s.node = node;
                 s.customers.push_back(customer);
-                route->insert(route->begin() + i_insertion++ + 1,1,s);
+                route_sequences->insert(route_sequences->begin() + i_insertion++ + 1,1,s);
             }
 
         }
@@ -2165,8 +2174,8 @@ void Search::build_predefined_solution(vector<vector<string>> solution) {
     this->solution->calculate_total_cost();
     this->solution->print();
     cout<<"\n-----------TESTING SOLUTION:--------"<<endl<<endl;
-    this->solution->print_is_viable(2);
-    cout<<endl;
+    //this->solution->print_is_viable(2);
+    cout<<endl;*/
 
 }
 

@@ -73,7 +73,8 @@ void default_run(Instance *instance, Config* config, Stats* stats) {
 
         stats->set_result(search->solution,((double) time / CLOCKS_PER_SEC));
         Utils::print_result_file(search, instance, i, (double) time / CLOCKS_PER_SEC, config->seeds.at(i));
-        search->solution->print_is_viable(config->seeds.at(i));
+        Utils::test_cost(search->solution);
+        Utils::test_print_viability(search->solution,config->seeds.at(i));
         delete search;
 
 
@@ -98,9 +99,9 @@ void grasp_run(Instance *instance, Config* config, Stats* stats) {
                 delete bestSearch;
                 bestSearch = search;
                 bestSearchTime = time;
-                bestSearch->solution->print_is_viable(config->seeds.at(i));
+                Utils::test_print_viability(search->solution,config->seeds.at(i));
             }else {
-                search->solution->print_is_viable(config->seeds.at(i));
+                Utils::test_print_viability(search->solution,config->seeds.at(i));
                 delete search;
             }
 

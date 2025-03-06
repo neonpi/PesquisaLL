@@ -5,7 +5,9 @@
 #ifndef SOLUTION_H
 #define SOLUTION_H
 #include "Instance.h"
+#include "Route.h"
 #include "Sequence.h"
+#include <algorithm>
 
 
 class Solution {
@@ -15,14 +17,12 @@ public:
 
     void initialize_routes();
     void calculate_total_cost();
-    void print_detailed_total_cost();
     void print();
-    void print_is_viable(long seed);
     Solution* clone();
 
     Instance* instance;
-    vector<vector<Sequence>> routes;
-    vector<bool> visited;
+    vector<Route*> routes;
+    vector<bool> served;
     double cost;
     int used_routes;
 };

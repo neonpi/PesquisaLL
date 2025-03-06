@@ -26,4 +26,6 @@ add_executable(prj_evrp main.cpp
         Solution.cpp
         Solution.h
         SearchDeltaCalc.cpp
+        Route.cpp
+        Route.h
 )

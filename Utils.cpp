@@ -238,7 +238,11 @@ void Utils::print_candidate_list(vector<tuple<int, int, Sequence, double>> *cand
         Sequence *cand_sequence = &get<2>(cand);
 
         if(cand_sequence->node!=cand_sequence->customers.at(0)) {
-            cout<<cand_route<<" - "<<cand_index<<" - ("<<cand_sequence->customers.at(0)->id<<")"<<cand_sequence->node->id<<" - "<<get<3>(cand)<<endl;;
+            cout<<cand_route<<" - "<<cand_index<<" - (";
+            for(int i=0; i<(int)(cand_sequence->customers.size())-1;i++) {
+                cout<<cand_sequence->customers.at(i)->id<<", ";
+            }
+            cout<<cand_sequence->customers.at((int)(cand_sequence->customers.size())-1)->id<<")"<<cand_sequence->node->id<<" - "<<get<3>(cand)<<endl;;
         }else {
             cout<<cand_route<<" - "<<cand_index<<" - "<<cand_sequence->node->id<<" - "<<get<3>(cand)<<endl;;
         }

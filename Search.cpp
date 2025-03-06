@@ -4,6 +4,8 @@
 
 #include "Search.h"
 
+#include "Utils.h"
+
 
 Search::Search(Instance *instance, Config* config) {
     this->instance = instance;
@@ -34,7 +36,8 @@ void Search::run() {
 
 void Search::debug_run() {
     this->construct();
-    this->rvnd_intra();
+    this->ls_intra_exchange();
+    //this->rvnd_intra();
 }
 
 void Search::construct() {
@@ -1299,7 +1302,7 @@ bool Search::is_viable() {
 
     return true;
 }
-//TODO testar
+
 vector<tuple<int, int, Sequence, double>> Search::build_candidate_list() {
 
     vector<tuple<int,int,Sequence, double>> cand_list;
@@ -1330,7 +1333,7 @@ vector<vector<tuple<int, int, Sequence, double>>> Search::build_candidate_list_i
     return parsed_list;
 }
 
-//TODO testar
+
 void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node *cand_node) {
     if(!this->solution->served.at(cand_node->index)) {
 
@@ -1363,7 +1366,6 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *c
                         }
 
                     }
-                    i_prev_seq++;
                 }
 
             }
@@ -1373,7 +1375,6 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *c
             }
 
 
-            i_route++;
         }
 
         if(get<0>(cand_tuple) != -1.0) {
@@ -1479,7 +1480,7 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *can
 
 }
 
-//TODO testar
+
 void Search::fill_forward_virtual(Sequence *previous_sequence, Sequence *current_sequence) {
 
     double distance = this->instance->distances[previous_sequence->node->index][current_sequence->node->index];
@@ -1515,14 +1516,14 @@ void Search::fill_forward(Sequence *previous_sequence, Sequence *current_sequenc
 
 }
 
-//TODO testar
+
 void Search::propagate(int route_index, int previous_sequence_index) {
     Route* route = this->solution->routes.at(route_index);
     vector<Sequence> *route_sequences = &route->sequences;
 
     Sequence* previous_sequence = nullptr;
     Sequence* current_sequence = &route_sequences->at(previous_sequence_index);
-
+    //TODO acho que nao precisa disso aqui, testar depois
     if(current_sequence->node->type == "p") {
         route->visited_lockers[current_sequence->node] = previous_sequence_index;
     }
@@ -1540,7 +1541,7 @@ void Search::propagate(int route_index, int previous_sequence_index) {
 
 }
 
-//Retorna false se não for viável TODO testar
+//Retorna false se não for viável
 bool Search::propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
     Route* route = this->solution->routes.at(route_index);
     vector<Sequence> *route_sequences = &route->sequences;
@@ -2055,7 +2056,7 @@ double Search::calculate_delta_distance(int route_index, int previous_sequence_i
     return delta_distance;
 }
 
-//TODO testar
+
 void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
     Route* route = this->solution->routes.at(get<0>(candidate));
     vector<Sequence> *route_sequences = &route->sequences;
@@ -2067,8 +2068,16 @@ void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {
     Sequence* candidate_sequence = &get<2>(candidate);
 
     //Atualizando o load minimo da rota
-    if(route_sequences->size() == 2 || candidate_sequence->customers.at(0)->load_demand < route->minimun_route_load) {
-        route->minimun_route_load = candidate_sequence->customers.at(0)->load_demand;
+    double lower_candidate_demmand = -1.0;
+    //TODO testar para locker
+    for(Node* customer: candidate_sequence->customers) {
+        if(customer->load_demand < lower_candidate_demmand || lower_candidate_demmand == -1.0) {
+            lower_candidate_demmand = customer->load_demand;
+        }
+    }
+
+    if(route_sequences->size() == 2 || lower_candidate_demmand < route->minimun_route_load) {
+        route->minimun_route_load = lower_candidate_demmand;
     }
 
     if((int)route_sequences->size() == 2){ this->solution->used_routes++; }

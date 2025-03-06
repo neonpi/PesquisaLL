@@ -30,7 +30,6 @@ Solution::~Solution() {
     }
 }
 
-//TODO testar
 void Solution::calculate_total_cost() {
     this->cost = 0.0;
     for (Route* r : this->routes) {

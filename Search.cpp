@@ -36,18 +36,6 @@ void Search::run() {
 
 void Search::debug_run() {
     this->construct();
-
-    /*
-    Node* locker = &this->instance->nodes.at(this->instance->locker_indexes[0]);
-    vector<Sequence> route = this->solution->routes.at(0);
-    auto it = (route.end()-1)->visited_lockers.find(locker);
-    if(it == (route.end()-1)->visited_lockers.end()) {
-        cout<<endl;
-    }else {
-        cout<<endl;
-
-    }*/
-    //this->rvnd_inter();
     this->rvnd_intra();
 }
 
@@ -1060,109 +1048,6 @@ void Search::rvnd_inter() {
 
 
 // }
-
-double Search::calculate_delta_2opt(vector<Sequence>* route, int i_seq_a, int i_seq_b) {
-    Sequence* seq_a = &route->at(i_seq_a);
-    Sequence* slice_first = &route->at(i_seq_a+1);
-    Sequence* seq_b = &route->at(i_seq_b);
-    Sequence* slice_last = &route->at(i_seq_b-1);
-    double delta = 0.0;
-    delta += this->instance->distances[seq_a->node->index][slice_last->node->index];
-    delta += this->instance->distances[slice_first->node->index][seq_b->node->index];
-    delta -= this->instance->distances[seq_a->node->index][slice_first->node->index];
-    delta -= this->instance->distances[slice_last->node->index][seq_b->node->index];
-
-    return delta;
-}
-
-double Search::calculate_delta_or_opt_1(vector<Sequence> *route, int i_seq_a, int i_seq_b) {
-    Sequence* seq_a_previous = &route->at(i_seq_a-1);
-    Sequence* seq_a = &route->at(i_seq_a);
-    Sequence* seq_a_next = &route->at(i_seq_a+1);
-
-    Sequence* seq_b_previous = &route->at(i_seq_b-1);
-    Sequence* seq_b = &route->at(i_seq_b);
-
-    double delta = 0.0;
-
-    delta+=this->instance->distances[seq_a_previous->node->index][seq_a_next->node->index];
-    delta-=this->instance->distances[seq_a_previous->node->index][seq_a->node->index];
-    delta-=this->instance->distances[seq_a->node->index][seq_a_next->node->index];
-
-    delta+=this->instance->distances[seq_b_previous->node->index][seq_a->node->index];
-    delta+=this->instance->distances[seq_a->node->index][seq_b->node->index];
-    delta-=this->instance->distances[seq_b_previous->node->index][seq_b->node->index];
-
-
-    return delta;
-}
-
-double Search::calculate_delta_or_opt_k(int k, vector<Sequence> *route, int i_seq_a, int i_seq_b) {
-    Sequence* seq_a_previous = &route->at(i_seq_a-1);
-    Sequence* seq_a_begin = &route->at(i_seq_a);
-    Sequence* seq_a_end = &route->at(i_seq_a+k-1);
-    Sequence* seq_a_next = &route->at(i_seq_a+k);
-
-    Sequence* seq_b_previous = &route->at(i_seq_b-1);
-    Sequence* seq_b = &route->at(i_seq_b);
-
-    double delta = 0.0;
-
-    delta+=this->instance->distances[seq_a_previous->node->index][seq_a_next->node->index];
-    delta-=this->instance->distances[seq_a_previous->node->index][seq_a_begin->node->index];
-    delta-=this->instance->distances[seq_a_end->node->index][seq_a_next->node->index];
-
-    delta+=this->instance->distances[seq_b_previous->node->index][seq_a_begin->node->index];
-    delta+=this->instance->distances[seq_a_end->node->index][seq_b->node->index];
-    delta-=this->instance->distances[seq_b_previous->node->index][seq_b->node->index];
-
-
-    return delta;
-}
-
-double Search::calculate_delta_exchange(vector<Sequence> *route, int i_seq_a, int i_seq_b) {
-
-    double delta = 0.0;
-
-    if (i_seq_b == i_seq_a+1) {
-        Sequence* seq_a_previous = &route->at(i_seq_a-1);
-        Sequence* seq_a = &route->at(i_seq_a);
-
-        Sequence* seq_b = &route->at(i_seq_b);
-        Sequence* seq_b_next = &route->at(i_seq_b+1);
-
-        delta+= this->instance->distances[seq_a_previous->node->index][seq_b->node->index];
-        delta-= this->instance->distances[seq_a_previous->node->index][seq_a->node->index];
-
-        delta+= this->instance->distances[seq_a->node->index][seq_b_next->node->index];
-        delta-= this->instance->distances[seq_b->node->index][seq_b_next->node->index];
-
-    }else {
-
-        Sequence* seq_a_previous = &route->at(i_seq_a-1);
-        Sequence* seq_a = &route->at(i_seq_a);
-        Sequence* seq_a_next = &route->at(i_seq_a+1);
-
-        Sequence* seq_b_previous = &route->at(i_seq_b-1);
-        Sequence* seq_b = &route->at(i_seq_b);
-        Sequence* seq_b_next = &route->at(i_seq_b+1);
-
-
-        delta+= this->instance->distances[seq_a_previous->node->index][seq_b->node->index];
-        delta+= this->instance->distances[seq_b->node->index][seq_a_next->node->index];
-        delta-= this->instance->distances[seq_a_previous->node->index][seq_a->node->index];
-        delta-= this->instance->distances[seq_a->node->index][seq_a_next->node->index];
-
-        delta+= this->instance->distances[seq_b_previous->node->index][seq_a->node->index];
-        delta+= this->instance->distances[seq_a->node->index][seq_b_next->node->index];
-        delta-= this->instance->distances[seq_b_previous->node->index][seq_b->node->index];
-        delta-= this->instance->distances[seq_b->node->index][seq_b_next->node->index];
-
-    }
-
-    return delta;
-
-}
 
 // double Search::calculate_delta_shift_1_0(vector<Sequence> *route_a, int i_seq_a, vector<Sequence> *route_b, int i_seq_b) {
 //     Sequence* seq_a_previous = &route_a->at(i_seq_a-1);

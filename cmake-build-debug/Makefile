@@ -224,6 +224,30 @@ Search.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Search.cpp.s
 .PHONY : Search.cpp.s
 
+SearchDeltaCalc.obj: SearchDeltaCalc.cpp.obj
+.PHONY : SearchDeltaCalc.obj
+
+# target to build an object file
+SearchDeltaCalc.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchDeltaCalc.cpp.obj
+.PHONY : SearchDeltaCalc.cpp.obj
+
+SearchDeltaCalc.i: SearchDeltaCalc.cpp.i
+.PHONY : SearchDeltaCalc.i
+
+# target to preprocess a source file
+SearchDeltaCalc.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchDeltaCalc.cpp.i
+.PHONY : SearchDeltaCalc.cpp.i
+
+SearchDeltaCalc.s: SearchDeltaCalc.cpp.s
+.PHONY : SearchDeltaCalc.s
+
+# target to generate assembly for a file
+SearchDeltaCalc.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchDeltaCalc.cpp.s
+.PHONY : SearchDeltaCalc.cpp.s
+
 Solution.obj: Solution.cpp.obj
 .PHONY : Solution.obj
 
@@ -413,6 +437,9 @@ help:
 	@echo ... Search.obj
 	@echo ... Search.i
 	@echo ... Search.s
+	@echo ... SearchDeltaCalc.obj
+	@echo ... SearchDeltaCalc.i
+	@echo ... SearchDeltaCalc.s
 	@echo ... Solution.obj
 	@echo ... Solution.i
 	@echo ... Solution.s

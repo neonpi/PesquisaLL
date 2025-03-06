@@ -25,4 +25,5 @@ add_executable(prj_evrp main.cpp
         Stats.h
         Solution.cpp
         Solution.h
+        SearchDeltaCalc.cpp
 )

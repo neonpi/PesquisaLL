@@ -1,4 +1,5 @@
 import pandas as pd
+import math
 class Instance:
     def __init__(self):
         self.name=""
@@ -314,5 +315,5 @@ def calculate_distances(instances):
         for i in range(len(instance.nodes)):
             line_distance = []
             for j in range(len(instance.nodes)):
-                line_distance.append(((instance.nodes[i].x-instance.nodes[j].x)**2 + (instance.nodes[i].y-instance.nodes[j].y)**2)**(1/2))
+                line_distance.append(math.trunc((((instance.nodes[i].x-instance.nodes[j].x)**2 + (instance.nodes[i].y-instance.nodes[j].y)**2)**(1/2)) * 10) / 10)
             instance.distances.append(line_distance)

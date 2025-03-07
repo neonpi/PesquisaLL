@@ -36,8 +36,7 @@ void Search::run() {
 
 void Search::debug_run() {
     this->construct();
-    this->ls_intra_exchange();
-    //this->rvnd_intra();
+    this->rvnd_intra();
 }
 
 void Search::construct() {
@@ -144,7 +143,6 @@ void Search::rvnd_intra() {
     }
 }
 
-//TODO testar
 void Search::ls_intra_exchange() {
 
     for(int i_route=0; i_route<(int)this->solution->routes.size();i_route++) {
@@ -191,7 +189,6 @@ void Search::ls_intra_exchange() {
     }
 }
 
-//TODO testar
 void Search::ls_intra_2opt() {
 
     for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
@@ -230,12 +227,8 @@ void Search::ls_intra_2opt() {
             if(best_delta<0.0) {
                 reverse(route_sequences->begin()+coordinates[0]+1,route_sequences->begin()+coordinates[1]);
                 propagate(i_route,coordinates[0]);
-                double estimated = this->solution->cost + best_delta;
-                this->solution->calculate_total_cost();
-                if (Count::differs(estimated,this->solution->cost)) {
-                    cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
-                    exit(20);
-                }
+                route->traveled_distance += best_delta;
+                this->solution->cost += best_delta;
                 i_route--;
             }
 
@@ -243,7 +236,6 @@ void Search::ls_intra_2opt() {
 
 }
 
-//TODO testar
 void Search::ls_intra_or_opt_1() {
     for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
 
@@ -289,19 +281,14 @@ void Search::ls_intra_or_opt_1() {
         if (best_delta < 0.0) {
             shift(route_sequences,coordinates[0],coordinates[1]);
             propagate(i_route,min(coordinates[0],coordinates[1])-1);
-            double estimated = this->solution->cost + best_delta;
-            this->solution->calculate_total_cost();
-            if (Count::differs(estimated,this->solution->cost)) {
-                cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
-                exit(20);
-            }
+            route->traveled_distance += best_delta;
+            this->solution->cost += best_delta;
             i_route--;
         }
 
     }
 }
 
-//TODO testar
 void Search::ls_intra_or_opt_k(int k) {
 
     for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
@@ -354,13 +341,8 @@ void Search::ls_intra_or_opt_k(int k) {
             if (best_delta < 0.0) {
                 shift_k(k,route_sequences,coordinates[0],coordinates[1]);
                 propagate(i_route,min(coordinates[0],coordinates[1])-1);
-
-                double estimated = this->solution->cost + best_delta;
-                this->solution->calculate_total_cost();
-                if (Count::differs(estimated,this->solution->cost)) {
-                    cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
-                    exit(20);
-                }
+                route->traveled_distance += best_delta;
+                this->solution->cost+= best_delta;
                 i_route--;
             }
         }

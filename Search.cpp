@@ -182,14 +182,9 @@ void Search::ls_intra_exchange() {
             }
 
             if(best_delta<0.0) {
-                swap_sequence_intraroute(i_route,coordinates[0],coordinates[1]);
+                swap_sequence_intraroute(i_route,coordinates[0],coordinates[1], best_delta);
                 propagate(i_route,coordinates[0]-1);
-                double estimated = this->solution->cost + best_delta;
-                this->solution->calculate_total_cost();
-                if (Count::differs(estimated,this->solution->cost)) {
-                    cout<<"Diferiu "<<this->config->seeds.at(this->config->run)<<" "<<this->config->run<<endl;
-                    exit(20);
-                }
+                this->solution->cost+=best_delta;
                 i_route--;
             }
         }
@@ -1264,9 +1259,10 @@ void Search::rvnd_inter() {
 // }
 
 //TODO testar
-void Search::swap_sequence_intraroute(int route_index, int seq_a_index, int seq_b_index) {
-    Sequence* sequence_a = &this->solution->routes.at(route_index)->sequences.at(seq_a_index);
-    Sequence* sequence_b = &this->solution->routes.at(route_index)->sequences.at(seq_b_index);
+void Search::swap_sequence_intraroute(int route_index, int seq_a_index, int seq_b_index, double delta_distance) {
+    Route* route = this->solution->routes.at(route_index);
+    Sequence* sequence_a = &route->sequences.at(seq_a_index);
+    Sequence* sequence_b = &route->sequences.at(seq_b_index);
 
     Node* node_a = sequence_a->node;
     vector<Node*> customers_a = sequence_a->customers;
@@ -1279,6 +1275,8 @@ void Search::swap_sequence_intraroute(int route_index, int seq_a_index, int seq_
 
     sequence_a->node = node_b;
     sequence_a->customers = customers_b;
+
+    route->traveled_distance += delta_distance;
 }
 
 //TODO testar

@@ -68,7 +68,7 @@ public:
 
     void local_search();
     void swap_sequence(int route_a_index, int seq_a_index, int route_b_index, int seq_b_index);
-    void swap_sequence_intraroute(int route_index, int seq_a_index, int seq_b_index);
+    void swap_sequence_intraroute(int route_index, int seq_a_index, int seq_b_index, double delta_distance);
     bool is_viable();
 
     vector<tuple<int, int, Sequence, double>> build_candidate_list();

@@ -14,6 +14,11 @@ Route::Route(Instance* instance) {
     depot_t.node = &this->instance->nodes.at(1);
     depot_t.customers = {};
     this->sequences = {depot_0,depot_t};
+
+    for(int i=this->instance->locker_indexes[0]; i<this->instance->locker_indexes[1];i++) {
+        Node* locker = &this->instance->nodes[i];
+        this->visited_lockers[locker] = 0;
+    }
 }
 
 string Route::get_route_string(int route_label) {

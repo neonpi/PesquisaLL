@@ -8,6 +8,7 @@
 #define VIABLE_TW 0
 #define EARLY_TW 1
 #define INVIABLE_TW 2
+#define BOTH 'z'
 
 #include <tuple>
 #include <vector>
@@ -43,9 +44,14 @@ public:
     void rvnd_inter();
     void ls_inter_shift_1_0();
     void ls_inter_shift_2_0();
+
     void ls_inter_swap_1_1();
+    void persist_swap_1_1(int* coordinates, double delta);
+
     void ls_inter_swap_2_1();
     void ls_inter_swap_2_2();
+
+    void ls_remove_double_locker();
 
     //IG
     void iterated_greedy();
@@ -53,7 +59,7 @@ public:
     void deconstruct_route(int i_route);
 
 
-    bool swap_1_1_broke_load(vector<Sequence>* route_a, Sequence* seq_a , vector<Sequence>* route_b, Sequence* seq_b);
+    bool swap_1_1_broke_load(Route *route_a, Sequence* seq_a, Route *route_b, Sequence* seq_b);
     bool swap_2_1_broke_load(vector<Sequence>* route_a, Sequence* seq_a_1, Sequence *seq_a_2, vector<Sequence>* route_b, Sequence* seq_b);
     bool swap_2_2_broke_load(vector<Sequence>* route_a, Sequence* seq_a_1, Sequence *seq_a_2, vector<Sequence>* route_b, Sequence* seq_b_1, Sequence* seq_b_2);
     double calculate_delta_2opt(vector<Sequence>* route, int i_seq_a, int i_seq_b);
@@ -62,7 +68,7 @@ public:
     double calculate_delta_exchange(vector<Sequence>* route, int i_seq_a, int i_seq_b);
     double calculate_delta_shift_1_0(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);
     double calculate_delta_shift_2_0(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);
-    double calculate_delta_swap_1_1(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);
+    double calculate_delta_swap_1_1(vector<Sequence>* route_a, int i_seq_a, vector<Sequence>* route_b, int i_seq_b, char for_route);
     double calculate_delta_swap_2_1(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);
     double calculate_delta_swap_2_2(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);
 

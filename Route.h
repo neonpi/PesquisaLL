@@ -17,7 +17,7 @@ public:
 
     Instance* instance;
     vector<Sequence> sequences;
-    unordered_map<Node*,int> visited_lockers; //<locker, indice>
+    unordered_map<Node*,int> visited_lockers; //<locker, contador>
     double traveled_distance = 0.0;
     double load = 0.0;
     double minimun_route_load = 0.0;

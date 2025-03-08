@@ -272,6 +272,78 @@ SearchDeltaCalc.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchDeltaCalc.cpp.s
 .PHONY : SearchDeltaCalc.cpp.s
 
+SearchPersister.obj: SearchPersister.cpp.obj
+.PHONY : SearchPersister.obj
+
+# target to build an object file
+SearchPersister.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchPersister.cpp.obj
+.PHONY : SearchPersister.cpp.obj
+
+SearchPersister.i: SearchPersister.cpp.i
+.PHONY : SearchPersister.i
+
+# target to preprocess a source file
+SearchPersister.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchPersister.cpp.i
+.PHONY : SearchPersister.cpp.i
+
+SearchPersister.s: SearchPersister.cpp.s
+.PHONY : SearchPersister.s
+
+# target to generate assembly for a file
+SearchPersister.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchPersister.cpp.s
+.PHONY : SearchPersister.cpp.s
+
+SearchPropagator.obj: SearchPropagator.cpp.obj
+.PHONY : SearchPropagator.obj
+
+# target to build an object file
+SearchPropagator.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchPropagator.cpp.obj
+.PHONY : SearchPropagator.cpp.obj
+
+SearchPropagator.i: SearchPropagator.cpp.i
+.PHONY : SearchPropagator.i
+
+# target to preprocess a source file
+SearchPropagator.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchPropagator.cpp.i
+.PHONY : SearchPropagator.cpp.i
+
+SearchPropagator.s: SearchPropagator.cpp.s
+.PHONY : SearchPropagator.s
+
+# target to generate assembly for a file
+SearchPropagator.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchPropagator.cpp.s
+.PHONY : SearchPropagator.cpp.s
+
+SearchValidator.obj: SearchValidator.cpp.obj
+.PHONY : SearchValidator.obj
+
+# target to build an object file
+SearchValidator.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchValidator.cpp.obj
+.PHONY : SearchValidator.cpp.obj
+
+SearchValidator.i: SearchValidator.cpp.i
+.PHONY : SearchValidator.i
+
+# target to preprocess a source file
+SearchValidator.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchValidator.cpp.i
+.PHONY : SearchValidator.cpp.i
+
+SearchValidator.s: SearchValidator.cpp.s
+.PHONY : SearchValidator.s
+
+# target to generate assembly for a file
+SearchValidator.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchValidator.cpp.s
+.PHONY : SearchValidator.cpp.s
+
 Solution.obj: Solution.cpp.obj
 .PHONY : Solution.obj
 
@@ -467,6 +539,15 @@ help:
 	@echo ... SearchDeltaCalc.obj
 	@echo ... SearchDeltaCalc.i
 	@echo ... SearchDeltaCalc.s
+	@echo ... SearchPersister.obj
+	@echo ... SearchPersister.i
+	@echo ... SearchPersister.s
+	@echo ... SearchPropagator.obj
+	@echo ... SearchPropagator.i
+	@echo ... SearchPropagator.s
+	@echo ... SearchValidator.obj
+	@echo ... SearchValidator.i
+	@echo ... SearchValidator.s
 	@echo ... Solution.obj
 	@echo ... Solution.i
 	@echo ... Solution.s

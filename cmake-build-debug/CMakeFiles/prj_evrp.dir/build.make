@@ -250,6 +250,48 @@ CMakeFiles/prj_evrp.dir/Route.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/prj_evrp.dir/Route.cpp.s"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.1\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S D:\Estudos\Mestrado\VRP\prj_vrppl\Route.cpp -o CMakeFiles\prj_evrp.dir\Route.cpp.s
 
+CMakeFiles/prj_evrp.dir/SearchPersister.cpp.obj: CMakeFiles/prj_evrp.dir/flags.make
+CMakeFiles/prj_evrp.dir/SearchPersister.cpp.obj: D:/Estudos/Mestrado/VRP/prj_vrppl/SearchPersister.cpp
+CMakeFiles/prj_evrp.dir/SearchPersister.cpp.obj: CMakeFiles/prj_evrp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\Estudos\Mestrado\VRP\prj_vrppl\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/prj_evrp.dir/SearchPersister.cpp.obj"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.1\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/prj_evrp.dir/SearchPersister.cpp.obj -MF CMakeFiles\prj_evrp.dir\SearchPersister.cpp.obj.d -o CMakeFiles\prj_evrp.dir\SearchPersister.cpp.obj -c D:\Estudos\Mestrado\VRP\prj_vrppl\SearchPersister.cpp
+
+CMakeFiles/prj_evrp.dir/SearchPersister.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/prj_evrp.dir/SearchPersister.cpp.i"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.1\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E D:\Estudos\Mestrado\VRP\prj_vrppl\SearchPersister.cpp > CMakeFiles\prj_evrp.dir\SearchPersister.cpp.i
+
+CMakeFiles/prj_evrp.dir/SearchPersister.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/prj_evrp.dir/SearchPersister.cpp.s"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.1\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S D:\Estudos\Mestrado\VRP\prj_vrppl\SearchPersister.cpp -o CMakeFiles\prj_evrp.dir\SearchPersister.cpp.s
+
+CMakeFiles/prj_evrp.dir/SearchPropagator.cpp.obj: CMakeFiles/prj_evrp.dir/flags.make
+CMakeFiles/prj_evrp.dir/SearchPropagator.cpp.obj: D:/Estudos/Mestrado/VRP/prj_vrppl/SearchPropagator.cpp
+CMakeFiles/prj_evrp.dir/SearchPropagator.cpp.obj: CMakeFiles/prj_evrp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\Estudos\Mestrado\VRP\prj_vrppl\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/prj_evrp.dir/SearchPropagator.cpp.obj"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.1\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/prj_evrp.dir/SearchPropagator.cpp.obj -MF CMakeFiles\prj_evrp.dir\SearchPropagator.cpp.obj.d -o CMakeFiles\prj_evrp.dir\SearchPropagator.cpp.obj -c D:\Estudos\Mestrado\VRP\prj_vrppl\SearchPropagator.cpp
+
+CMakeFiles/prj_evrp.dir/SearchPropagator.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/prj_evrp.dir/SearchPropagator.cpp.i"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.1\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E D:\Estudos\Mestrado\VRP\prj_vrppl\SearchPropagator.cpp > CMakeFiles\prj_evrp.dir\SearchPropagator.cpp.i
+
+CMakeFiles/prj_evrp.dir/SearchPropagator.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/prj_evrp.dir/SearchPropagator.cpp.s"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.1\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S D:\Estudos\Mestrado\VRP\prj_vrppl\SearchPropagator.cpp -o CMakeFiles\prj_evrp.dir\SearchPropagator.cpp.s
+
+CMakeFiles/prj_evrp.dir/SearchValidator.cpp.obj: CMakeFiles/prj_evrp.dir/flags.make
+CMakeFiles/prj_evrp.dir/SearchValidator.cpp.obj: D:/Estudos/Mestrado/VRP/prj_vrppl/SearchValidator.cpp
+CMakeFiles/prj_evrp.dir/SearchValidator.cpp.obj: CMakeFiles/prj_evrp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\Estudos\Mestrado\VRP\prj_vrppl\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/prj_evrp.dir/SearchValidator.cpp.obj"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.1\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/prj_evrp.dir/SearchValidator.cpp.obj -MF CMakeFiles\prj_evrp.dir\SearchValidator.cpp.obj.d -o CMakeFiles\prj_evrp.dir\SearchValidator.cpp.obj -c D:\Estudos\Mestrado\VRP\prj_vrppl\SearchValidator.cpp
+
+CMakeFiles/prj_evrp.dir/SearchValidator.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/prj_evrp.dir/SearchValidator.cpp.i"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.1\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E D:\Estudos\Mestrado\VRP\prj_vrppl\SearchValidator.cpp > CMakeFiles\prj_evrp.dir\SearchValidator.cpp.i
+
+CMakeFiles/prj_evrp.dir/SearchValidator.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/prj_evrp.dir/SearchValidator.cpp.s"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.1\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S D:\Estudos\Mestrado\VRP\prj_vrppl\SearchValidator.cpp -o CMakeFiles\prj_evrp.dir\SearchValidator.cpp.s
+
 # Object files for target prj_evrp
 prj_evrp_OBJECTS = \
 "CMakeFiles/prj_evrp.dir/main.cpp.obj" \
@@ -264,7 +306,10 @@ prj_evrp_OBJECTS = \
 "CMakeFiles/prj_evrp.dir/Stats.cpp.obj" \
 "CMakeFiles/prj_evrp.dir/Solution.cpp.obj" \
 "CMakeFiles/prj_evrp.dir/SearchDeltaCalc.cpp.obj" \
-"CMakeFiles/prj_evrp.dir/Route.cpp.obj"
+"CMakeFiles/prj_evrp.dir/Route.cpp.obj" \
+"CMakeFiles/prj_evrp.dir/SearchPersister.cpp.obj" \
+"CMakeFiles/prj_evrp.dir/SearchPropagator.cpp.obj" \
+"CMakeFiles/prj_evrp.dir/SearchValidator.cpp.obj"
 
 # External object files for target prj_evrp
 prj_evrp_EXTERNAL_OBJECTS =
@@ -282,11 +327,14 @@ prj_evrp.exe: CMakeFiles/prj_evrp.dir/Stats.cpp.obj
 prj_evrp.exe: CMakeFiles/prj_evrp.dir/Solution.cpp.obj
 prj_evrp.exe: CMakeFiles/prj_evrp.dir/SearchDeltaCalc.cpp.obj
 prj_evrp.exe: CMakeFiles/prj_evrp.dir/Route.cpp.obj
+prj_evrp.exe: CMakeFiles/prj_evrp.dir/SearchPersister.cpp.obj
+prj_evrp.exe: CMakeFiles/prj_evrp.dir/SearchPropagator.cpp.obj
+prj_evrp.exe: CMakeFiles/prj_evrp.dir/SearchValidator.cpp.obj
 prj_evrp.exe: CMakeFiles/prj_evrp.dir/build.make
 prj_evrp.exe: CMakeFiles/prj_evrp.dir/linkLibs.rsp
 prj_evrp.exe: CMakeFiles/prj_evrp.dir/objects1.rsp
 prj_evrp.exe: CMakeFiles/prj_evrp.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=D:\Estudos\Mestrado\VRP\prj_vrppl\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Linking CXX executable prj_evrp.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=D:\Estudos\Mestrado\VRP\prj_vrppl\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX executable prj_evrp.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\prj_evrp.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

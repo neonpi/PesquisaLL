@@ -29,4 +29,7 @@ add_executable(prj_evrp main.cpp
         Route.cpp
         Route.h
         Counter.h
+        SearchPersister.cpp
+        SearchPropagator.cpp
+        SearchValidator.cpp
 )

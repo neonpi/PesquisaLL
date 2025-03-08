@@ -88,6 +88,9 @@
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Config.h">
 			<Option target="prj_evrp"/>
 		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Counter.h">
+			<Option target="prj_evrp"/>
+		</Unit>
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Instance.cpp">
 			<Option target="prj_evrp"/>
 		</Unit>
@@ -113,6 +116,15 @@
 			<Option target="prj_evrp"/>
 		</Unit>
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/SearchDeltaCalc.cpp">
+			<Option target="prj_evrp"/>
+		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/SearchPersister.cpp">
+			<Option target="prj_evrp"/>
+		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/SearchPropagator.cpp">
+			<Option target="prj_evrp"/>
+		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/SearchValidator.cpp">
 			<Option target="prj_evrp"/>
 		</Unit>
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Sequence.h">

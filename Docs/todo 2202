@@ -11,7 +11,8 @@ analizar somatório de clientes por locker
 
 Deixar repetir locker no inter, o intra vai fundir. Vai ter que mudar 
 
-Criar estrutura route. load e dist do lado de fora
-
 LS intrarota pra fundir locker. Rodar ela antes do rvnd intra
 RVND intra antes de rodar o RVND inter pelo menos uma vez
+
+Para a menor instancia: Semente 7657 junta dois lockers na mesma rota.
+Talvez colocar a demanda total daquele nó, na sequence

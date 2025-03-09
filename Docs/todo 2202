@@ -22,6 +22,14 @@ Talvez colocar a demanda total daquele nó, na sequence
 TODO: Testar varredura das buscas locais, pra ver se fazerm sentido
 Lembrar da questão de interseções de movimentos entre buscas
 
-V_0: D0 -> C20 -> P1(C0, C2, C3, C4) -> P0(C5, C7, C8, C9, C10, C11, C13, C15) -> Dt -> 
-V_1: D0 -> C19 -> C23 -> C24 -> C6 -> C1 -> P0(C17, C18, C21, C22) -> Dt -> 
-V_2: D0 -> C12 -> C16 -> C14 -> Dt -> 
+Checklist de reavaliação das buscas:
+    Índices de troca: OK
+
+Voltar com o if que estava no reajusta da demanda minima da rota:
+if (s != seq_a), pois quando essa verificação é feita os nos ainda estão na rota
+
+V_0: D0 -> C4 -> C6 -> C7 -> C14 -> C10 -> C8 -> C5 -> C3 -> P0(C1, C13, C16) -> Dt -> 
+V_1: D0 -> C19 -> C20 -> P0(C17) -> P1(C0, C2, C9, C21, C22, C23, C24) -> Dt -> 
+V_2: D0 -> C12 -> C18 -> C15 -> C11 -> Dt -> 
+ PARANDO POR HOJE:
+ TEM ALGO ERRADO NO SHIFT 1 0, QUEBRANDO A SOLUÇÃO. A MENOR INSTANCIA TA DANDO CUSTO DE 170 E POUCOS

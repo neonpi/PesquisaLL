@@ -20,6 +20,20 @@ void Search::persist_swap_1_1(int *coordinates, double delta) {
     route_b->traveled_distance += delta_b;
     this->solution->cost += delta;
 
+    //Atualizando loads das rotas
+    double seq_a_load = 0.0;
+    for(Node* n: seq_a->customers) {
+        seq_a_load += n->load_demand;
+    }
+
+    double seq_b_load = 0.0;
+    for(Node* n: seq_b->customers) {
+        seq_b_load += n->load_demand;
+    }
+
+    route_a->load += (seq_b_load - seq_a_load);
+    route_b->load += (seq_a_load - seq_b_load);
+
 
     //Atualizando a demanda mínima para a rota a, se for necessario
     double min_seq_b_demand = -1.0;
@@ -106,6 +120,26 @@ void Search::persist_swap_2_2(int *coordinates, double delta) {
     route_a->traveled_distance += delta_a;
     route_b->traveled_distance += delta_b;
     this->solution->cost += delta;
+
+    //Atualizando loads das rotas
+    double seq_a_load = 0.0;
+    for(Node* n: seq_a_1->customers) {
+        seq_a_load += n->load_demand;
+    }
+    for(Node* n: seq_a_2->customers) {
+        seq_a_load += n->load_demand;
+    }
+
+    double seq_b_load = 0.0;
+    for(Node* n: seq_b_1->customers) {
+        seq_b_load += n->load_demand;
+    }
+    for(Node* n: seq_b_2->customers) {
+        seq_b_load += n->load_demand;
+    }
+
+    route_a->load += (seq_b_load - seq_a_load);
+    route_b->load += (seq_a_load - seq_b_load);
 
     //Atualizando a demanda mínima para a rota a, se for necessario
     double min_seq_b_demand = -1.0;
@@ -212,12 +246,22 @@ void Search::persist_shift_1_0(int *coordinates, double delta) {
     vector<Sequence>* route_b_sequences = &route_b->sequences;
     Sequence* seq_b = &route_b_sequences->at(coordinates[3]);
 
+
     double delta_a= calculate_delta_shift_1_0(route_a_sequences,coordinates[1],route_b_sequences,coordinates[3],'a');
     double delta_b= calculate_delta_shift_1_0(route_a_sequences,coordinates[1],route_b_sequences,coordinates[3],'b');
 
     route_a->traveled_distance += delta_a;
     route_b->traveled_distance += delta_b;
     this->solution->cost += delta;
+
+    //Atualizando loads das rotas 
+    double seq_a_load = 0.0;
+    for(Node* n: seq_a->customers) {
+        seq_a_load += n->load_demand;
+    }
+
+    route_a->load -= seq_a_load;
+    route_b->load += seq_a_load;
 
     //Atualizando a demanda mínima para a rota b, se for necessario
     double min_seq_a_demand = -1.0;
@@ -269,6 +313,11 @@ void Search::persist_shift_1_0(int *coordinates, double delta) {
         route_a->minimun_route_load = 0.0;
         iter_swap(this->solution->routes.begin()+coordinates[0],this->solution->routes.begin()+this->solution->used_routes-1);
         this->solution->used_routes--;
+    }
+
+    //Tratando o caso de criação de uma rota nova
+    if((int)route_b_sequences->size() == 3) {
+        this->solution->used_routes++;
     }
 
 }

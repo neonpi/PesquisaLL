@@ -38,12 +38,15 @@ void Search::debug_run() {
     this->construct();
     double cost_backup = this->solution->cost;
     while(true) {
+        //this->ls_inter_shift_1_0();
         this->ls_inter_shift_1_0();
         Utils::test_cost(this->solution);
+        Utils::test_print_viability(this->solution,0);
+
         if(this->solution->cost < cost_backup) {
             cost_backup = this->solution->cost;
         }else {
-            this->solution->print();
+            //this->solution->print();
             break;
         }
     }

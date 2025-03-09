@@ -125,11 +125,13 @@ void Utils::test_print_viability(Solution *solution, long seed) {
     int inviabilities = 0;
     bool customer_viable = true;
     bool load_viable = true;
+    bool load_sum_viable = true;
     bool time_window_viable = true;
     int used_vehicles = 0;
 
     vector<string> inviable_customers;
     vector<string> inviable_tws;
+    vector<string> inviable_load_sum;
 
     //Verificando viabilidade de cliente atendido
     for(int i=solution->instance->customer_indexes[0];
@@ -150,7 +152,21 @@ void Utils::test_print_viability(Solution *solution, long seed) {
 
         //Verificando viabilidade de load
         if(r->load > solution->instance->load_capacity) {
+
             load_viable = false;
+            inviabilities++;
+        }
+
+        //Verificando se o somatorio de loads está certo
+        double load_sum = 0.0;
+        for(const Sequence& s: r->sequences) {
+            for(Node* n: s.customers) {
+                load_sum += n->load_demand;
+            }
+        }
+
+        if(load_sum != r->load) {
+            load_sum_viable = false;
             inviabilities++;
         }
 
@@ -179,6 +195,10 @@ void Utils::test_print_viability(Solution *solution, long seed) {
             cout<< customer<<", ";
         }
         cout<<endl;
+    }
+
+    if(!load_sum_viable) {
+        cout<<"Load sum!"<<endl;
     }
 
     if(!load_viable) {

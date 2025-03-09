@@ -254,7 +254,7 @@ void Search::persist_shift_1_0(int *coordinates, double delta) {
     route_b->traveled_distance += delta_b;
     this->solution->cost += delta;
 
-    //Atualizando loads das rotas 
+    //Atualizando loads das rotas
     double seq_a_load = 0.0;
     for(Node* n: seq_a->customers) {
         seq_a_load += n->load_demand;

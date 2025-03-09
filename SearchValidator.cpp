@@ -52,3 +52,14 @@ bool Search::swap_2_2_broke_load(Route *route_a, Sequence *seq_a_1, Sequence *se
     bool broke_b = (route_b->load  - seq_b_demand + seq_a_demand) > this->instance->load_capacity;
     return broke_a || broke_b;
 }
+
+bool Search::swap_1_0_broke_load(Sequence *seq_a, Route *route_b) {
+
+    double seq_a_demand = 0.0;
+
+    for(Node* n: seq_a->customers) {
+        seq_a_demand += n->load_demand;
+    }
+
+    return  (route_b->load + seq_a_demand) > this->instance->load_capacity;
+}

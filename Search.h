@@ -58,7 +58,7 @@ public:
     void persist_swap_2_2(int* coordinates, double delta);
 
     void ls_locker_reducer();
-    void reduce_double_locker(Route *route, Node *locker);
+    void reduce_double_locker(int i_route, Route *route, Node *locker);
 
     //IG
     void iterated_greedy();

@@ -343,6 +343,9 @@ double Search::calculate_delta_swap_2_1(vector<Sequence> *route_a, int i_seq_a, 
 
 double Search::calculate_delta_locker_reduce(vector<Sequence> *route_sequences, int i_locker_a, int i_locker_b,
                                              Node *locker, char to_locker) {
+
+    if(i_locker_b == i_locker_a + 1){return 0.0;} //TODO verificar se, se forem vizinhos, vai ser sempre zero mesmo
+
     double delta = 0.0;
 
     if(to_locker == 'a') {

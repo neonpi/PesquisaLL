@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 
         for(Instance* instance: instances) {
 
-            //if(instance->inst_name == "C106_co_100.txt") {
+            //if(instance->inst_name == "C101_co_50.txt") {
                 cout<<"Instance "<< instance->inst_name<<endl;
                 Stats* stats = new Stats(instance, config);
                 Utils::print_result_file(nullptr, instance, 0, 0.0, 0.0);
@@ -64,7 +64,7 @@ void default_run(Instance *instance, Config* config, Stats* stats) {
         //cout<<config->seeds.at(i)<<endl;
         //srand(7106);
         //srand(7657);
-        srand(27939);
+        //srand(27939);
         config->run = i;
 
         Search* search = new Search(instance,config);

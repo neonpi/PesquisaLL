@@ -533,7 +533,7 @@ void Search::ls_locker_reducer() {
             Node* locker = &this->instance->nodes.at(i_locker);
 
             if(route->visited_lockers[locker] > 1) {
-                reduce_double_locker(route,locker);
+                reduce_double_locker(i_route,route, locker);
             }
         }
 
@@ -542,7 +542,7 @@ void Search::ls_locker_reducer() {
 
 }
 
-void Search::reduce_double_locker(Route *route, Node *locker) {
+void Search::reduce_double_locker(int i_route, Route *route, Node *locker) {
 
     vector<Sequence>* route_sequences = &route->sequences;
 
@@ -553,44 +553,44 @@ void Search::reduce_double_locker(Route *route, Node *locker) {
     int i_locker_b = i_locker_a + 1;
     while(route_sequences->at(i_locker_b).node != locker) {i_locker_b++;}
 
-    double delta_a_to_b = this->calculate_delta_locker_reduce(route_sequences,i_locker_a,i_locker_b,locker,'a');
+    double delta_a_to_b = this->calculate_delta_locker_reduce(route_sequences,i_locker_a,i_locker_b,locker,'b');
     double delta_b_to_a = this->calculate_delta_locker_reduce(route_sequences,i_locker_a,i_locker_b,locker,'a');
 
-    Sequence* main_locker = nullptr;
-    Sequence* reduced_locker = nullptr;
+    Sequence* main_locker_sequence = nullptr;
+    Sequence* reduced_locker_sequence = nullptr;
     int i_reduced = -1;
     double choosed_delta = 0.0;
 
     if(delta_a_to_b < delta_b_to_a) {
-        main_locker = &route_sequences->at(i_locker_b);
+        main_locker_sequence = &route_sequences->at(i_locker_b);
         i_reduced = i_locker_a;
         choosed_delta = delta_a_to_b;
     }else {
-        main_locker = &route_sequences->at(i_locker_a);
+        main_locker_sequence = &route_sequences->at(i_locker_a);
         i_reduced = i_locker_b;
         choosed_delta = delta_b_to_a;
     }
 
     //this->solution->print();
 
-    reduced_locker = &route_sequences->at(i_reduced);
+    reduced_locker_sequence = &route_sequences->at(i_reduced);
 
-    for(Node* customer: reduced_locker->customers) {
-        main_locker->customers.push_back(customer);
+    for(Node* customer: reduced_locker_sequence->customers) {
+        main_locker_sequence->customers.push_back(customer);
     }
 
 
     route_sequences->erase(route_sequences->begin() + i_reduced,route_sequences->begin() + i_reduced + 1);
 
-    /*this->solution->print();
-    cout<<endl;*/
-    if(choosed_delta > 0.0) {
+    //this->solution->print();
+    /*if(choosed_delta > 0.0) {
         cout<<endl;
-    }
+    }*/
 
     route->traveled_distance += choosed_delta;
     this->solution->cost += choosed_delta;
     route->visited_lockers[locker] --;
+    this->propagate(i_route,i_locker_a-1);
 
 
 }

@@ -28,3 +28,18 @@ cout<<seq_a_1->node->id<<","<<seq_a_2->node->id<<","<<coordinates[0]<<
 " - "<<seq_b->node->id<<","<<coordinates[2]<<" - "<<best_delta<<endl;
 
 Verificar por que alguns deltas do reduce de lockers são positivos
+
+TOTAL COST: 437.3
+PATHS: 
+V_0: D0 -> C23 -> P1(C31) -> P2(C38) -> P1(C41, C26, C30) -> C28 -> C29 -> C27 -> C25 -> C21 -> C0 -> Dt -> 
+V_1: D0 -> C6 -> C7 -> C10 -> C8 -> C3 -> C1 -> P0(C2, C4, C5, C9, C11) -> C48 -> C46 -> Dt -> 
+V_2: D0 -> C40 -> C39 -> C43 -> C45 -> C44 -> C47 -> C49 -> Dt -> 
+V_3: D0 -> P1(C32, C34, C35) -> C17 -> C18 -> P0(C15, C16, C19, C20, C22, C42) -> Dt -> 
+V_4: D0 -> P0(C12, C13, C14) -> C24 -> C36 -> C37 -> C33 -> Dt -> 
+TOTAL COST: 437.3
+PATHS: 
+V_0: D0 -> C23 -> P1(C31, C41, C26, C30) -> P2(C38) -> C28 -> C29 -> C27 -> C25 -> C21 -> C0 -> Dt -> 
+V_1: D0 -> C6 -> C7 -> C10 -> C8 -> C3 -> C1 -> P0(C2, C4, C5, C9, C11) -> C48 -> C46 -> Dt -> 
+V_2: D0 -> C40 -> C39 -> C43 -> C45 -> C44 -> C47 -> C49 -> Dt -> 
+V_3: D0 -> P1(C32, C34, C35) -> C17 -> C18 -> P0(C15, C16, C19, C20, C22, C42) -> Dt -> 
+V_4: D0 -> P0(C12, C13, C14) -> C24 -> C36 -> C37 -> C33 -> Dt -> 

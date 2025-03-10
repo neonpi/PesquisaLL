@@ -25,10 +25,14 @@ Lembrar da questão de interseções de movimentos entre buscas
 Checklist de reavaliação das buscas:
     Índices de troca: OK
 
-Voltar com o if que estava no reajusta da demanda minima da rota:
-if (s != seq_a), pois quando essa verificação é feita os nos ainda estão na rota
 
-No persister: depois da pra juntar a lógica de somatorio da demanda dos clientes com o somatorio da atualização de demanda minima
+V_0: D0 -> C4 -> C6 -> C7 -> C10 -> C8 -> C5 -> C3 -> C20 -> P1(C0, C2, C9, C21, C22, C23) -> Dt -> 
+V_1: D0 -> P1(C24) -> C19 -> C18 -> C14 -> P0(C1, C13, C16, C17) -> C11 -> Dt -> 
+V_2: D0 -> C12 -> C15 -> Dt -> 
 
 
-
+seq_a_1 = &this->solution->routes.at(coordinates[0])->sequences.at(coordinates[1]);
+seq_a_2 = &this->solution->routes.at(coordinates[0])->sequences.at(coordinates[1]+1);
+seq_b = &this->solution->routes.at(coordinates[2])->sequences.at(coordinates[3]);
+cout<<seq_a_1->node->id<<","<<seq_a_2->node->id<<","<<coordinates[0]<<
+" - "<<seq_b->node->id<<","<<coordinates[2]<<" - "<<best_delta<<endl;

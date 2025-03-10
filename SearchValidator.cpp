@@ -63,3 +63,18 @@ bool Search::swap_1_0_broke_load(Sequence *seq_a, Route *route_b) {
 
     return  (route_b->load + seq_a_demand) > this->instance->load_capacity;
 }
+
+bool Search::swap_2_0_broke_load(Sequence *seq_a_1, Sequence* seq_a_2, Route *route_b) {
+
+    double seq_a_demand = 0.0;
+
+    for(Node* n: seq_a_1->customers) {
+        seq_a_demand += n->load_demand;
+    }
+
+    for(Node* n: seq_a_2->customers) {
+        seq_a_demand += n->load_demand;
+    }
+
+    return  (route_b->load + seq_a_demand) > this->instance->load_capacity;
+}

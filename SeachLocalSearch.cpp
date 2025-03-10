@@ -401,3 +401,67 @@ void Search::ls_inter_shift_1_0() {
     }
 }
 
+
+void Search::ls_inter_shift_2_0() {
+
+    double best_delta = 0.0;
+    int coordinates[4] = {-1,-1,-1,-1}; //i_route_a,i_seq_a,i_route_b,i_seq_b
+    Route* route_a = nullptr;
+    Route* route_b = nullptr;
+    vector<Sequence> * route_a_sequences = nullptr;
+    vector<Sequence> * route_b_sequences = nullptr;
+    Sequence * seq_a_1 = nullptr;
+    Sequence * seq_a_2 = nullptr;
+    Sequence * seq_b = nullptr;
+    for (int i_route_a = 0;i_route_a<(int)this->solution->routes.size();i_route_a++) {
+        route_a = this->solution->routes.at(i_route_a);
+        route_a_sequences = &route_a->sequences;
+        if((int)route_a_sequences->size() > 3) {
+            for (int i_route_b = 0;i_route_b<(int)this->solution->routes.size();i_route_b++) {
+
+                if(i_route_a!=i_route_b) {
+                    route_b = this->solution->routes.at(i_route_b);
+                    route_b_sequences = &route_b->sequences;
+
+                    //Verificando se pelo menos um cliente da rota A cabe na rota B
+                    if((route_b->load + route_a->minimun_route_load) <= this->instance->load_capacity) {
+                        //Aponta pro nó de A que vai
+                        for(int i_seq_a = 1; i_seq_a<((int)route_a_sequences->size()-2);i_seq_a++) {
+                            seq_a_1 = &route_a_sequences->at(i_seq_a);
+                            seq_a_2 = &route_a_sequences->at(i_seq_a+1);
+
+                            //Verificando se os nós da seq A cabe na rota B
+                            if(!this->swap_2_0_broke_load(seq_a_1,seq_a_2,route_b)) {
+
+                                //Aponta pro nó de B que vai vir antes
+                                for(int i_seq_b = 0; i_seq_b<((int)route_b_sequences->size()-1);i_seq_b++) {
+                                    seq_b = &route_b_sequences->at(i_seq_b); //TODO depois remover
+
+                                    double delta = calculate_delta_shift_2_0(route_a_sequences,i_seq_a,route_b_sequences,i_seq_b, BOTH);
+                                    if(Count::improves(0.0,delta) &&
+                                        Count::improves(best_delta,delta)) {
+
+                                        if(propagate_virtual_shift_2_0(i_route_b,i_seq_b,seq_a_1,seq_a_2)) {
+                                            best_delta = delta;
+                                            coordinates[0] = i_route_a;
+                                            coordinates[1] = i_seq_a;
+                                            coordinates[2] = i_route_b;
+                                            coordinates[3] = i_seq_b;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if((int)route_b_sequences->size() == 2) {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    if(best_delta<0.0) {
+        this->persist_shift_2_0(coordinates,best_delta);
+    }
+}

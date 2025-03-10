@@ -46,6 +46,7 @@ public:
     void persist_shift_1_0(int* coordinates, double delta);
 
     void ls_inter_shift_2_0();
+    void persist_shift_2_0(int* coordinates, double delta);
 
     void ls_inter_swap_1_1();
     void persist_swap_1_1(int* coordinates, double delta);
@@ -67,12 +68,13 @@ public:
     bool swap_2_1_broke_load(vector<Sequence>* route_a, Sequence* seq_a_1, Sequence *seq_a_2, vector<Sequence>* route_b, Sequence* seq_b);
     bool swap_2_2_broke_load(Route *route_a, Sequence* seq_a_1, Sequence *seq_a_2, Route *route_b, Sequence* seq_b_1, Sequence* seq_b_2);
     bool swap_1_0_broke_load(Sequence* seq_a, Route *route_b);
+    bool swap_2_0_broke_load(Sequence *seq_a_1, Sequence* seq_a_2, Route *route_b);
     double calculate_delta_2opt(vector<Sequence>* route_sequences, int i_seq_a, int i_seq_b);
     double calculate_delta_or_opt_1(vector<Sequence>* route_sequences, int i_seq_a, int i_seq_b);
     double calculate_delta_or_opt_k(int k,vector<Sequence>* route_sequences, int i_seq_a, int i_seq_b);
     double calculate_delta_exchange(vector<Sequence>* route_sequences, int i_seq_a, int i_seq_b);
     double calculate_delta_shift_1_0(vector<Sequence>* route_a, int i_seq_a, vector<Sequence>* route_b, int i_seq_b, char for_route);
-    double calculate_delta_shift_2_0(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);
+    double calculate_delta_shift_2_0(vector<Sequence>* route_a, int i_seq_a, vector<Sequence>* route_b, int i_seq_b, char for_route);
     double calculate_delta_swap_1_1(vector<Sequence>* route_a_sequences, int i_seq_a, vector<Sequence>* route_b_sequences, int i_seq_b, char for_route);
     double calculate_delta_swap_2_1(vector<Sequence>* route_a,int i_seq_a,vector<Sequence>* route_b,int i_seq_b);
     double calculate_delta_swap_2_2(vector<Sequence>* route_a_sequences, int i_seq_a, vector<Sequence>* route_b_sequences, int i_seq_b, char for_route);
@@ -92,7 +94,7 @@ public:
     void propagate(int route_index, int previous_sequence_index);
     bool propagate_virtual(int route_index, int previous_sequence_index, Sequence *cand_sequence);
     bool propagate_virtual_exchange(int route_index, int i_seq_a, int i_seq_b);
-    bool propagate_virtual_segment(int route_index, int previous_sequence_index, Sequence *cand_sequence_1, Sequence *cand_sequence_2);
+    bool propagate_virtual_shift_2_0(int route_index, int previous_sequence_index, Sequence *cand_sequence_1, Sequence *cand_sequence_2);
     bool propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b);
     bool propagate_virtual_or_opt_1_up(int route_index, int i_seq_a, int i_seq_b);
     bool propagate_virtual_or_opt_k_up(int k,int route_index, int i_seq_a, int i_seq_b);

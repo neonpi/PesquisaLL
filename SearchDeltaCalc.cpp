@@ -339,3 +339,30 @@ double Search::calculate_delta_swap_2_1(vector<Sequence> *route_a, int i_seq_a, 
     return delta;
 
 }
+
+
+double Search::calculate_delta_locker_reduce(vector<Sequence> *route_sequences, int i_locker_a, int i_locker_b,
+                                             Node *locker, char to_locker) {
+    double delta = 0.0;
+
+    if(to_locker == 'a') {
+        Sequence* locker_b_prev = &route_sequences->at(i_locker_b-1);
+        Sequence* locker_b_next = &route_sequences->at(i_locker_b+1);
+
+        delta += this->instance->distances[locker_b_prev->node->index][locker_b_next->node->index];
+        delta -= this->instance->distances[locker_b_prev->node->index][locker->index];
+        delta -= this->instance->distances[locker->index][locker_b_next->node->index];
+
+    }else { //b
+        Sequence* locker_a_prev = &route_sequences->at(i_locker_a-1);
+        Sequence* locker_a_next = &route_sequences->at(i_locker_a+1);
+
+        delta += this->instance->distances[locker_a_prev->node->index][locker_a_next->node->index];
+        delta -= this->instance->distances[locker_a_prev->node->index][locker->index];
+        delta -= this->instance->distances[locker->index][locker_a_next->node->index];
+
+    }
+
+    return delta;
+
+}

@@ -37,8 +37,8 @@ void Search::run() {
 void Search::debug_run() {
     this->construct();
     this->rvnd_inter();
-    Utils::test_cost(this->solution);
-    Utils::test_print_viability(this->solution,0);
+    /*Utils::test_cost(this->solution);
+    Utils::test_print_viability(this->solution,0);*/
 
 }
 
@@ -178,7 +178,9 @@ void Search::rvnd_inter() {
                 default:
                     cout<<"Unknown LS"<<endl;
             }
-
+            this->ls_locker_reducer();
+            /*Utils::test_cost(this->solution);
+            Utils::test_print_viability(this->solution,0);*/
             if(this->solution->cost < cost_backup) {
                 double cost_before_intra = this->solution->cost;
                 this->rvnd_intra();

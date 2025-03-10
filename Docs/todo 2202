@@ -11,12 +11,6 @@ analizar somatório de clientes por locker
 
 Deixar repetir locker no inter, o intra vai fundir. Vai ter que mudar 
 
-LS intrarota pra fundir locker. Rodar ela antes do rvnd intra
-RVND intra antes de rodar o RVND inter pelo menos uma vez
-
-Para a menor instancia: Semente 7657 junta dois lockers na mesma rota.
-Talvez colocar a demanda total daquele nó, na sequence
-
 ----------------------------------------------
 
 TODO: Testar varredura das buscas locais, pra ver se fazerm sentido
@@ -26,10 +20,6 @@ Checklist de reavaliação das buscas:
     Índices de troca: OK
 
 
-V_0: D0 -> C4 -> C6 -> C7 -> C10 -> C8 -> C5 -> C3 -> C20 -> P1(C0, C2, C9, C21, C22, C23) -> Dt -> 
-V_1: D0 -> P1(C24) -> C19 -> C18 -> C14 -> P0(C1, C13, C16, C17) -> C11 -> Dt -> 
-V_2: D0 -> C12 -> C15 -> Dt -> 
-
 
 seq_a_1 = &this->solution->routes.at(coordinates[0])->sequences.at(coordinates[1]);
 seq_a_2 = &this->solution->routes.at(coordinates[0])->sequences.at(coordinates[1]+1);
@@ -37,7 +27,4 @@ seq_b = &this->solution->routes.at(coordinates[2])->sequences.at(coordinates[3])
 cout<<seq_a_1->node->id<<","<<seq_a_2->node->id<<","<<coordinates[0]<<
 " - "<<seq_b->node->id<<","<<coordinates[2]<<" - "<<best_delta<<endl;
 
-
-V_0: D0 -> C4 -> C6 -> C7 -> C14 -> C10 -> C8 -> C5 -> C3 -> P0(C1, C13, C16) -> Dt -> 
-V_1: D0 -> C19 -> C20 -> P0(C17) -> P1(C0, C2, C9, C21, C22, C23, C24) -> Dt -> 
-V_2: D0 -> C12 -> C18 -> C15 -> C11 -> Dt ->
+Verificar por que alguns deltas do reduce de lockers são positivos

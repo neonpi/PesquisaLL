@@ -14,6 +14,9 @@ public:
     Route(Instance* instance);
 
     string get_route_string(int route_label);
+    void clone_this_to(Route* r);
+
+
 
     Instance* instance;
     vector<Sequence> sequences;

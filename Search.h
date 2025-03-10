@@ -126,10 +126,13 @@ public:
     void shift_k(int k,vector<Sequence> *route_sequences, int i_seq_a, int i_seq_b);
     void build_predefined_solution(vector<vector<string>> solution);
 
+    void backup_solution();
+    void restore_solution();
+
     Instance* instance;
     Solution* solution;
     Sequence* virtual_sequence;
-    Search* best;
+    Solution* best_solution;
     Config* config;
 
 

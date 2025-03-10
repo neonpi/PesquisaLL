@@ -18,7 +18,8 @@ public:
     void initialize_routes();
     void calculate_total_cost();
     void print();
-    Solution* clone();
+
+    void clone_this_to(Solution *s);
 
     Instance* instance;
     vector<Route*> routes;

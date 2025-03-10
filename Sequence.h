@@ -17,7 +17,6 @@ public:
     char method = 'u';
     double time_off = 0.0;
     double current_time = 0.0;
-    //double sequence_demand = 0.0;
 
     void clone_this_to(Sequence* clone) {
         clone->node = this->node;
@@ -25,15 +24,14 @@ public:
         clone->method = this->method;
         clone->time_off = this->time_off;
         clone->current_time = this->current_time;
-        //clone->sequence_demand = this->sequence_demand;
     }
 
-    void reset_values() {
+    /*void reset_values() {
         this->method = 'u';
         this->time_off = 0.0;
         this->current_time = 0.0;
         //this->sequence_demand = 0.0;
-    }
+    }*/
 };
 
 

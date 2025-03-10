@@ -44,3 +44,12 @@ string Route::get_route_string(int route_label) {
 
     return s;
 }
+
+void Route::clone_this_to(Route *r) {
+    r->instance = this->instance;
+    r->sequences = this->sequences;
+    r->visited_lockers = this->visited_lockers;
+    r->traveled_distance = this->traveled_distance;
+    r->load = this->load;
+    r->minimun_route_load = this->minimun_route_load;
+}

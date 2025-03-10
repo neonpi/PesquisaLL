@@ -10,7 +10,7 @@
 Search::Search(Instance *instance, Config* config) {
     this->instance = instance;
     this->config = config;
-    this->best = nullptr;
+    this->best_solution = nullptr;
     
     this->solution = new Solution(instance);
     this->virtual_sequence = new Sequence();
@@ -19,8 +19,8 @@ Search::Search(Instance *instance, Config* config) {
 
 Search::~Search() {
 
-    if (this->best != nullptr) {
-        delete this->best;
+    if (this->best_solution != nullptr) {
+        delete this->best_solution;
     }
 
     delete this->virtual_sequence;
@@ -37,6 +37,7 @@ void Search::run() {
 void Search::debug_run() {
     this->construct();
     this->rvnd_inter();
+    this->iterated_greedy();
     /*Utils::test_cost(this->solution);
     Utils::test_print_viability(this->solution,0);*/
 
@@ -194,145 +195,121 @@ void Search::rvnd_inter() {
     }
 }
 
+void Search::backup_solution() {
+    if(this->best_solution != nullptr) {
+        delete this->best_solution;
+    }
+    this->best_solution = new Solution(this->instance);
+    this->solution->clone_this_to(this->best_solution);
+}
+
+void Search::restore_solution() {
+    delete this->solution;
+    this->solution = this->best_solution;
+    this->best_solution = new Solution(this->instance);
+    this->solution->clone_this_to(this->best_solution);
+
+}
 
 
-// void Search::iterated_greedy() {
-//     Solution* bestSolution = this->solution->clone();
-//     int dec_size = 1;
-//     int dec_size_limit = this->instance->customers_qty*0.4;
+void Search::iterated_greedy() {
 
-//     int iter_random_limit = 10;
-//     int iter_total_limit = this->solution->used_routes + iter_random_limit;
+    backup_solution();
 
 
-//     while(dec_size<dec_size_limit) {
+    int dec_size = 1;
+    int dec_size_limit = this->instance->customers_qty*0.4;
 
-//         for(int iter=0; iter<iter_total_limit;iter++) {
-
-//             if(iter<iter_random_limit) {
-//                 deconstruct_random(dec_size);
-//             }else {
-//                 deconstruct_route(iter-iter_random_limit);
-//             }
-
-//             insertion_heuristic_ig();
-
-//             this->rvnd_inter();
-
-//             if(this->solution->cost < bestSolution->cost) {
-//                 delete bestSolution;
-//                 bestSolution = this->solution->clone();
-//                 iter_total_limit = this->solution->used_routes + iter_random_limit;
-//                 dec_size = 0;
-//                 break;
-//             }else {
-//                 delete this->solution;
-//                 this->solution = bestSolution->clone();
-//             }
-
-//         }
-
-//         dec_size++;
-
-//     }
-
-// }
-
-// void Search::deconstruct_random(int dec_size) {
+    int iter_random_limit = 10;
+    int iter_total_limit = this->solution->used_routes + iter_random_limit;
 
 
-//     for(int i=0;i<dec_size;i++) {
+    while(dec_size<dec_size_limit) {
 
-//         int i_route = rand()%this->solution->used_routes;
-//         vector<Sequence>* route = &this->solution->routes.at(i_route);
+        for(int iter=0; iter<iter_total_limit;iter++) {
 
-//         int i_seq = 1 + rand()%((int)route->size()-2);
-//         Sequence* seq = &route->at(i_seq);
-//         this->solution->visited.at(seq->customer->index) = false;
+            if(iter<iter_random_limit) {
+                //deconstruct_random(dec_size);
+            }else {
+                //deconstruct_route(iter-iter_random_limit);
+            }
 
-//         route->erase(route->begin()+i_seq,route->begin()+i_seq+1);
+            //insertion_heuristic_ig();
 
-//         if(route->size() == 2) {
-//             (route->end()-1)->current_distance = 0.0;
-//             (route->end()-1)->current_time = 0.0;
-//             (route->end()-1)->current_load = 0.0;
-//             iter_swap(this->solution->routes.begin()+i_route,this->solution->routes.begin()+this->solution->used_routes-1);
-//             this->solution->used_routes--;
-//         }
+            this->rvnd_inter();
 
+            if(this->solution->cost < this->best_solution->cost) {
+                backup_solution();
+                iter_total_limit = this->solution->used_routes + iter_random_limit;
+                dec_size = 0;
+                break;
+            }else {
+                restore_solution();
+            }
 
-//     }
+        }
 
-//     for(int i=0;i<this->solution->used_routes;i++) {
-//         propagate(i,0);
-//     }
+        dec_size++;
 
-//     //this->solution->calculate_total_cost();
+    }
 
-
-
-
-
-// }
-
-// void Search::deconstruct_route(int i_route) {
-//     vector<Sequence> *route = &this->solution->routes.at(i_route);
-
-//     for(int i_seq = 1; i_seq<(route->size()-1);i_seq++) {
-//         this->solution->visited.at(route->at(i_seq).customer->index) = false;
-//     }
-
-//     route->erase(route->begin()+1,route->end()-1);
-
-//     route->at(1).current_distance = 0.0;
-//     route->at(1).current_time = 0.0;
-//     route->at(1).current_load = 0.0;
-//     iter_swap(this->solution->routes.begin()+i_route,this->solution->routes.begin()+this->solution->used_routes-1);
-//     this->solution->used_routes--;
+}
+/*
+void Search::deconstruct_random(int dec_size) {
 
 
-// }
+    for(int i=0;i<dec_size;i++) {
 
-// void Search::local_search() {
+        int i_route = rand()%this->solution->used_routes;
+        Route* route =
+        vector<Sequence>* route = &this->solution->routes.at(i_route);
 
-//     double best_cost = this->solution->cost;
+        int i_seq = 1 + rand()%((int)route->size()-2);
+        Sequence* seq = &route->at(i_seq);
+        this->solution->visited.at(seq->customer->index) = false;
+
+        route->erase(route->begin()+i_seq,route->begin()+i_seq+1);
+
+        if(route->size() == 2) {
+            (route->end()-1)->current_distance = 0.0;
+            (route->end()-1)->current_time = 0.0;
+            (route->end()-1)->current_load = 0.0;
+            iter_swap(this->solution->routes.begin()+i_route,this->solution->routes.begin()+this->solution->used_routes-1);
+            this->solution->used_routes--;
+        }
 
 
-//     for(int i_route_a=0;i_route_a<this->instance->max_vehicle;i_route_a++) {
-//         vector<Sequence>* route_a = &this->solution->routes.at(i_route_a);
-//         if(route_a->size()>2) {
+    }
 
-//             for(int i_seq_a=1;i_seq_a<(route_a->size()-1);i_seq_a++) {
-//                 Sequence * seq_a = &route_a->at(i_seq_a);
-//                 for(int i_route_b=i_route_a;i_route_b<this->instance->max_vehicle;i_route_b++) {
-//                     vector<Sequence>* route_b = &this->solution->routes.at(i_route_b);
-//                     if(route_b->size()>2) {
-//                         for(int i_seq_b = route_a == route_b? i_seq_a+1: 1; i_seq_b<(route_b->size()-1); i_seq_b++) {
-//                             Sequence * seq_b = &route_b->at(i_seq_b);
-//                             swap_sequence(i_route_a,i_seq_a,i_route_b,i_seq_b);
+    for(int i=0;i<this->solution->used_routes;i++) {
+        propagate(i,0);
+    }
 
-//                             if(is_viable() && this->solution->cost<best_cost) {
-//                                 best_cost = this->solution->cost;
-//                                 i_seq_b = (route_b->size()-1);
-//                                 i_route_b = this->instance->max_vehicle;
-//                                 i_seq_a = (route_a->size()-1);
-//                                 i_route_a = -1;
+    //this->solution->calculate_total_cost();
 
-//                             }else {
-//                                 swap_sequence(i_route_a,i_seq_a,i_route_b,i_seq_b);
-//                             }
 
-//                         }
-//                     }
 
-//                 }
 
-//             }
 
-//         }
-//     }
+}*/
+/*
+void Search::deconstruct_route(int i_route) {
+    vector<Sequence> *route = &this->solution->routes.at(i_route);
 
-// }
+    for(int i_seq = 1; i_seq<(route->size()-1);i_seq++) {
+        this->solution->visited.at(route->at(i_seq).customer->index) = false;
+    }
+
+    route->erase(route->begin()+1,route->end()-1);
+
+    route->at(1).current_distance = 0.0;
+    route->at(1).current_time = 0.0;
+    route->at(1).current_load = 0.0;
+    iter_swap(this->solution->routes.begin()+i_route,this->solution->routes.begin()+this->solution->used_routes-1);
+    this->solution->used_routes--;
+
+
+}*/
 
 // void Search::swap_sequence(int route_a_index, int seq_a_index, int route_b_index, int seq_b_index) {
 //     Sequence* sequence_a = &this->solution->routes.at(route_a_index).at(seq_a_index);

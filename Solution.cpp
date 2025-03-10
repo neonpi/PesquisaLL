@@ -20,8 +20,6 @@ Solution::Solution(Instance* instance) {
         this->routes.push_back(r);
     }
 
-
-
 }
 //TODO testar
 Solution::~Solution() {
@@ -62,13 +60,19 @@ void Solution::print() {
     }
 }
 
-Solution * Solution::clone() {
+void Solution::clone_this_to(Solution *s) {
 
-    Solution *s = new Solution(this->instance);
-    s->routes = this->routes;
+    s->instance = this->instance;
+
+    for(int i_route = 0; i_route < this->instance->max_vehicle; i_route++) {
+        Route* this_route = this->routes.at(i_route);
+        Route* s_route = s->routes.at(i_route);
+        this_route->clone_this_to(s_route);
+    }
+
+    //s->routes = this->routes;
     s->served = this->served;
     s->cost = this->cost;
     s->used_routes = this->used_routes;
 
-    return s;
 }

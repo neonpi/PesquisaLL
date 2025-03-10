@@ -369,3 +369,18 @@ double Search::calculate_delta_locker_reduce(vector<Sequence> *route_sequences, 
     return delta;
 
 }
+
+double Search::calculate_delta_destruction(vector<Sequence> *route, int i_seq) {
+
+    Sequence* seq_prev = &route->at(i_seq-1);
+    Sequence* seq = &route->at(i_seq);
+    Sequence* seq_next = &route->at(i_seq+1);
+
+    double delta = 0.0;
+
+    delta += this->instance->distances[seq_prev->node->index][seq_next->node->index];
+    delta -= this->instance->distances[seq_prev->node->index][seq->node->index];
+    delta -= this->instance->distances[seq->node->index][seq_next->node->index];
+
+    return delta;
+}

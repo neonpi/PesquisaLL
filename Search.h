@@ -81,6 +81,7 @@ public:
     double calculate_delta_swap_2_1(vector<Sequence>* route_a, int i_seq_a, vector<Sequence>* route_b, int i_seq_b, char for_route);
     double calculate_delta_swap_2_2(vector<Sequence>* route_a_sequences, int i_seq_a, vector<Sequence>* route_b_sequences, int i_seq_b, char for_route);
     double calculate_delta_locker_reduce(vector<Sequence>* route_sequences, int i_locker_a, int i_locker_b, Node* locker, char to_locker);
+    double calculate_delta_destruction(vector<Sequence>* route, int i_seq);
     void local_search();
     void swap_sequence(int route_a_index, int seq_a_index, int route_b_index, int seq_b_index);
     void swap_sequence_intraroute(int route_index, int seq_a_index, int seq_b_index, double delta_distance);

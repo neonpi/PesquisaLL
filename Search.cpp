@@ -228,8 +228,16 @@ void Search::iterated_greedy() {
 
         for(int iter=0; iter<iter_total_limit;iter++) {
 
+            this->solution->print();
+            while(this->solution->used_routes > 0) {
+                deconstruct_random(1);
+                this->solution->print();
+                Utils::test_cost(this->solution);
+                Utils::test_print_viability(this->solution,0);
+            }
+
             if(iter<iter_random_limit) {
-                //deconstruct_random(dec_size);
+                deconstruct_random(dec_size);
             }else {
                 //deconstruct_route(iter-iter_random_limit);
             }
@@ -254,44 +262,58 @@ void Search::iterated_greedy() {
     }
 
 }
-/*
-void Search::deconstruct_random(int dec_size) {
 
+void Search::deconstruct_random(int dec_size) {
 
     for(int i=0;i<dec_size;i++) {
 
         int i_route = rand()%this->solution->used_routes;
-        Route* route =
-        vector<Sequence>* route = &this->solution->routes.at(i_route);
+        Route* route = this->solution->routes.at(i_route);
+        vector<Sequence>* route_sequences = &route->sequences;
 
-        int i_seq = 1 + rand()%((int)route->size()-2);
-        Sequence* seq = &route->at(i_seq);
-        this->solution->visited.at(seq->customer->index) = false;
+        int i_seq = 1 + rand()%((int)route_sequences->size()-2);
+        Sequence* seq = &route_sequences->at(i_seq);
 
-        route->erase(route->begin()+i_seq,route->begin()+i_seq+1);
+        int i_customer = rand()%((int)seq->customers.size());
+        Node* customer = seq->customers.at(i_customer);
 
-        if(route->size() == 2) {
-            (route->end()-1)->current_distance = 0.0;
-            (route->end()-1)->current_time = 0.0;
-            (route->end()-1)->current_load = 0.0;
-            iter_swap(this->solution->routes.begin()+i_route,this->solution->routes.begin()+this->solution->used_routes-1);
-            this->solution->used_routes--;
+        this->solution->served.at(customer->index) = false;
+
+        if((int)seq->customers.size() == 1) {
+
+            double delta = calculate_delta_destruction(route_sequences,i_seq);
+            this->solution->cost += delta;
+
+            if(seq->node->type == "p") {
+                route->visited_lockers[seq->node] --;
+            }
+
+            route_sequences->erase(route_sequences->begin()+i_seq,route_sequences->begin()+i_seq+1);
+
+            if(route_sequences->size() == 2) {
+                route->traveled_distance = 0.0;
+                route->load = 0.0;
+                route->minimun_route_load = 0.0;
+
+                iter_swap(this->solution->routes.begin()+i_route,this->solution->routes.begin()+this->solution->used_routes-1);
+
+                this->solution->used_routes--;
+            }else {
+                route->load -= customer->load_demand;
+            }
+
+
+        }else {
+            seq->customers.erase(seq->customers.begin() + i_customer , seq->customers.begin() + i_customer + 1);
+            route->load -= customer->load_demand;
         }
-
-
     }
 
     for(int i=0;i<this->solution->used_routes;i++) {
         propagate(i,0);
     }
 
-    //this->solution->calculate_total_cost();
-
-
-
-
-
-}*/
+}
 /*
 void Search::deconstruct_route(int i_route) {
     vector<Sequence> *route = &this->solution->routes.at(i_route);

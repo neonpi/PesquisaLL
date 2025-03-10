@@ -36,3 +36,8 @@ seq_a_2 = &this->solution->routes.at(coordinates[0])->sequences.at(coordinates[1
 seq_b = &this->solution->routes.at(coordinates[2])->sequences.at(coordinates[3]);
 cout<<seq_a_1->node->id<<","<<seq_a_2->node->id<<","<<coordinates[0]<<
 " - "<<seq_b->node->id<<","<<coordinates[2]<<" - "<<best_delta<<endl;
+
+
+V_0: D0 -> C4 -> C6 -> C7 -> C14 -> C10 -> C8 -> C5 -> C3 -> P0(C1, C13, C16) -> Dt -> 
+V_1: D0 -> C19 -> C20 -> P0(C17) -> P1(C0, C2, C9, C21, C22, C23, C24) -> Dt -> 
+V_2: D0 -> C12 -> C18 -> C15 -> C11 -> Dt ->

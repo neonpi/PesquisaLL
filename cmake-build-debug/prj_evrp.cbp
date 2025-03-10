@@ -109,6 +109,9 @@
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Route.h">
 			<Option target="prj_evrp"/>
 		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/SeachLocalSearch.cpp">
+			<Option target="prj_evrp"/>
+		</Unit>
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/Search.cpp">
 			<Option target="prj_evrp"/>
 		</Unit>

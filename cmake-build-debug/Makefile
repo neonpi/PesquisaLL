@@ -224,6 +224,30 @@ Route.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/Route.cpp.s
 .PHONY : Route.cpp.s
 
+SeachLocalSearch.obj: SeachLocalSearch.cpp.obj
+.PHONY : SeachLocalSearch.obj
+
+# target to build an object file
+SeachLocalSearch.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SeachLocalSearch.cpp.obj
+.PHONY : SeachLocalSearch.cpp.obj
+
+SeachLocalSearch.i: SeachLocalSearch.cpp.i
+.PHONY : SeachLocalSearch.i
+
+# target to preprocess a source file
+SeachLocalSearch.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SeachLocalSearch.cpp.i
+.PHONY : SeachLocalSearch.cpp.i
+
+SeachLocalSearch.s: SeachLocalSearch.cpp.s
+.PHONY : SeachLocalSearch.s
+
+# target to generate assembly for a file
+SeachLocalSearch.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SeachLocalSearch.cpp.s
+.PHONY : SeachLocalSearch.cpp.s
+
 Search.obj: Search.cpp.obj
 .PHONY : Search.obj
 
@@ -533,6 +557,9 @@ help:
 	@echo ... Route.obj
 	@echo ... Route.i
 	@echo ... Route.s
+	@echo ... SeachLocalSearch.obj
+	@echo ... SeachLocalSearch.i
+	@echo ... SeachLocalSearch.s
 	@echo ... Search.obj
 	@echo ... Search.i
 	@echo ... Search.s

@@ -290,3 +290,52 @@ double Search::calculate_delta_shift_2_0(vector<Sequence> *route_a, int i_seq_a,
 
     return delta;
 }
+
+
+
+double Search::calculate_delta_swap_2_1(vector<Sequence> *route_a, int i_seq_a, vector<Sequence> *route_b,
+                                        int i_seq_b, char for_route) {
+    Sequence* seq_a_previous = &route_a->at(i_seq_a-1);
+    Sequence* seq_a_1 = &route_a->at(i_seq_a);
+    Sequence* seq_a_2 = &route_a->at(i_seq_a+1);
+    Sequence* seq_a_next = &route_a->at(i_seq_a+2);
+
+    Sequence* seq_b_previous = &route_b->at(i_seq_b-1);
+    Sequence* seq_b = &route_b->at(i_seq_b);
+    Sequence* seq_b_next = &route_b->at(i_seq_b+1);
+
+    double delta = 0.0;
+
+    switch (for_route) {
+        case 'a':
+            //Contabilizando alteração da rota_a
+            delta+=this->instance->distances[seq_a_previous->node->index][seq_b->node->index];
+            delta+=this->instance->distances[seq_b->node->index][seq_a_next->node->index];
+            delta-=this->instance->distances[seq_a_previous->node->index][seq_a_1->node->index];
+            delta-=this->instance->distances[seq_a_2->node->index][seq_a_next->node->index];
+            break;
+        case 'b':
+            //Contabilizando alteração da rota_b
+            delta+=this->instance->distances[seq_b_previous->node->index][seq_a_1->node->index];
+            delta+=this->instance->distances[seq_a_2->node->index][seq_b_next->node->index];
+            delta-=this->instance->distances[seq_b_previous->node->index][seq_b->node->index];
+            delta-=this->instance->distances[seq_b->node->index][seq_b_next->node->index];
+            break;
+        default: //BOTH
+            //Contabilizando alteração da rota_a
+            delta+=this->instance->distances[seq_a_previous->node->index][seq_b->node->index];
+            delta+=this->instance->distances[seq_b->node->index][seq_a_next->node->index];
+            delta-=this->instance->distances[seq_a_previous->node->index][seq_a_1->node->index];
+            delta-=this->instance->distances[seq_a_2->node->index][seq_a_next->node->index];
+
+            //Contabilizando alteração da rota_b
+            delta+=this->instance->distances[seq_b_previous->node->index][seq_a_1->node->index];
+            delta+=this->instance->distances[seq_a_2->node->index][seq_b_next->node->index];
+            delta-=this->instance->distances[seq_b_previous->node->index][seq_b->node->index];
+            delta-=this->instance->distances[seq_b->node->index][seq_b_next->node->index];
+    }
+
+
+    return delta;
+
+}

@@ -465,3 +465,79 @@ void Search::ls_inter_shift_2_0() {
         this->persist_shift_2_0(coordinates,best_delta);
     }
 }
+
+void Search::ls_inter_swap_2_1() {
+    double best_delta = 0.0;
+    int coordinates[4] = {-1,-1,-1,-1}; //i_route_a,i_seq_a,i_route_b,i_seq_b
+    Route * route_a = nullptr;
+    vector<Sequence> * route_a_sequences = nullptr;
+    Sequence * seq_a_1 = nullptr;
+    Sequence * seq_a_2 = nullptr;
+    Route * route_b = nullptr;
+    vector<Sequence> * route_b_sequences = nullptr;
+    Sequence * seq_b = nullptr;
+
+    for (int i_route_a = 0;i_route_a<(int)this->solution->routes.size();i_route_a++) {
+        route_a = this->solution->routes.at(i_route_a);
+        route_a_sequences = &route_a->sequences;
+        if((int)route_a_sequences->size()>3) {
+            for (int i_route_b = 0;i_route_b<(int)this->solution->routes.size();i_route_b++) {
+
+                if(i_route_b != i_route_a) {
+                    route_b = this->solution->routes.at(i_route_b);
+                    route_b_sequences = &route_b->sequences;
+                    if((int)route_b_sequences->size()>2) {
+                        for(int i_seq_a=1; i_seq_a<((int)route_a_sequences->size()-2);i_seq_a++) {
+                            seq_a_1 = &route_a_sequences->at(i_seq_a);
+                            seq_a_2 = &route_a_sequences->at(i_seq_a+1);
+
+                            for(int i_seq_b = 1; i_seq_b<((int)route_b_sequences->size()-1);i_seq_b++) {
+                                seq_b = &route_b_sequences->at(i_seq_b);
+
+                                //Trocar locker com locker não faz efeito TODO testar depois
+                                    if(!swap_2_1_broke_load(route_a,seq_a_1,seq_a_2,route_b,seq_b)) {
+                                        double delta = calculate_delta_swap_2_1(route_a_sequences,i_seq_a,route_b_sequences,i_seq_b, BOTH);
+                                        if(Count::improves(0.0,delta) &&
+                                            Count::improves(best_delta,delta)) {
+                                            if(propagate_virtual_swap_2_1(i_route_a,i_seq_a-1,seq_b) &&
+                                                propagate_virtual_swap_2_1(i_route_b,i_seq_b-1,seq_a_1,seq_a_2)) {
+                                                best_delta = delta;
+                                                coordinates[0] = i_route_a;
+                                                coordinates[1] = i_seq_a;
+                                                coordinates[2] = i_route_b;
+                                                coordinates[3] = i_seq_b;
+                                                }
+                                            }
+                                    }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if(best_delta<0.0) {
+        this->persist_swap_2_1(coordinates,best_delta);
+    }
+}
+
+
+
+void Search::reduce_double_locker() {
+
+    for(int i_route = 0; i_route < this->solution->used_routes; i_route++) {
+        Route * route = this->solution->routes.at(i_route);
+
+        for(int i_locker = this->instance->locker_indexes[0]; i_locker < this->instance->locker_indexes[1]; i_locker++) {
+            Node* locker = &this->instance->nodes.at(i_locker);
+
+            if(route->visited_lockers[locker] > 1) {
+                
+            }
+        }
+
+    }
+
+
+}

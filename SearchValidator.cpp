@@ -102,3 +102,9 @@ bool Search::swap_2_1_broke_load(Route *route_a, Sequence* seq_a_1, Sequence *se
     return broke_a || broke_b;
 
 }
+
+bool Search::broke_time_window() {
+
+    return this->virtual_sequence->current_time < this->virtual_sequence->node->time_window[0] ||
+        this->virtual_sequence->current_time > this->virtual_sequence->node->time_window[1];
+}

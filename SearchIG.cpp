@@ -28,7 +28,7 @@ void Search::iterated_greedy() {
             this->ls_locker_reducer();
             this->rvnd_inter();
 
-            if(this->solution->cost < this->best_solution->cost) {
+            if(this->solution->cost < this->best_solution->cost && Count::differs(this->solution->cost,this->best_solution->cost)) {
                 backup_solution();
 
                 iter_total_limit = this->solution->used_routes + iter_random_limit;

@@ -68,7 +68,8 @@
 				26,
 				27,
 				28,
-				29
+				29,
+				30
 			]
 		}
 	],
@@ -121,7 +122,8 @@
 				26,
 				27,
 				28,
-				29
+				29,
+				30
 			]
 		},
 		{
@@ -311,6 +313,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "SeachLocalSearch.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "SearchIG.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

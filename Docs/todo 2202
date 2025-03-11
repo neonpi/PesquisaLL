@@ -43,3 +43,18 @@ V_1: D0 -> C6 -> C7 -> C10 -> C8 -> C3 -> C1 -> P0(C2, C4, C5, C9, C11) -> C48 -
 V_2: D0 -> C40 -> C39 -> C43 -> C45 -> C44 -> C47 -> C49 -> Dt -> 
 V_3: D0 -> P1(C32, C34, C35) -> C17 -> C18 -> P0(C15, C16, C19, C20, C22, C42) -> Dt -> 
 V_4: D0 -> P0(C12, C13, C14) -> C24 -> C36 -> C37 -> C33 -> Dt -> 
+
+
+
+
+
+
+V_0: D0 -> C12 -> C10 -> P1(C3, C4, C0, C2, C9, C21, C22, C23, C24) -> C20 -> Dt -> 
+V_1: D0 -> C19 -> C18 -> C14 -> C15 -> C11 -> P0(C1, C13, C16, C17) -> Dt -> 
+V_2: D0 -> C6 -> C8 -> P1(C5, C7) -> Dt ->
+
+V_0: D0 -> C12 -> C10 -> C8 -> P1(C5, C7) -> Dt -> 
+V_1: D0 -> C19 -> C18 -> C14 -> C15 -> C11 -> P0(C1, C13, C16, C17) -> Dt -> 
+V_2: D0 -> C6 -> P1(C3, C4, C0, C2, C9, C21, C22, C23, C24) -> C20 -> Dt ->
+
+Quando é 2 indo, tem que considerar tambem a distância entre eles para acrescentar no delta da rota

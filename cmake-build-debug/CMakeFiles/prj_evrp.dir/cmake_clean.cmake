@@ -13,6 +13,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/prj_evrp.dir/Search.cpp.obj.d"
   "CMakeFiles/prj_evrp.dir/SearchDeltaCalc.cpp.obj"
   "CMakeFiles/prj_evrp.dir/SearchDeltaCalc.cpp.obj.d"
+  "CMakeFiles/prj_evrp.dir/SearchIG.cpp.obj"
+  "CMakeFiles/prj_evrp.dir/SearchIG.cpp.obj.d"
   "CMakeFiles/prj_evrp.dir/SearchPersister.cpp.obj"
   "CMakeFiles/prj_evrp.dir/SearchPersister.cpp.obj.d"
   "CMakeFiles/prj_evrp.dir/SearchPropagator.cpp.obj"

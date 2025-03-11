@@ -121,6 +121,9 @@
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/SearchDeltaCalc.cpp">
 			<Option target="prj_evrp"/>
 		</Unit>
+		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/SearchIG.cpp">
+			<Option target="prj_evrp"/>
+		</Unit>
 		<Unit filename="D:/Estudos/Mestrado/VRP/prj_vrppl/SearchPersister.cpp">
 			<Option target="prj_evrp"/>
 		</Unit>

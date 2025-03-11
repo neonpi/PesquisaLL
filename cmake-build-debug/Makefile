@@ -296,6 +296,30 @@ SearchDeltaCalc.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchDeltaCalc.cpp.s
 .PHONY : SearchDeltaCalc.cpp.s
 
+SearchIG.obj: SearchIG.cpp.obj
+.PHONY : SearchIG.obj
+
+# target to build an object file
+SearchIG.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchIG.cpp.obj
+.PHONY : SearchIG.cpp.obj
+
+SearchIG.i: SearchIG.cpp.i
+.PHONY : SearchIG.i
+
+# target to preprocess a source file
+SearchIG.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchIG.cpp.i
+.PHONY : SearchIG.cpp.i
+
+SearchIG.s: SearchIG.cpp.s
+.PHONY : SearchIG.s
+
+# target to generate assembly for a file
+SearchIG.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\prj_evrp.dir\build.make CMakeFiles/prj_evrp.dir/SearchIG.cpp.s
+.PHONY : SearchIG.cpp.s
+
 SearchPersister.obj: SearchPersister.cpp.obj
 .PHONY : SearchPersister.obj
 
@@ -566,6 +590,9 @@ help:
 	@echo ... SearchDeltaCalc.obj
 	@echo ... SearchDeltaCalc.i
 	@echo ... SearchDeltaCalc.s
+	@echo ... SearchIG.obj
+	@echo ... SearchIG.i
+	@echo ... SearchIG.s
 	@echo ... SearchPersister.obj
 	@echo ... SearchPersister.i
 	@echo ... SearchPersister.s

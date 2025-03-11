@@ -31,7 +31,6 @@ public:
     //Construtivo
     void construct();
     void insertion_heuristic();
-    void insertion_heuristic_ig();
 
     //Busca local
     void rvnd_intra();
@@ -82,13 +81,11 @@ public:
     double calculate_delta_swap_2_2(vector<Sequence>* route_a_sequences, int i_seq_a, vector<Sequence>* route_b_sequences, int i_seq_b, char for_route);
     double calculate_delta_locker_reduce(vector<Sequence>* route_sequences, int i_locker_a, int i_locker_b, Node* locker, char to_locker);
     double calculate_delta_destruction(vector<Sequence>* route, int i_seq);
-    void local_search();
     void swap_sequence(int route_a_index, int seq_a_index, int route_b_index, int seq_b_index);
     void swap_sequence_intraroute(int route_index, int seq_a_index, int seq_b_index, double delta_distance);
     bool is_viable();
 
     vector<tuple<int, int, Sequence, double>> build_candidate_list();
-    vector<vector<tuple<int, int, Sequence, double>>> build_candidate_list_ig();
     void insert_sequency(tuple<int, int, Sequence, double> candidate);
 
     void try_customer_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node* cand_node);
@@ -121,7 +118,6 @@ public:
     bool is_load_viable(int route_index, Node* cand_node){return this->instance->load_capacity > this->solution->routes.at(route_index)->load + cand_node->load_demand;}
 
     double calculate_delta_distance(int route_index, int previous_sequence_index, Sequence *cand_sequence);
-    void print_ig_candidate_list(vector<vector<tuple<int, int, Sequence, double>>> *cand_list);
 
     void shift(vector<Sequence> *route_sequences, int i_seq_a, int i_seq_b);
     void shift_k(int k,vector<Sequence> *route_sequences, int i_seq_a, int i_seq_b);

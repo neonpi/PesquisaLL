@@ -28,9 +28,9 @@ Search::~Search() {
 
 
 void Search::run() {
-    /*this->construct();
+    this->construct();
     this->rvnd_inter();
-    this->iterated_greedy();*/
+    this->iterated_greedy();
 
 }
 
@@ -73,42 +73,6 @@ void Search::insertion_heuristic() {
     this->solution->calculate_total_cost();
 }
 
-// void Search::insertion_heuristic_ig() {
-
-//     vector<vector<tuple<int,int,Sequence,double>>> cand_list = build_candidate_list_ig(); //(rota,antecessor,cliente destino)
-
-//     while(!cand_list.empty()) {
-//         //tuple<int,int,Sequence,double> candidate = cand_list.at(0); //GULOSO
-
-//         //Randomizado
-//         int qty_groups = int((int)cand_list.size()*this->config->alpha);
-
-//         int rand_index = 0;
-//         if(qty_groups>2) {
-//             rand_index = rand()%qty_groups;
-//         }
-
-//         vector<tuple<int,int,Sequence,double>> group = cand_list.at(rand_index);
-
-//         int candidates = (int)group.size();
-
-//         rand_index = 0;
-//         if(candidates>2) {
-//             rand_index = rand()%candidates;
-//         }
-
-//         tuple<int,int,Sequence,double> candidate = group.at(rand_index);
-
-//         insert_sequency(candidate);
-
-
-//         cand_list.erase(cand_list.begin(),cand_list.end());
-
-//         cand_list = build_candidate_list_ig();
-//     }
-
-//     this->solution->calculate_total_cost();
-// }
 
 void Search::rvnd_intra() {
 
@@ -300,15 +264,6 @@ vector<tuple<int, int, Sequence, double>> Search::build_candidate_list() {
 
     return cand_list;
 }
-
-vector<vector<tuple<int, int, Sequence, double>>> Search::build_candidate_list_ig() {
-
-    vector<tuple<int,int,Sequence, double>> cand_list = build_candidate_list();
-
-    vector<vector<tuple<int, int, Sequence, double>>> parsed_list = group_by_delta(&cand_list);
-    return parsed_list;
-}
-
 
 void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *cand_list, Node *cand_node) {
     if(!this->solution->served.at(cand_node->index)) {
@@ -623,46 +578,6 @@ bool Search::propagate_virtual_2opt(int route_index, int i_seq_a, int i_seq_b) {
     return true;
 }
 
-vector<vector<tuple<int, int, Sequence, double>>> Search::group_by_delta(
-    vector<tuple<int, int, Sequence, double>> *cand_list) {
-
-    vector<vector<tuple<int, int, Sequence, double>>> all_group_list;
-
-    for(int i_cand_list = 0;i_cand_list<(int)cand_list->size();i_cand_list++) {
-        vector<tuple<int, int, Sequence, double>> group_list;
-
-        group_list.push_back(cand_list->at(i_cand_list++));
-
-        while(i_cand_list < (int) cand_list->size() &&
-            get<3>(*(group_list.end()-1)) == get<3>(cand_list->at(i_cand_list))) {
-                group_list.push_back(cand_list->at(i_cand_list++));
-        }
-
-        all_group_list.push_back(group_list);
-
-        i_cand_list--;
-
-    }
-
-
-    return all_group_list;
-}
-
-//TODO testar
-double Search::calculate_delta_distance(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
-    Route* route = this->solution->routes.at(route_index);
-    vector<Sequence> *route_sequences = &route->sequences;
-
-    Sequence a_previous_sequence = route_sequences->at(previous_sequence_index);
-    Sequence a_next_sequence = route_sequences->at(previous_sequence_index+1);
-
-    double distance_prev_next = this->instance->distances[a_previous_sequence.node->index][a_next_sequence.node->index];
-    double distance_prev_cus = this->instance->distances[a_previous_sequence.node->index][cand_sequence->node->index];
-    double distance_cus_next = this->instance->distances[cand_sequence->node->index][a_next_sequence.node->index];
-
-    double delta_distance = distance_prev_cus + distance_cus_next - distance_prev_next;
-    return delta_distance;
-}
 
 
 void Search::insert_sequency(tuple<int, int, Sequence, double> candidate) {

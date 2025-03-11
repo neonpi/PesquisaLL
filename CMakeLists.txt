@@ -33,4 +33,5 @@ add_executable(prj_evrp main.cpp
         SearchPropagator.cpp
         SearchValidator.cpp
         SeachLocalSearch.cpp
+        SearchIG.cpp
 )

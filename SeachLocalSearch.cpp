@@ -333,7 +333,6 @@ void Search::ls_inter_swap_2_2() {
     }
     if(best_delta<0.0) {
         this->persist_swap_2_2(coordinates,best_delta);
-
     }
 
 }
@@ -571,8 +570,6 @@ void Search::reduce_double_locker(int i_route, Route *route, Node *locker) {
         choosed_delta = delta_b_to_a;
     }
 
-    //this->solution->print();
-
     reduced_locker_sequence = &route_sequences->at(i_reduced);
 
     for(Node* customer: reduced_locker_sequence->customers) {
@@ -582,10 +579,6 @@ void Search::reduce_double_locker(int i_route, Route *route, Node *locker) {
 
     route_sequences->erase(route_sequences->begin() + i_reduced,route_sequences->begin() + i_reduced + 1);
 
-    //this->solution->print();
-    /*if(choosed_delta > 0.0) {
-        cout<<endl;
-    }*/
 
     route->traveled_distance += choosed_delta;
     this->solution->cost += choosed_delta;

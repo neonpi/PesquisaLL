@@ -142,7 +142,7 @@ void Utils::test_print_viability(Solution *solution, long seed) {
             customer_viable = false;
             Node* customer = &solution->instance->nodes.at(i);
             inviable_customers.push_back(customer->id);
-            inviabilities++;
+            //inviabilities++;
         }
 
     }
@@ -237,11 +237,17 @@ void Utils::test_cost(Solution *solution) {
     double cost = 0.0;
 
     for(Route* route: solution->routes) {
+        double travelled_dist = 0.0;
         for(int i=1;i<(int)route->sequences.size();i++) {
             Sequence prev_sequence = route->sequences.at(i-1);
             Sequence sequence = route->sequences.at(i);
-            cost+= solution->instance->distances[prev_sequence.node->index][sequence.node->index];
+            travelled_dist+= solution->instance->distances[prev_sequence.node->index][sequence.node->index];
         }
+        if(travelled_dist != route->traveled_distance && Count::differs(travelled_dist,route->traveled_distance)) {
+            cout<<"Erro de distancia da rota (E:"<<travelled_dist<<" G:"<<route->traveled_distance<<")"<< endl;
+            exit(8);
+        }
+        cost += travelled_dist;
     }
 
     if( Count::differs(cost,solution->cost)) {

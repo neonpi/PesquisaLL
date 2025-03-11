@@ -9,14 +9,11 @@ void Search::iterated_greedy() {
 
     backup_solution();
 
-
     int dec_size = 1;
     int dec_size_limit = this->instance->customers_qty*0.4;
 
     int iter_random_limit = 10;
     int iter_total_limit = this->solution->used_routes + iter_random_limit;
-
-
     while(dec_size<dec_size_limit) {
 
         for(int iter=0; iter<iter_total_limit;iter++) {
@@ -27,12 +24,13 @@ void Search::iterated_greedy() {
                 deconstruct_route(iter-iter_random_limit);
             }
 
-            //insertion_heuristic_ig();
-
+            insertion_heuristic();
+            this->ls_locker_reducer();
             this->rvnd_inter();
 
             if(this->solution->cost < this->best_solution->cost) {
                 backup_solution();
+
                 iter_total_limit = this->solution->used_routes + iter_random_limit;
                 dec_size = 0;
                 break;
@@ -83,6 +81,7 @@ void Search::deconstruct_random(int dec_size) {
                 this->solution->used_routes--;
             }else {
                 route->load -= customer->load_demand;
+                route->traveled_distance += delta;
             }
 
 
@@ -101,7 +100,6 @@ void Search::deconstruct_random(int dec_size) {
 void Search::deconstruct_route(int i_route) {
     Route* route = this->solution->routes.at(i_route);
     vector<Sequence> *route_sequences = &route->sequences;
-
     for(int i_seq = 1; i_seq<(route_sequences->size()-1);i_seq++) {
         Sequence* seq = &route_sequences->at(i_seq);
 

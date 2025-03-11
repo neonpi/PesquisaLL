@@ -64,12 +64,12 @@ void default_run(Instance *instance, Config* config, Stats* stats) {
         //cout<<config->seeds.at(i)<<endl;
         //srand(7106);
         //srand(7657);
-        srand(27939);
+        //srand(27939);
         config->run = i;
 
         Search* search = new Search(instance,config);
         clock_t time = clock();
-        search->debug_run();
+        search->run();
         //search->solution->print();
         //search->run();
         time = clock() - time;

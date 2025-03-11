@@ -3,6 +3,21 @@
 //
 #include "Search.h"
 
+double Search::calculate_delta_distance(int route_index, int previous_sequence_index, Sequence *cand_sequence) {
+    Route* route = this->solution->routes.at(route_index);
+    vector<Sequence> *route_sequences = &route->sequences;
+
+    Sequence a_previous_sequence = route_sequences->at(previous_sequence_index);
+    Sequence a_next_sequence = route_sequences->at(previous_sequence_index+1);
+
+    double distance_prev_next = this->instance->distances[a_previous_sequence.node->index][a_next_sequence.node->index];
+    double distance_prev_cus = this->instance->distances[a_previous_sequence.node->index][cand_sequence->node->index];
+    double distance_cus_next = this->instance->distances[cand_sequence->node->index][a_next_sequence.node->index];
+
+    double delta_distance = distance_prev_cus + distance_cus_next - distance_prev_next;
+    return delta_distance;
+}
+
 double Search::calculate_delta_2opt(vector<Sequence>* route_sequences, int i_seq_a, int i_seq_b) {
     Sequence* seq_a = &route_sequences->at(i_seq_a);
     Sequence* slice_first = &route_sequences->at(i_seq_a+1);
@@ -173,16 +188,20 @@ double Search::calculate_delta_swap_2_2(vector<Sequence> *route_a_sequences, int
 
         //Contabilizando alteração da rota_a
         delta+=this->instance->distances[seq_a_previous->node->index][seq_b_1->node->index];
+        delta+=this->instance->distances[seq_b_1->node->index][seq_b_2->node->index];
         delta+=this->instance->distances[seq_b_2->node->index][seq_a_next->node->index];
         delta-=this->instance->distances[seq_a_previous->node->index][seq_a_1->node->index];
+        delta-=this->instance->distances[seq_a_1->node->index][seq_a_2->node->index];
         delta-=this->instance->distances[seq_a_2->node->index][seq_a_next->node->index];
 
     }else if(for_route == 'b') {
 
         //Contabilizando alteração da rota_b
         delta+=this->instance->distances[seq_b_previous->node->index][seq_a_1->node->index];
+        delta+=this->instance->distances[seq_a_1->node->index][seq_a_2->node->index];
         delta+=this->instance->distances[seq_a_2->node->index][seq_b_next->node->index];
         delta-=this->instance->distances[seq_b_previous->node->index][seq_b_1->node->index];
+        delta-=this->instance->distances[seq_b_1->node->index][seq_b_2->node->index];
         delta-=this->instance->distances[seq_b_2->node->index][seq_b_next->node->index];
 
     }else { //BOTH

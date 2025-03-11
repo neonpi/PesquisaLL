@@ -211,27 +211,6 @@ void Search::restore_solution() {
 
 }
 
-
-
-/*
-void Search::deconstruct_route(int i_route) {
-    vector<Sequence> *route = &this->solution->routes.at(i_route);
-
-    for(int i_seq = 1; i_seq<(route->size()-1);i_seq++) {
-        this->solution->visited.at(route->at(i_seq).customer->index) = false;
-    }
-
-    route->erase(route->begin()+1,route->end()-1);
-
-    route->at(1).current_distance = 0.0;
-    route->at(1).current_time = 0.0;
-    route->at(1).current_load = 0.0;
-    iter_swap(this->solution->routes.begin()+i_route,this->solution->routes.begin()+this->solution->used_routes-1);
-    this->solution->used_routes--;
-
-
-}*/
-
 // void Search::swap_sequence(int route_a_index, int seq_a_index, int route_b_index, int seq_b_index) {
 //     Sequence* sequence_a = &this->solution->routes.at(route_a_index).at(seq_a_index);
 //     Sequence* sequence_b = &this->solution->routes.at(route_b_index).at(seq_b_index);

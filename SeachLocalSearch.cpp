@@ -100,6 +100,7 @@ void Search::ls_intra_2opt() {
 }
 
 void Search::ls_intra_or_opt_1() {
+    bool is_reduction = false;
     for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
 
         double best_delta = 0.0;
@@ -109,41 +110,72 @@ void Search::ls_intra_or_opt_1() {
         vector<Sequence>* route_sequences = &route->sequences;
         for(int i_seq_a = 1; i_seq_a<((int)(route_sequences->size())-2);i_seq_a++) {
             Sequence* seq_a = &route_sequences->at(i_seq_a);
-            Sequence* seq_b = nullptr;
-            //Seq_b é o indice do cara que vem depois do novo destino do seq_a. Seq_b eh empurrado
+            Node* node_a = seq_a->node;
+            double delta;
+            //Verificando no se o nó é um cliente flex e se existe o seu locker na rota
+            if(node_a->type == "c3" && route->visited_lockers[node_a->designated_locker] > 0) {
+                int i_locker = 0;
+                while(route->sequences[++i_locker].node != node_a->designated_locker);
 
-            for(int i_seq_b = 1; i_seq_b<(int)(route_sequences->size());i_seq_b++) {
-                //Não faz sentido testar com i=j ou com o vizinho mais proximo (Vizinhança ja eh contemplada pelo exchange)
-                if (abs(i_seq_a-i_seq_b)>1) {
-                    seq_b = &route_sequences->at(i_seq_b);
-                    double delta = calculate_delta_or_opt_1(route_sequences,i_seq_a,i_seq_b);
-                    if(Count::improves(0.0,delta) &&
-                        Count::improves(best_delta,delta)) {
+                delta = this->calculate_delta_destruction(route_sequences,i_seq_a);
+                if(Count::improves(0.0,delta) &&
+                                        Count::improves(best_delta,delta)) {
+                    best_delta = delta;
+                    coordinates[0] = i_seq_a;
+                    coordinates[1] = i_locker;
+                    is_reduction = true;
+                }
+            }else {
+                Sequence* seq_b = nullptr;
+                //Seq_b é o indice do cara que vem depois do novo destino do seq_a. Seq_b eh empurrado
 
-                        if (i_seq_a<i_seq_b) {
-                            if (propagate_virtual_or_opt_1_up(i_route,i_seq_a,i_seq_b)) {
-                                best_delta = delta;
-                                coordinates[0] = i_seq_a;
-                                coordinates[1] = i_seq_b;
+                for(int i_seq_b = 1; i_seq_b<(int)(route_sequences->size());i_seq_b++) {
+                    //Não faz sentido testar com i=j ou com o vizinho mais proximo (Vizinhança ja eh contemplada pelo exchange)
+                    if (abs(i_seq_a-i_seq_b)>1) {
+                        seq_b = &route_sequences->at(i_seq_b);
+                        delta = calculate_delta_or_opt_1(route_sequences,i_seq_a,i_seq_b);
+                        if(Count::improves(0.0,delta) &&
+                            Count::improves(best_delta,delta)) {
+                            if (i_seq_a<i_seq_b) {
+                                if (propagate_virtual_or_opt_1_up(i_route,i_seq_a,i_seq_b)) {
+                                    best_delta = delta;
+                                    coordinates[0] = i_seq_a;
+                                    coordinates[1] = i_seq_b;
+                                    is_reduction = false;
+                                }
+                            }else {
+                                if (propagate_virtual_or_opt_1_down(i_route,i_seq_a,i_seq_b)) {
+                                    best_delta = delta;
+                                    coordinates[0] = i_seq_a;
+                                    coordinates[1] = i_seq_b;
+                                    is_reduction = false;
+                                }
                             }
-                        }else {
-                            if (propagate_virtual_or_opt_1_down(i_route,i_seq_a,i_seq_b)) {
-                                best_delta = delta;
-                                coordinates[0] = i_seq_a;
-                                coordinates[1] = i_seq_b;
-                            }
+
                         }
-
                     }
                 }
+
             }
+
 
         }
 
 
         if (best_delta < 0.0) {
-            shift(route_sequences,coordinates[0],coordinates[1]);
-            propagate(i_route,min(coordinates[0],coordinates[1])-1);
+            if(is_reduction) {
+                Sequence* seq_a = &route->sequences.at(coordinates[0]);
+                Sequence* seq_b = &route->sequences.at(coordinates[1]);
+                seq_b->customers.push_back(seq_a->node);
+                route_sequences->erase(route_sequences->begin() + coordinates[0],route_sequences->begin() + coordinates[0] + 1);
+
+                propagate(i_route,coordinates[0]-1);
+
+            }else {
+                shift(route_sequences,coordinates[0],coordinates[1]);
+                propagate(i_route,min(coordinates[0],coordinates[1])-1);
+            }
+
             route->traveled_distance += best_delta;
             this->solution->cost += best_delta;
             i_route--;
@@ -374,7 +406,7 @@ void Search::ls_inter_shift_1_0() {
 
                                 //Verificando no se o nó é um cliente flex e se existe o seu locker na rota de destino
                                 if(node_a->type == "c3" && route_b->visited_lockers[node_a->designated_locker] > 0) {
-                                    int i_locker = -1;
+                                    int i_locker = 0;
                                     while(route_b->sequences[++i_locker].node != node_a->designated_locker);
 
                                     delta = this->calculate_delta_destruction(route_a_sequences,i_seq_a);

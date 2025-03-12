@@ -263,15 +263,26 @@ void Search::persist_shift_1_0(int *coordinates, double delta)
     Route *route_a = this->solution->routes.at(coordinates[0]);
     vector<Sequence> *route_a_sequences = &route_a->sequences;
     Sequence *seq_a = &route_a_sequences->at(coordinates[1]);
+    Node* node_a = seq_a->node;
     Route *route_b = this->solution->routes.at(coordinates[2]);
     vector<Sequence> *route_b_sequences = &route_b->sequences;
     Sequence *seq_b = &route_b_sequences->at(coordinates[3]);
+    Node* node_b = seq_b->node;
+    bool is_reduction = (node_a->type == "c3" && node_a->designated_locker == node_b);
 
-    double delta_a = calculate_delta_shift_1_0(route_a_sequences, coordinates[1], route_b_sequences, coordinates[3], 'a');
-    double delta_b = calculate_delta_shift_1_0(route_a_sequences, coordinates[1], route_b_sequences, coordinates[3], 'b');
 
-    route_a->traveled_distance += delta_a;
-    route_b->traveled_distance += delta_b;
+    if(is_reduction) {
+        route_a->traveled_distance += delta;
+
+    }else {
+        double delta_a = calculate_delta_shift_1_0(route_a_sequences, coordinates[1], route_b_sequences, coordinates[3], 'a');
+        double delta_b = calculate_delta_shift_1_0(route_a_sequences, coordinates[1], route_b_sequences, coordinates[3], 'b');
+        route_a->traveled_distance += delta_a;
+        route_b->traveled_distance += delta_b;
+
+    }
+
+
     this->solution->cost += delta;
 
     // Atualizando loads das rotas
@@ -323,11 +334,21 @@ void Search::persist_shift_1_0(int *coordinates, double delta)
         route_b->visited_lockers[seq_a->node]++;
     }
 
-    route_b_sequences->insert(route_b_sequences->begin() + coordinates[3] + 1, 1, *seq_a);
+    //Se for reduction, incluir o nó na lista de clientes da seq b, ao invez de inclui-lo na rota
+    if(is_reduction) {
+        seq_b->customers.push_back(node_a);
+    }else {
+        route_b_sequences->insert(route_b_sequences->begin() + coordinates[3] + 1, 1, *seq_a);
+    }
+
     route_a_sequences->erase(route_a_sequences->begin() + coordinates[1], route_a_sequences->begin() + coordinates[1] + 1);
 
-    propagate(coordinates[2], coordinates[3]);
+
     propagate(coordinates[0], coordinates[1] - 1);
+    //Se for reduction, a rota b não precisa de propagate
+    if(!is_reduction) {
+        propagate(coordinates[2], coordinates[3]);
+    }
 
     // Tratando esvaziamento da rota a
     if ((int)route_a_sequences->size() == 2)
@@ -340,7 +361,7 @@ void Search::persist_shift_1_0(int *coordinates, double delta)
     }
 
     // Tratando o caso de criação de uma rota nova
-    if ((int)route_b_sequences->size() == 3)
+    if (!is_reduction && (int)route_b_sequences->size() == 3)
     {
         this->solution->used_routes++;
     }

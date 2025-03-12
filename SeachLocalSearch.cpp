@@ -3,6 +3,7 @@
 //
 
 #include "Search.h"
+#include "Utils.h"
 //LS INTRA ROUTE
 void Search::ls_intra_exchange() {
 
@@ -366,24 +367,48 @@ void Search::ls_inter_shift_1_0() {
                             seq_a = &route_a_sequences->at(i_seq_a);
 
                             //Verificando se o nó da seq A cabe na rota B
-                            if(!this->swap_1_0_broke_load(seq_a,route_b)) {
+                            if(!this->shift_1_0_broke_load(seq_a,route_b)) {
 
-                                //Aponta pro nó de B que vai vir antes
-                                for(int i_seq_b = 0; i_seq_b<((int)route_b_sequences->size()-1);i_seq_b++) {
-                                    seq_b = &route_b_sequences->at(i_seq_b); //TODO depois remover
+                                Node* node_a = seq_a->node;
+                                double delta;
 
-                                    double delta = calculate_delta_shift_1_0(route_a_sequences,i_seq_a,route_b_sequences,i_seq_b,BOTH);
+                                //Verificando no se o nó é um cliente flex e se existe o seu locker na rota de destino
+                                if(node_a->type == "c3" && route_b->visited_lockers[node_a->designated_locker] > 0) {
+                                    int i_locker = -1;
+                                    while(route_b->sequences[++i_locker].node != node_a->designated_locker);
+
+                                    delta = this->calculate_delta_destruction(route_a_sequences,i_seq_a);
+
                                     if(Count::improves(0.0,delta) &&
                                         Count::improves(best_delta,delta)) {
-                                        if(propagate_virtual(i_route_b,i_seq_b,seq_a)) {
-                                            best_delta = delta;
-                                            coordinates[0] = i_route_a;
-                                            coordinates[1] = i_seq_a;
-                                            coordinates[2] = i_route_b;
-                                            coordinates[3] = i_seq_b;
+                                        best_delta = delta;
+                                        coordinates[0] = i_route_a;
+                                        coordinates[1] = i_seq_a;
+                                        coordinates[2] = i_route_b;
+                                        coordinates[3] = i_locker;
+                                    }
+
+
+                                }else {
+
+                                    //Aponta pro nó de B que vai vir antes
+                                    for(int i_seq_b = 0; i_seq_b<((int)route_b_sequences->size()-1);i_seq_b++) {
+                                        seq_b = &route_b_sequences->at(i_seq_b); //TODO depois remover
+
+                                        delta = calculate_delta_shift_1_0(route_a_sequences,i_seq_a,route_b_sequences,i_seq_b,BOTH);
+                                        if(Count::improves(0.0,delta) &&
+                                            Count::improves(best_delta,delta)) {
+                                            if(propagate_virtual(i_route_b,i_seq_b,seq_a)) {
+                                                best_delta = delta;
+                                                coordinates[0] = i_route_a;
+                                                coordinates[1] = i_seq_a;
+                                                coordinates[2] = i_route_b;
+                                                coordinates[3] = i_seq_b;
+                                            }
                                         }
                                     }
                                 }
+
                             }
                         }
                     }

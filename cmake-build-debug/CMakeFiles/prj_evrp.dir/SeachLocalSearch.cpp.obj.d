@@ -203,4 +203,6 @@ CMakeFiles/prj_evrp.dir/SeachLocalSearch.cpp.obj: \
  C:/Program\ Files/JetBrains/CLion\ 2024.1/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/c++io.h \
  C:/Program\ Files/JetBrains/CLion\ 2024.1/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/fstream.tcc \
  D:\Estudos\Mestrado\VRP\prj_vrppl\Solution.h \
- D:\Estudos\Mestrado\VRP\prj_vrppl\Route.h
+ D:\Estudos\Mestrado\VRP\prj_vrppl\Route.h \
+ D:\Estudos\Mestrado\VRP\prj_vrppl\Utils.h \
+ D:\Estudos\Mestrado\VRP\prj_vrppl\Stats.h

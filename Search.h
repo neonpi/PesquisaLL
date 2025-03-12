@@ -68,7 +68,7 @@ public:
     bool swap_1_1_broke_load(Route *route_a, Sequence* seq_a, Route *route_b, Sequence* seq_b);
     bool swap_2_1_broke_load(Route *route_a, Sequence* seq_a_1, Sequence *seq_a_2, Route *route_b, Sequence* seq_b);
     bool swap_2_2_broke_load(Route *route_a, Sequence* seq_a_1, Sequence *seq_a_2, Route *route_b, Sequence* seq_b_1, Sequence* seq_b_2);
-    bool swap_1_0_broke_load(Sequence* seq_a, Route *route_b);
+    bool shift_1_0_broke_load(Sequence* seq_a, Route *route_b);
     bool swap_2_0_broke_load(Sequence *seq_a_1, Sequence* seq_a_2, Route *route_b);
     double calculate_delta_2opt(vector<Sequence>* route_sequences, int i_seq_a, int i_seq_b);
     double calculate_delta_or_opt_1(vector<Sequence>* route_sequences, int i_seq_a, int i_seq_b);

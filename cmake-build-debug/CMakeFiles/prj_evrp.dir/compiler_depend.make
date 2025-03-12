@@ -901,7 +901,9 @@ CMakeFiles/prj_evrp.dir/SeachLocalSearch.cpp.obj: D:/Estudos/Mestrado/VRP/prj_vr
   D:/Estudos/Mestrado/VRP/prj_vrppl/Route.h \
   D:/Estudos/Mestrado/VRP/prj_vrppl/Search.h \
   D:/Estudos/Mestrado/VRP/prj_vrppl/Sequence.h \
-  D:/Estudos/Mestrado/VRP/prj_vrppl/Solution.h
+  D:/Estudos/Mestrado/VRP/prj_vrppl/Solution.h \
+  D:/Estudos/Mestrado/VRP/prj_vrppl/Stats.h \
+  D:/Estudos/Mestrado/VRP/prj_vrppl/Utils.h
 
 CMakeFiles/prj_evrp.dir/Search.cpp.obj: D:/Estudos/Mestrado/VRP/prj_vrppl/Search.cpp \
   C:/Program\ Files/JetBrains/CLion\ 2024.1/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/algorithm \

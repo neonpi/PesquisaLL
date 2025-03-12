@@ -907,6 +907,8 @@ CMakeFiles/prj_evrp.dir/SeachLocalSearch.cpp.obj
  D:/Estudos/Mestrado/VRP/prj_vrppl/Search.h
  D:/Estudos/Mestrado/VRP/prj_vrppl/Sequence.h
  D:/Estudos/Mestrado/VRP/prj_vrppl/Solution.h
+ D:/Estudos/Mestrado/VRP/prj_vrppl/Stats.h
+ D:/Estudos/Mestrado/VRP/prj_vrppl/Utils.h
 
 CMakeFiles/prj_evrp.dir/Search.cpp.obj
  D:/Estudos/Mestrado/VRP/prj_vrppl/Search.cpp

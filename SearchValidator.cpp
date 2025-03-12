@@ -53,7 +53,7 @@ bool Search::swap_2_2_broke_load(Route *route_a, Sequence *seq_a_1, Sequence *se
     return broke_a || broke_b;
 }
 
-bool Search::swap_1_0_broke_load(Sequence *seq_a, Route *route_b) {
+bool Search::shift_1_0_broke_load(Sequence *seq_a, Route *route_b) {
 
     double seq_a_demand = 0.0;
 

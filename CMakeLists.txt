@@ -12,12 +12,6 @@ add_executable(prj_evrp main.cpp
         Utils.h
         Search.cpp
         Search.h
-        instance_factory/Evrptwprpl.cpp
-        instance_factory/Evrptwprpl.h
-        instance_factory/Factory.cpp
-        instance_factory/Factory.h
-        instance_factory/Vrppl.cpp
-        instance_factory/Vrppl.h
         Sequence.h
         Config.cpp
         Config.h

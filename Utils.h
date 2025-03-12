@@ -8,14 +8,16 @@
 #include <vector>
 #include "Search.h"
 #include "Stats.h"
-#include "instance_factory/Evrptwprpl.h"
-#include "instance_factory/Vrppl.h"
-
 
 
 class Utils {
 public:
-    static vector<Instance*> buildInstances(string problem);
+    //Instance builder
+    static vector<Instance*> buildInstances();
+    static Instance* buildInstance(string fileName);
+    static void defineNodeIndexes(Instance* instance);
+
+
     static void print_result_file(Search *search, Instance *instance, int run, double time, long seed);
     static vector<string> tookenize(string str, string symbol);
 
@@ -25,6 +27,7 @@ public:
     static void test_print_viability(Solution *solution, long seed);
     static void test_cost(Solution* solution);
     static void print_candidate_list(vector<tuple<int, int, Sequence, double>> *cand_list);
+
 
 };
 

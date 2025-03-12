@@ -84,7 +84,7 @@ def build_path_strings(selected_instance,in_debug_mode):
     return paths_array_strings
 
 def build_instances_vrppl():
-    instance_list = open('..\\..\\instances\\instances_vrppl.txt',"r")
+    instance_list = open('../../instances/instances.txt', "r")
 
     ready_instances = []
 

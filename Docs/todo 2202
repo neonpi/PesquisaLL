@@ -9,17 +9,10 @@ Construtivo: Priorizar os obrigatorios (SERA?)
 Como é melhor aprimorante, ja é suficiente para ignorar a inconsistencia Se for locker locker tentar juntar
 analizar somatório de clientes por locker
 
-Deixar repetir locker no inter, o intra vai fundir. Vai ter que mudar 
-
 ----------------------------------------------
 
 TODO: Testar varredura das buscas locais, pra ver se fazerm sentido
 Lembrar da questão de interseções de movimentos entre buscas
-
-Checklist de reavaliação das buscas:
-    Índices de troca: OK
-
-
 
 seq_a_1 = &this->solution->routes.at(coordinates[0])->sequences.at(coordinates[1]);
 seq_a_2 = &this->solution->routes.at(coordinates[0])->sequences.at(coordinates[1]+1);
@@ -45,16 +38,7 @@ V_3: D0 -> P1(C32, C34, C35) -> C17 -> C18 -> P0(C15, C16, C19, C20, C22, C42) -
 V_4: D0 -> P0(C12, C13, C14) -> C24 -> C36 -> C37 -> C33 -> Dt -> 
 
 
+Analisar parametros
 
-
-
-
-V_0: D0 -> C12 -> C10 -> P1(C3, C4, C0, C2, C9, C21, C22, C23, C24) -> C20 -> Dt -> 
-V_1: D0 -> C19 -> C18 -> C14 -> C15 -> C11 -> P0(C1, C13, C16, C17) -> Dt -> 
-V_2: D0 -> C6 -> C8 -> P1(C5, C7) -> Dt ->
-
-V_0: D0 -> C12 -> C10 -> C8 -> P1(C5, C7) -> Dt -> 
-V_1: D0 -> C19 -> C18 -> C14 -> C15 -> C11 -> P0(C1, C13, C16, C17) -> Dt -> 
-V_2: D0 -> C6 -> P1(C3, C4, C0, C2, C9, C21, C22, C23, C24) -> C20 -> Dt ->
-
-Quando é 2 indo, tem que considerar tambem a distância entre eles para acrescentar no delta da rota
+No shift: Tentar alterar a modalidade do cliente se for C3
+;

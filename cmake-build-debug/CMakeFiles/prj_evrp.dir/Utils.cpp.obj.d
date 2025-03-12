@@ -205,9 +205,4 @@ CMakeFiles/prj_evrp.dir/Utils.cpp.obj: \
  C:/Program\ Files/JetBrains/CLion\ 2024.1/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/fstream.tcc \
  D:\Estudos\Mestrado\VRP\prj_vrppl\Solution.h \
  D:\Estudos\Mestrado\VRP\prj_vrppl\Route.h \
- D:\Estudos\Mestrado\VRP\prj_vrppl\Stats.h \
- D:\Estudos\Mestrado\VRP\prj_vrppl\instance_factory/Evrptwprpl.h \
- D:/Estudos/Mestrado/VRP/prj_vrppl/Utils.h \
- D:\Estudos\Mestrado\VRP\prj_vrppl\instance_factory/Factory.h \
- D:/Estudos/Mestrado/VRP/prj_vrppl/Instance.h \
- D:\Estudos\Mestrado\VRP\prj_vrppl\instance_factory/Vrppl.h
+ D:\Estudos\Mestrado\VRP\prj_vrppl\Stats.h

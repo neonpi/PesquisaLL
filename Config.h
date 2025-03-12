@@ -6,6 +6,7 @@
 #define CONFIG_H
 #include <ctime>
 #include <fstream>
+#include <iostream>
 #include <vector>
 #include <string>
 
@@ -17,13 +18,17 @@ public:
     double alpha;
     int run;
 
-    Config(int runs, double alpha) {
+    Config(int runs, double alpha, bool pred_seed) {
         this->runs = runs;
         this->alpha = alpha;
         //srand(clock());
         srand(time(NULL));
-        for(int i=0;i<runs;i++) {
-            this->seeds.push_back(rand());
+        if(pred_seed) {
+            build_predefined_seeds();
+        }else {
+            for(int i=0;i<runs;i++) {
+                this->seeds.push_back(rand());
+            }
         }
     };
 
@@ -38,6 +43,22 @@ public:
         }
 
         file.close();
+    }
+
+    void build_predefined_seeds() {
+        ifstream file;
+        file.open("pred_seeds.txt");
+
+        if(!file.is_open()) {
+            cout<<"File not found"<<endl;
+            exit(1);
+        }
+        string line;
+        for(int i=0;i<this->runs;i++) {
+            getline(file,line);
+            this->seeds.push_back(stol(line));
+
+        }
     }
 
 };

@@ -7,7 +7,6 @@
 #include "Search.h"
 #include "Stats.h"
 #include "Utils.h"
-#include "instance_factory/Vrppl.h"
 
 using namespace std;
 
@@ -22,10 +21,10 @@ int main(int argc, char *argv[])
     if(argc < 2) {
 
         cout<<"LOADING INSTANCES"<<endl;
-        vector<Instance*> instances = Utils::buildInstances("vrppl");
+        vector<Instance*> instances = Utils::buildInstances();
         cout<<"LOADING FINISHED"<<endl;
 
-        Config* config = new Config(30,0.2);
+        Config* config = new Config(30,0.2,true);
         config->print();
 
         cout<<"RUNNING EXPERIMENTS"<<endl;
@@ -125,8 +124,8 @@ void irace_run(int argc, char *argv[]) {
     long seed = stol(argv[4]);
     double alpha = stod(argv[6]);
 
-    Config* config = new Config(1,alpha);
-    Instance* instance = Vrppl::buildInstance(instance_name);
+    Config* config = new Config(1,alpha,false);
+    Instance* instance = Utils::buildInstance(instance_name);
 
     Search* search = new Search(instance,config);
 

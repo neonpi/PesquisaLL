@@ -111,6 +111,7 @@ void Search::ls_intra_or_opt_1() {
         for(int i_seq_a = 1; i_seq_a<((int)(route_sequences->size())-2);i_seq_a++) {
             Sequence* seq_a = &route_sequences->at(i_seq_a);
             Node* node_a = seq_a->node;
+
             double delta;
             //Verificando no se o nó é um cliente flex e se existe o seu locker na rota
             if(node_a->type == "c3" && route->visited_lockers[node_a->designated_locker] > 0) {
@@ -125,37 +126,36 @@ void Search::ls_intra_or_opt_1() {
                     coordinates[1] = i_locker;
                     is_reduction = true;
                 }
-            }else {
-                Sequence* seq_b = nullptr;
-                //Seq_b é o indice do cara que vem depois do novo destino do seq_a. Seq_b eh empurrado
+            }
 
-                for(int i_seq_b = 1; i_seq_b<(int)(route_sequences->size());i_seq_b++) {
-                    //Não faz sentido testar com i=j ou com o vizinho mais proximo (Vizinhança ja eh contemplada pelo exchange)
-                    if (abs(i_seq_a-i_seq_b)>1) {
-                        seq_b = &route_sequences->at(i_seq_b);
-                        delta = calculate_delta_or_opt_1(route_sequences,i_seq_a,i_seq_b);
-                        if(Count::improves(0.0,delta) &&
-                            Count::improves(best_delta,delta)) {
-                            if (i_seq_a<i_seq_b) {
-                                if (propagate_virtual_or_opt_1_up(i_route,i_seq_a,i_seq_b)) {
-                                    best_delta = delta;
-                                    coordinates[0] = i_seq_a;
-                                    coordinates[1] = i_seq_b;
-                                    is_reduction = false;
-                                }
-                            }else {
-                                if (propagate_virtual_or_opt_1_down(i_route,i_seq_a,i_seq_b)) {
-                                    best_delta = delta;
-                                    coordinates[0] = i_seq_a;
-                                    coordinates[1] = i_seq_b;
-                                    is_reduction = false;
-                                }
+            Sequence* seq_b = nullptr;
+            //Seq_b é o indice do cara que vem depois do novo destino do seq_a. Seq_b eh empurrado
+
+            for(int i_seq_b = 1; i_seq_b<(int)(route_sequences->size());i_seq_b++) {
+                //Não faz sentido testar com i=j ou com o vizinho mais proximo (Vizinhança ja eh contemplada pelo exchange)
+                if (abs(i_seq_a-i_seq_b)>1) {
+                    seq_b = &route_sequences->at(i_seq_b);
+                    delta = calculate_delta_or_opt_1(route_sequences,i_seq_a,i_seq_b);
+                    if(Count::improves(0.0,delta) &&
+                        Count::improves(best_delta,delta)) {
+                        if (i_seq_a<i_seq_b) {
+                            if (propagate_virtual_or_opt_1_up(i_route,i_seq_a,i_seq_b)) {
+                                best_delta = delta;
+                                coordinates[0] = i_seq_a;
+                                coordinates[1] = i_seq_b;
+                                is_reduction = false;
                             }
-
+                        }else {
+                            if (propagate_virtual_or_opt_1_down(i_route,i_seq_a,i_seq_b)) {
+                                best_delta = delta;
+                                coordinates[0] = i_seq_a;
+                                coordinates[1] = i_seq_b;
+                                is_reduction = false;
+                            }
                         }
+
                     }
                 }
-
             }
 
 
@@ -371,7 +371,6 @@ void Search::ls_inter_swap_2_2() {
 }
 
 void Search::ls_inter_shift_1_0() {
-
     double best_delta = 0.0;
     int coordinates[4] = {-1,-1,-1,-1}; //i_route_a,i_seq_a,i_route_b,i_seq_b
     Route* route_a = nullptr;
@@ -380,6 +379,7 @@ void Search::ls_inter_shift_1_0() {
     vector<Sequence> * route_b_sequences = nullptr;
     Sequence * seq_a = nullptr;
     Sequence * seq_b = nullptr;
+    bool is_reduction = false;
 
     for (int i_route_a = 0;i_route_a<(int)this->solution->routes.size();i_route_a++) {
         route_a = this->solution->routes.at(i_route_a);
@@ -408,7 +408,9 @@ void Search::ls_inter_shift_1_0() {
                                 if(node_a->type == "c3" && route_b->visited_lockers[node_a->designated_locker] > 0) {
                                     int i_locker = 0;
                                     while(route_b->sequences[++i_locker].node != node_a->designated_locker);
-
+                                    if(i_route_a == 0) {
+                                        //cout<<endl;
+                                    }
                                     delta = this->calculate_delta_destruction(route_a_sequences,i_seq_a);
 
                                     if(Count::improves(0.0,delta) &&
@@ -418,25 +420,26 @@ void Search::ls_inter_shift_1_0() {
                                         coordinates[1] = i_seq_a;
                                         coordinates[2] = i_route_b;
                                         coordinates[3] = i_locker;
+                                        is_reduction = true;
                                     }
 
 
-                                }else {
+                                }
 
-                                    //Aponta pro nó de B que vai vir antes
-                                    for(int i_seq_b = 0; i_seq_b<((int)route_b_sequences->size()-1);i_seq_b++) {
-                                        seq_b = &route_b_sequences->at(i_seq_b); //TODO depois remover
+                                //Aponta pro nó de B que vai vir antes
+                                for(int i_seq_b = 0; i_seq_b<((int)route_b_sequences->size()-1);i_seq_b++) {
+                                    seq_b = &route_b_sequences->at(i_seq_b); //TODO depois remover
 
-                                        delta = calculate_delta_shift_1_0(route_a_sequences,i_seq_a,route_b_sequences,i_seq_b,BOTH);
-                                        if(Count::improves(0.0,delta) &&
-                                            Count::improves(best_delta,delta)) {
-                                            if(propagate_virtual(i_route_b,i_seq_b,seq_a)) {
-                                                best_delta = delta;
-                                                coordinates[0] = i_route_a;
-                                                coordinates[1] = i_seq_a;
-                                                coordinates[2] = i_route_b;
-                                                coordinates[3] = i_seq_b;
-                                            }
+                                    delta = calculate_delta_shift_1_0(route_a_sequences,i_seq_a,route_b_sequences,i_seq_b,BOTH);
+                                    if(Count::improves(0.0,delta) &&
+                                        Count::improves(best_delta,delta)) {
+                                        if(propagate_virtual(i_route_b,i_seq_b,seq_a)) {
+                                            best_delta = delta;
+                                            coordinates[0] = i_route_a;
+                                            coordinates[1] = i_seq_a;
+                                            coordinates[2] = i_route_b;
+                                            coordinates[3] = i_seq_b;
+                                            is_reduction = false;
                                         }
                                     }
                                 }
@@ -453,7 +456,8 @@ void Search::ls_inter_shift_1_0() {
     }
 
     if(best_delta<0.0) {
-        this->persist_shift_1_0(coordinates,best_delta);
+
+        this->persist_shift_1_0(coordinates,best_delta, is_reduction);
     }
 }
 

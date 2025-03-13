@@ -24,14 +24,14 @@ int main(int argc, char *argv[])
         vector<Instance*> instances = Utils::buildInstances();
         cout<<"LOADING FINISHED"<<endl;
 
-        Config* config = new Config(30,0.2,true);
+        Config* config = new Config(30,0.2,false);
         config->print();
 
         cout<<"RUNNING EXPERIMENTS"<<endl;
 
         for(Instance* instance: instances) {
 
-            //if(instance->inst_name == "C203_co_25.txt") {
+            //if(instance->inst_name == "C104_co_50.txt") {
                 cout<<"Instance "<< instance->inst_name<<endl;
                 Stats* stats = new Stats(instance, config);
                 Utils::print_result_file(nullptr, instance, 0, 0.0, 0.0);
@@ -60,6 +60,7 @@ void default_run(Instance *instance, Config* config, Stats* stats) {
     for(int i=0;i<config->runs;i++) {
 
         srand(config->seeds.at(i));
+        //srand(config->seeds.at(13));
         //cout<<config->seeds.at(i)<<endl;
         //srand(7106);
         //srand(7657);

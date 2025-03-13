@@ -42,7 +42,7 @@ public:
 
     void rvnd_inter();
     void ls_inter_shift_1_0();
-    void persist_shift_1_0(int* coordinates, double delta);
+    void persist_shift_1_0(int* coordinates, double delta, bool is_reduction);
 
     void ls_inter_shift_2_0();
     void persist_shift_2_0(int* coordinates, double delta);
@@ -131,7 +131,6 @@ public:
     Sequence* virtual_sequence;
     Solution* best_solution;
     Config* config;
-
 
 };
 

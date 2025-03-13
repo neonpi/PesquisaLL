@@ -258,7 +258,7 @@ void Search::persist_swap_2_2(int *coordinates, double delta)
     propagate(coordinates[2], coordinates[3] - 1);
 }
 
-void Search::persist_shift_1_0(int *coordinates, double delta)
+void Search::persist_shift_1_0(int *coordinates, double delta, bool is_reduction)
 {
     Route *route_a = this->solution->routes.at(coordinates[0]);
     vector<Sequence> *route_a_sequences = &route_a->sequences;
@@ -268,7 +268,6 @@ void Search::persist_shift_1_0(int *coordinates, double delta)
     vector<Sequence> *route_b_sequences = &route_b->sequences;
     Sequence *seq_b = &route_b_sequences->at(coordinates[3]);
     Node* node_b = seq_b->node;
-    bool is_reduction = (node_a->type == "c3" && node_a->designated_locker == node_b);
 
 
     if(is_reduction) {

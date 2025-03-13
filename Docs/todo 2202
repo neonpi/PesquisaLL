@@ -42,3 +42,30 @@ Analisar parametros
 
 No shift: Tentar alterar a modalidade do cliente se for C3
 ;
+
+Definir tempo limite;
+dar a melhor solução
+Mandar o gurobi printar a solução apos um determinado tempo
+caminho minimo entre os vertices
+
+fazer o caminho minimo e comparar com a matriz de distancia.
+tem que bater.
+
+se não bater, ta quebrando a desigualdade triangular
+
+Tirar a verificação dos dois casos na busca local
+d[][] double
+
+11,235145
+112,354... (*10)
+112,000 (floor)
+11,2000 (/10)
+-------------
+d[][] int
+11,235145
+112,354...(*10)
+112,00000 (floor)
+112 (int)
+
+double(112)/10
+

@@ -10,7 +10,8 @@
 
 using namespace std;
 
-void default_run(Instance *instance, Config* config, Stats* stats);
+void default_run(vector<Instance*> *instances, Config* config);
+void run_pair_instance_seed(vector<Instance*> *instances, string instance_name, long seed, Config* config);
 void grasp_run(Instance *instance, Config* config, Stats* stats);
 void test_solution(Instance *instance, Config* config, Stats* stats);
 void irace_run(int argc, char *argv[]);
@@ -29,60 +30,80 @@ int main(int argc, char *argv[])
 
         cout<<"RUNNING EXPERIMENTS"<<endl;
 
-        for(Instance* instance: instances) {
+        run_pair_instance_seed(&instances,"C101_co_25.txt",0,config);
+        //default_run(&instances,config);
 
-            //if(instance->inst_name == "C104_co_50.txt") {
-                cout<<"Instance "<< instance->inst_name<<endl;
-                Stats* stats = new Stats(instance, config);
-                Utils::print_result_file(nullptr, instance, 0, 0.0, 0.0);
-
-                //test_solution(instance, config, stats);
-                default_run(instance, config, stats);
-
-                stats->finish_stats();
-
-                Utils::print_screen_run(stats);
-                Utils::print_final_stats(stats);
-                delete stats;
-            //}
-
-        }
-
-        delete config;
         cout<<"EXPERIMENTS FINISHED"<<endl;
+        delete config;
     }else {
         irace_run(argc, argv);
     }
     return 0;
 }
 
-void default_run(Instance *instance, Config* config, Stats* stats) {
-    for(int i=0;i<config->runs;i++) {
+void default_run(vector<Instance*> *instances, Config* config) {
 
-        srand(config->seeds.at(i));
-        //srand(config->seeds.at(13));
-        //cout<<config->seeds.at(i)<<endl;
-        //srand(7106);
-        //srand(7657);
-        //srand(19995);
-        config->run = i;
+    for(Instance * instance: *instances) {
+        cout<<"Instance "<< instance->inst_name<<endl;
+        Stats* stats = new Stats(instance, config);
+        Utils::print_result_file(nullptr, instance, 0, 0.0, 0.0);
 
-        Search* search = new Search(instance,config);
-        clock_t time = clock();
-        search->run();
-        //search->solution->print();
-        //search->run();
-        time = clock() - time;
+        for(int i=0;i<config->runs;i++) {
 
-        stats->set_result(search->solution,((double) time / CLOCKS_PER_SEC));
-        Utils::print_result_file(search, instance, i, (double) time / CLOCKS_PER_SEC, config->seeds.at(i));
-        Utils::test_cost(search->solution);
-        Utils::test_print_viability(search->solution,config->seeds.at(i));
-        delete search;
+            srand(config->seeds.at(i));
+            config->run = i;
 
+            Search* search = new Search(instance,config);
+            clock_t time = clock();
+            search->run();
+            time = clock() - time;
+
+            stats->set_result(search->solution,((double) time / CLOCKS_PER_SEC));
+            Utils::print_result_file(search, instance, i, (double) time / CLOCKS_PER_SEC, config->seeds.at(i));
+            Utils::test_cost(search->solution);
+            Utils::test_print_viability(search->solution,config->seeds.at(i));
+            delete search;
 
 
+
+        }
+        stats->finish_stats();
+
+        Utils::print_screen_run(stats);
+        Utils::print_final_stats(stats);
+        delete stats;
     }
+}
+
+
+void run_pair_instance_seed(vector<Instance *> *instances, string instance_name, long seed, Config *config) {
+    Instance* instance = nullptr;
+    for(Instance* i: *instances) {
+        if (i->inst_name == instance_name) {
+            instance = i;
+            break;
+        }
+    }
+
+    if(instance == nullptr) {cout<<"Instance not found"<<endl; return;}
+
+
+    cout<<"Instance "<< instance->inst_name<<endl;
+    Stats* stats = new Stats(instance, config);
+    Utils::print_result_file(nullptr, instance, 0, 0.0, 0.0);
+
+    srand(seed);
+
+    Search* search = new Search(instance,config);
+    clock_t time = clock();
+    search->run();
+    time = clock() - time;
+
+    stats->set_result(search->solution,((double) time / CLOCKS_PER_SEC));
+    Utils::print_result_file(search, instance, 0, (double) time / CLOCKS_PER_SEC, seed);
+    Utils::test_cost(search->solution);
+    Utils::test_print_viability(search->solution,seed);
+    delete search;
 }
 
 void grasp_run(Instance *instance, Config* config, Stats* stats) {

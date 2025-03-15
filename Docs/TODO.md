@@ -9,4 +9,4 @@ $h_i \rightarrow$ Cliente recebeu em casa
 $l_i \rightarrow$ Cliente recebeu no locker
 $y_{ij} \rightarrow$ Se o cliente i está atribuido ao locker j
 
-Instância R103_co_100 possui clientes sem locker. O gurobi nao conseguiu resultados
+

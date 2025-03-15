@@ -1,4 +1,11 @@
 
+11-02-----------
+-Old
+Perguntar autor:
+Modelo específico do processador Intel® Core™ i7-4770 processor at 3.4 GHz
+Quantas execuções para o SA?
+Instância R103_co_100 possui clientes sem locker. O gurobi nao conseguiu resultados
+
 Gurobi solução inicial para aproveitar a solução anterior. Solução de entrada. Start solution
 
 Gerar uma solução heurística com o ig, depois pegar os dados e jogar no gurobi
@@ -66,3 +73,4 @@ d[][] int
 
 double(112)/10
 
+Instância R103_co_100 possui clientes sem locker. O gurobi nao conseguiu resultados

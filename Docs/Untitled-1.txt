@@ -1,7 +1,0 @@
-Restrição:
-    Rota x cliente Se a rota atende o cliente 1:
-Construir várias soluções.
-Quero distintas
-Cada solução, separar as rotas
-Põe no pacote
-Vira um problema de seleção,0

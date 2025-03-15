@@ -16,7 +16,7 @@ void grasp_run(Instance *instance, Config* config, Stats* stats);
 void test_solution(Instance *instance, Config* config, Stats* stats);
 void irace_run(int argc, char *argv[]);
 
-void test_shortest_path(vector<Instance*> *instances, string instance_name);
+void test_shortest_path(vector<Instance*> *instances);
 
 int main(int argc, char *argv[])
 {
@@ -31,9 +31,9 @@ int main(int argc, char *argv[])
 
         cout<<"RUNNING EXPERIMENTS"<<endl;
 
-        test_shortest_path(&instances,"C101_co_25.txt");
+        test_shortest_path(&instances);
         //run_pair_instance_seed(&instances,"C101_co_25.txt",0,config);
-        //default_run(&instances,config);
+        default_run(&instances,config);
 
         cout<<"EXPERIMENTS FINISHED"<<endl;
         delete config;
@@ -179,11 +179,11 @@ void test_solution(Instance *instance, Config* config, Stats* stats) {
 
 }
 
-void test_shortest_path(vector<Instance *> *instances, string instance_name) {
-
+void test_shortest_path(vector<Instance *> *instances) {
+    int broken_inequalties = 0;
     double inf = 1000000.0;
     for(Instance* instance: *instances) {
-        cout<<"Instance "<< instance->inst_name<<endl;
+        //cout<<"Instance "<< instance->inst_name<<endl;
         bool broke_inequalty = false;
         //Instanciando matriz de distancias
         vector<vector<double>> shortest_path;
@@ -240,6 +240,8 @@ void test_shortest_path(vector<Instance *> *instances, string instance_name) {
             for(int j=0; j < instance -> n_node; j++) {
 
                 if(shortest_path.at(i).at(j) < instance->distances[i][j] && Count::differs(shortest_path.at(i).at(j),instance->distances[i][j])) {
+                    double* bo = &instance->distances[i][j];
+                    instance->distances[i][j] = shortest_path.at(i).at(j);
                     broke_inequalty = true;
                 }
 
@@ -248,10 +250,10 @@ void test_shortest_path(vector<Instance *> *instances, string instance_name) {
         }
 
         if(broke_inequalty) {
-            cout<<"Broke inequalty"<<endl;
+            broken_inequalties++;
         }
     }
 
-
+    cout<<broken_inequalties<<" broken"<<endl;
 
 }

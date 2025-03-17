@@ -12,6 +12,7 @@ using namespace std;
 
 void default_run(vector<Instance*> *instances, Config* config);
 void run_pair_instance_seed(vector<Instance*> *instances, string instance_name, long seed, Config* config);
+void run_instance(vector<Instance*> *instances, string instance_name, Config* config);
 void grasp_run(Instance *instance, Config* config, Stats* stats);
 void test_solution(Instance *instance, Config* config, Stats* stats);
 void irace_run(int argc, char *argv[]);
@@ -27,13 +28,15 @@ int main(int argc, char *argv[])
         cout<<"LOADING FINISHED"<<endl;
 
         Config* config = new Config(30,0.2,false);
+        //Config* config = new Config(1000000,0.2,false);
         config->print();
 
         cout<<"RUNNING EXPERIMENTS"<<endl;
 
-        test_shortest_path(&instances);
+        //test_shortest_path(&instances);
         //run_pair_instance_seed(&instances,"C101_co_25.txt",0,config);
-        default_run(&instances,config);
+        run_instance(&instances,"C104_co_25.txt",config);
+        //default_run(&instances,config);
 
         cout<<"EXPERIMENTS FINISHED"<<endl;
         delete config;
@@ -77,6 +80,58 @@ void default_run(vector<Instance*> *instances, Config* config) {
     }
 }
 
+
+void run_instance(vector<Instance *> *instances, string instance_name, Config *config) {
+    Instance* instance = nullptr;
+    for(Instance* i: *instances) {
+        if (i->inst_name == instance_name) {
+            instance = i;
+            break;
+        }
+    }
+
+    if(instance == nullptr) {cout<<"Instance not found"<<endl; return;}
+
+    cout<<"Instance "<< instance->inst_name<<endl;
+    Stats* stats = new Stats(instance, config);
+    Utils::print_result_file(nullptr, instance, 0, 0.0, 0.0);
+    double best_known = -1.0;
+    for(int i=0;i<config->runs;i++) {
+
+        srand(config->seeds.at(i));
+        config->run = i;
+
+        Search* search = new Search(instance,config);
+        clock_t time = clock();
+        search->run();
+        time = clock() - time;
+
+
+        stats->set_result(search->solution,((double) time / CLOCKS_PER_SEC));
+        Utils::print_result_file(search, instance, i, (double) time / CLOCKS_PER_SEC, config->seeds.at(i));
+        Utils::test_cost(search->solution);
+        Utils::test_print_viability(search->solution,config->seeds.at(i));
+
+        /*if(best_known == -1.0 || search->solution->cost < best_known) {
+            best_known = search->solution->cost;
+            cout<<"Improvement found "<<best_known<<" on run "<<i<<endl;
+            if(best_known < 182) {
+                break;
+            }
+        }*/
+
+        delete search;
+
+    }
+
+    stats->finish_stats();
+
+    Utils::print_screen_run(stats);
+    Utils::print_final_stats(stats);
+    delete stats;
+
+
+}
 
 void run_pair_instance_seed(vector<Instance *> *instances, string instance_name, long seed, Config *config) {
     Instance* instance = nullptr;

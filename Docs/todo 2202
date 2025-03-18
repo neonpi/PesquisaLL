@@ -74,3 +74,11 @@ d[][] int
 double(112)/10
 
 Instância R103_co_100 possui clientes sem locker. O gurobi nao conseguiu resultados
+
+
+Construtivo: Se colocar locker ve ser tem flex dele na rota e condensar
+retornar boolean nas ls para o rvnd (Estudar o impacto)
+Visitar as citações do trabalho
+Trabalhar a escrita
+
+swap 1 1 : a -> b : Se tiver locker de a na rota b, o custo dele nao precisa nem ser considerado pra ir

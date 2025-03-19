@@ -1,0 +1,10 @@
+Instancia ../../instances/vrppl/25/C102_co_25.txt tem duplicidade de locker pra mesmo no
+Instancia ../../instances/vrppl/25/C108_co_25.txt tem duplicidade de locker pra mesmo no
+Instancia ../../instances/vrppl/25/C201_co_25.txt tem duplicidade de locker pra mesmo no
+Instancia ../../instances/vrppl/25/C202_co_25.txt tem duplicidade de locker pra mesmo no
+Instancia ../../instances/vrppl/25/C203_co_25.txt tem duplicidade de locker pra mesmo no
+Instancia ../../instances/vrppl/25/C204_co_25.txt tem duplicidade de locker pra mesmo no
+Instancia ../../instances/vrppl/25/C205_co_25.txt tem duplicidade de locker pra mesmo no
+Instancia ../../instances/vrppl/25/C206_co_25.txt tem duplicidade de locker pra mesmo no
+Instancia ../../instances/vrppl/25/C207_co_25.txt tem duplicidade de locker pra mesmo no
+Instancia ../../instances/vrppl/25/C208_co_25.txt tem duplicidade de locker pra mesmo no

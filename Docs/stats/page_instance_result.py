@@ -6,7 +6,7 @@ import data as dt
 import pandas as pd
 
 # st.write("OLA")
-instances = dt.build_instances_vrppl()
+instances = dt.build_instances()
 
 #Controllers
 st.sidebar.header("Parameters")

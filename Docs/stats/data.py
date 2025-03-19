@@ -1,30 +1,6 @@
 import pandas as pd
 import math
-class Instance:
-    def __init__(self):
-        self.name=""
-        self.nodes = []
-        self.distances = []
-    def __str__(self):
-        instance_str = self.name + " - "
-        for node in self.nodes:
-            instance_str = instance_str + node.__str__()+" "
-        return instance_str
-class Node:
-    def __init__(self):
-        self.id = ''
-        self.type = ''
-        self.x = 0
-        self.y = 0
-        self.demand = 0
-        self.ready_time = 0
-        self.due_time = 0
-        self.service_time = 0
-        self.locker_customers = []
-        self.assigned_locker = ''
-    
-    def __str__(self):
-        return "ID:" + self.id
+import models as md
 
 def build_paths(instance_name, debug):
     
@@ -83,7 +59,7 @@ def build_path_strings(selected_instance,in_debug_mode):
             i+=1            
     return paths_array_strings
 
-def build_instances_vrppl():
+def build_instances():
     instance_list = open('../../instances/instances.txt', "r")
 
     ready_instances = []
@@ -92,7 +68,7 @@ def build_instances_vrppl():
         instance_name = '..\\..\\' + instance_name.split("\n")[0]
         instance_file = open(instance_name,"r")
 
-        new_instance = Instance()
+        new_instance = md.Instance()
         new_instance.name = instance_name.split("\\")[len(instance_name.split("\\"))-1]
 
         #Numero de clientes e lockers
@@ -110,10 +86,10 @@ def build_instances_vrppl():
         ## Definindo nós
 
         # Ids e demandas
-        node_d0 = Node()
+        node_d0 = md.Node()
         node_d0.id = "D0"
         new_instance.nodes.append(node_d0)
-        node_dt = Node()
+        node_dt = md.Node()
         node_dt.id = "Dt"
         new_instance.nodes.append(node_dt)
 
@@ -121,14 +97,14 @@ def build_instances_vrppl():
         for i in range(n_customers):
             line = instance_file.readline()
             line = line.split("\n")[0]
-            new_node = Node()
+            new_node = md.Node()
             new_node.demand = line
             new_node.id = "C" + str(i)
             new_instance.nodes.append(new_node)
         
         
         for i in range(n_lockers):
-            new_node = Node()
+            new_node = md.Node()
             new_node.demand = 0
             new_node.id = "P" + str(i)
             new_instance.nodes.append(new_node)
@@ -196,85 +172,6 @@ def build_instances_vrppl():
     calculate_distances(ready_instances)
     return ready_instances
 
-def build_instances_evrptwprpl():
-    file = pd.read_csv('..\\..\\instances\\instances_evrptwprpl.txt',names=['file_name'])
-    file = list(file['file_name'])
-    instances = ['..\\..\\' + instance for instance in file]
-    ready_instances = []
-
-    for instance in instances:
-        file_instance = pd.read_csv(instance, sep=' ')
-        new_instance = Instance()
-        new_instance.name = instance.split('\\')[5]
-        locker_count = 0
-        for line in file_instance.iterrows():
-            if(is_node(line)):
-                new_node = Node()
-                new_node.id = line[1]['StringID']
-                new_node.type = line[1]['Type']
-                new_node.x = int(line[1]['x'])
-                new_node.y = int(line[1]['y'])
-                new_node.demand = int(line[1]['demand'])
-                new_node.ready_time = int(line[1]['ReadyTime'])
-                new_node.due_time = int(line[1]['DueDate'])
-                new_node.service_time = int(line[1]['ServiceTime'])
-                new_instance.nodes.append(new_node)
-                if(new_node.type == 'p'):
-                    locker_count+=1
-            elif (is_param(line)):
-                if locker_count==1:
-                    locker = find_k_locker(new_instance.nodes,['1'])
-                    for node in new_instance.nodes:
-                        if(node.type == 'c2' or node.type == 'c3'):
-                            node.assigned_locker = locker
-                            locker.locker_customers.append(node)
-                
-
-
-        ready_instances.append(new_instance) 
-    calculate_distances(ready_instances)
-    return ready_instances
-
-def build_instances():
-    file = pd.read_csv('..\\..\\instances\\instances.txt',names=['file_name'])
-    file = list(file['file_name'])
-    instances = ['..\\..\\' + instance for instance in file]
-
-    ready_instances = []
-
-    for instance in instances:
-        file_instance = pd.read_csv(instance, sep=' ')
-        new_instance = Instance()
-        new_instance.name = instance.split('\\')[4]
-        locker_count = 0
-        for line in file_instance.iterrows():
-            if(is_node(line)):
-                new_node = Node()
-                new_node.id = line[1]['StringID']
-                new_node.type = line[1]['Type']
-                new_node.x = int(line[1]['x'])
-                new_node.y = int(line[1]['y'])
-                new_node.demand = int(line[1]['demand'])
-                new_node.ready_time = int(line[1]['ReadyTime'])
-                new_node.due_time = int(line[1]['DueDate'])
-                new_node.service_time = int(line[1]['ServiceTime'])
-                new_instance.nodes.append(new_node)
-                if(new_node.type == 'p'):
-                    locker_count+=1
-            elif (is_param(line)):
-                if locker_count==1:
-                    locker = find_k_locker(new_instance.nodes,['1'])
-                    for node in new_instance.nodes:
-                        if(node.type == 'c2' or node.type == 'c3'):
-                            node.assigned_locker = locker
-                            locker.locker_customers.append(node)
-                
-
-
-        ready_instances.append(new_instance) 
-    calculate_distances(ready_instances)
-    return ready_instances
-
 def is_node(line):
     return line[1]['StringID'] != 'param' and line[1]['StringID'] != '0' and line[1]['StringID'] != '1'
 def is_locker_line(line):
@@ -308,7 +205,7 @@ def find_k_locker(nodes, line):
                 return node
             else:
                 c+=1
-    return Node()
+    return md.Node()
 
 def calculate_distances(instances):
     for instance in instances:

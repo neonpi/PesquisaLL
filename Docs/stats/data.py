@@ -1,6 +1,9 @@
 import pandas as pd
 import math
 import models as md
+import streamlit as st
+import numpy as np
+import traceback
 
 def build_paths(instance_name, debug):
     
@@ -32,22 +35,95 @@ def build_paths(instance_name, debug):
     finally:
         return routes    
     
-def build_stats(instance_name, debug):
+def build_stats(debug):
 
+    instance_results = dict()
+    overall_stats = dict()
+    summary_result = dict()
     try:
+        instances = st.session_state['instances']
 
-        stats = None
+        overall_stats = {
+            'avg_cost': np.array([]),
+            'best_cost': np.array([]),
+            'avg_time': np.array([]),
+            'gap': np.array([]),
 
-        if debug:
-            stats = pd.read_csv(f'..\\..\\cmake-build-debug\\Output\\{instance_name}_stats',index_col="run")
-        else:
-            stats = pd.read_csv(f'..\\..\\Output\\{instance_name}_stats',index_col="run")
+        }
+        
+        # lendo resultados da literatura
+        with open("lit_sol.txt","r") as lit_file:
+            lines = lit_file.readlines()
+            overall_stats['lit_best_cost'] = np.array([float(sol.strip().split(",")[0]) for sol in lines])
+            overall_stats['lit_avg_time'] = np.array([float(sol.strip().split(",")[1]) for sol in lines])
+
+        
+        i_num = 0
+        for instance in instances:
+            
+            if debug:
+                file_name= f'../../cmake-build-debug/Output/{instance.name}_stats'
+            else:
+                file_name= f'../../Output/{instance.name}_stats'
+            
+            exec_line = []
+            
+            with open(file_name,"r") as file:
+                for line in [l.strip() for l in file.readlines()]:
+                    if "---" in line:
+                        exec_line.append(line.strip().split(" ")[1].split(","))
     
-    except FileNotFoundError as error:
-        print(f"File {instance_name}_stats not Found")  
+            runs = np.array([int(line[0]) for line in exec_line])
+            costs = np.array([float(line[1]) for line in exec_line])
+            vehicles = np.array([int(line[2]) for line in exec_line])
+            times = np.array([float(line[3]) for line in exec_line])
 
+            overall_stats['avg_time'] = np.append(overall_stats['avg_time'],np.mean(times))
+            overall_stats['avg_cost'] = np.append(overall_stats['avg_cost'],np.mean(costs))
+            overall_stats['best_cost'] = np.append(overall_stats['best_cost'],np.min(costs))
+            overall_stats['gap'] = np.append(overall_stats['gap'],(np.min(costs) - overall_stats['lit_best_cost'][i_num])/overall_stats['lit_best_cost'][i_num])
+            
+            i_num+=1
+
+            # print(times)
+            data = {
+                "Cost": costs,
+                "#Vehicle": vehicles,
+                "Time": times
+            }
+            stats = pd.DataFrame(data=data, index = runs)
+            stats.index.name = "Run"
+            instance_results[instance.name] = stats
+        
+        overall_stats = {
+            "Lit. Cost": overall_stats['lit_best_cost'],
+            "Lit. Avg Time": overall_stats['lit_avg_time'],
+            "Avg Time": overall_stats['avg_time'],
+            "Avg Cost": overall_stats['avg_cost'],
+            "Best Cost": overall_stats['best_cost'],
+            "Gap": overall_stats['gap']
+        }
+        overall_df = pd.DataFrame(data = overall_stats,index = [instance.name.strip().split(".")[0] for instance in instances])
+        overall_df.index.name = "Instance"
+
+        summary_result = {
+            "Literature avg time": np.mean(overall_stats['Lit. Avg Time']),
+            "Avg time": np.mean(overall_stats['Avg Time']),
+            "Literature avg best cost": np.mean(overall_stats['Lit. Cost']),
+            "Avg best cost": np.mean(overall_stats['Best Cost']),
+            "Avg GAP": np.mean(overall_stats['Gap']),
+            "Best GAP": np.min(overall_stats['Gap'])*100,
+            "Worst GAP": np.max(overall_stats['Gap'])*100
+        }
+
+
+    except FileNotFoundError as error:
+        print(f"File  not Found")  
+        # print(f"File {instance_name}_stats not Found")  
+    except Exception as error:
+        print(f"Erro {error}")
     finally:
-        return stats    
+        return instance_results, overall_df, summary_result
 
 def build_path_strings(selected_instance,in_debug_mode):
     paths_array_strings = build_paths(selected_instance.name,in_debug_mode)
@@ -159,6 +235,7 @@ def build_instances():
                     customer = new_instance.nodes[i]
                     customer.assigned_locker = locker
                     locker.locker_customers.append(customer)
+                    break
             
         ready_instances.append(new_instance)
         #print([node.id for node in new_instance.nodes])

@@ -2,18 +2,34 @@ import pandas as pd
 import streamlit as st
 import numpy as np
 import data as dt
-
+import json
 instances = st.session_state['instances']
+debug = st.session_state['debug']
 
-instances[0]
+# stats = [[instance.name,dt.build_stats(instance.name,debug)] for instance in instances ]
+instance_results, overall_df,summary_result = dt.build_stats(debug)
 
-in_debug_mode = st.sidebar.toggle("Debug mode")
+st.title("Summary results")
+st.write(f"Literature Avg. Time: {summary_result['Literature avg time']:.3f} s")
+st.write(f"Avg. Time: {summary_result['Avg time']:.3f} s")
+st.write(f"Literature Avg. Best Cost: {summary_result['Literature avg best cost']:.2f}")
+st.write(f"Avg Best Cost: {summary_result['Avg best cost']:.2f}")
+st.write(f"Avg GAP: {summary_result['Avg GAP']:.4f} %")
+st.write(f"Best GAP: {summary_result['Best GAP']:.4f} %")
+st.write(f"Worst GAP: {summary_result['Worst GAP']:.4f} %")
 
-selected_instance = [instance for instance in instances if instance.name == instance_selection][0]
-# stats = [[instance.name,dt.build_stats(instance.name,in_debug_mode)] for instance in instances ]
-# st.write(stats)
-# stats_data = []
-# print(stats)
+st.title("Overall results")
+
+st.dataframe(overall_df, height=6000, width=600, column_config={
+    'Lit. Cost': st.column_config.NumberColumn(format="%.1f"),
+    'Lit. Avg Time': st.column_config.NumberColumn(format="%.3f"),
+    'Avg Time': st.column_config.NumberColumn(format="%.3f"),
+    'Avg Cost': st.column_config.NumberColumn(format="%.1f"),
+    'Best Cost': st.column_config.NumberColumn(format="%.1f"),
+    'Gap': st.column_config.NumberColumn(format="%.3f")
+})
+
+
 # for i in range(len(instances)):
 #     if instances[i].name in [stat[0] for stat in stats]:
 #         print(instances[i].name)

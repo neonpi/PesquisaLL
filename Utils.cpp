@@ -93,30 +93,40 @@ Instance * Utils::buildInstance(string fileName) {
             getline(file,line);
         }
         splited_line = Utils::tookenize(line," ");
-        nodes.at(i).coord[0] = stod(splited_line.at(0));
-        nodes.at(i).coord[1] = stod(splited_line.at(1));
-        nodes.at(i).time_window[0] = stod(splited_line.at(2));
-        nodes.at(i).time_window[1] = stod(splited_line.at(3));
-        nodes.at(i).service_time = stod(splited_line.at(4));
+        Node* node = &nodes.at(i);
+        node->coord[0] = stod(splited_line.at(0));
+        node->coord[1] = stod(splited_line.at(1));
+
+
         switch (stoi(splited_line.at(5))) {
             case 0:
                 nodes.at(i).type = "d";
-                break;
+            break;
             case 1:
                 nodes.at(i).type = "c1";
-                break;
+            break;
             case 2:
                 nodes.at(i).type = "c2";
-                break;
+            break;
             case 3:
                 nodes.at(i).type = "c3";
-                break;
+            break;
             case 4:
                 nodes.at(i).type = "p";
-                break;
+            break;
             default:
                 nodes.at(i).type = "unknown";
-                break;
+            break;
+        }
+
+        node->service_time = stod(splited_line.at(4));
+
+        if(node->type != "d" && node->type != "p") {
+            node->time_window[0] = stod(splited_line.at(2));
+            node->time_window[1] = stod(splited_line.at(3));
+        }else {
+            node->time_window[0] = 0.0;
+            node->time_window[1] = BIG_M;
         }
 
     }

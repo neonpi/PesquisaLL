@@ -27,3 +27,5 @@ Falta dividir:
 {"D0", "P1()", "C6", "C4", "C2", "C45", "C3", "Dt"},
 {"D0", "P2", "C30", "C33", "Dt"},
 {"C0", "C13", "C46", "C16", "C14", "C12", "P1()", "Dt"}
+
+Problema era o locker e o deposito que tinham TW e a restrição do problema não as considera

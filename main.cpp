@@ -37,8 +37,8 @@ int main(int argc, char *argv[])
         //run_pair_instance_seed(&instances,"C101_co_25.txt",0,config);
         //run_instance(&instances,"RC107_co_50.txt",config);
         //run_instance(&instances,"C104_co_25.txt",config);
-        ///default_run(&instances,config);
-        test_solution(&instances,"RC107_co_50.txt", config);
+        default_run(&instances,config);
+        //test_solution(&instances,"RC107_co_50.txt", config);
 
         cout<<"EXPERIMENTS FINISHED"<<endl;
         delete config;

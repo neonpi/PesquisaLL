@@ -718,6 +718,12 @@ void Search::build_predefined_solution(vector<vector<string>> solution) {
         Route* route = this->solution->routes.at(i_solution_route);
         vector<Sequence>* route_sequences = &route->sequences;
         for(int i=1; i<(int)route_sequences->size(); i++) {
+            Sequence* s = &route->sequences.at(i);
+
+            for(Node* n: s->customers) {
+                route->load += n->load_demand;
+            }
+
             route->traveled_distance += this->instance->distances[route_sequences->at(i).node->index][route_sequences->at(i-1).node->index];
         }
 

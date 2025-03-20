@@ -9,6 +9,7 @@
 #include "Search.h"
 #include "Stats.h"
 
+#define BIG_M 1000000
 
 class Utils {
 public:

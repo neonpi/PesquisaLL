@@ -43,7 +43,7 @@ Instance * Utils::buildInstance(string fileName) {
     Instance* instance = new Instance();
     instance->avg_speed = 1.0;
     vector<string> instanceName = Utils::tookenize(fileName,"\\");
-    instance->inst_name = instanceName.at(instanceName.size()-1);
+    instance->name = instanceName.at(instanceName.size()-1);
 
     //Numero de clientes e número de lockers
     getline(file,line);
@@ -164,13 +164,13 @@ void Utils::print_result_file(Search *search, Instance *instance, int run, doubl
     ofstream file;
 
     if(search == nullptr) {
-        file.open("Output/"+instance->inst_name+"_stats", ofstream::out);
+        file.open("Output/"+instance->name+"_stats", ofstream::out);
         if (!file.is_open()) {
             cout<<"Output file not opened"<<endl;
         }
         file<<"run,cost,#_vehicles,time,seed"<<endl;
     }else{
-        file.open("Output/"+search->instance->inst_name+"_stats", ofstream::app);
+        file.open("Output/"+search->instance->name+"_stats", ofstream::app);
         if (!file.is_open()) {
             cout<<"Output file not opened"<<endl;
         }
@@ -234,7 +234,7 @@ vector<string> Utils::tookenize(string str, string symbol) {
 void Utils::print_final_stats(Stats *stats) {
     ofstream file;
 
-    if(stats->instance->inst_name == "C101_co_25.txt") {
+    if(stats->instance->name == "C101_co_25.txt") {
         file.open("Output/0_final",ios::out);
         file<<"instance,avg_time,avg_cost,#_vehicles,best_cost"<<endl;
         file.close();
@@ -242,7 +242,7 @@ void Utils::print_final_stats(Stats *stats) {
 
     file.open("Output/0_final",ios::app);
 
-    file<<stats->instance->inst_name<<","<<to_string(stats->avg_time)<<","<<to_string(stats->avg_cost)<<","<<to_string(stats->best_solution->used_routes)<<","<<to_string(stats->best_solution->cost)<<endl;
+    file<<stats->instance->name<<","<<to_string(stats->avg_time)<<","<<to_string(stats->avg_cost)<<","<<to_string(stats->best_solution->used_routes)<<","<<to_string(stats->best_solution->cost)<<endl;
 
     file.close();
 }

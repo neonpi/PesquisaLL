@@ -7,7 +7,7 @@
 #include <algorithm>
 
 Instance::Instance() {
-    this->inst_name="";
+    this->name="";
     this->n_node = 0;
     this->nodes = vector<Node>();
     this->customer_indexes[0] = 0;

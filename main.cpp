@@ -14,7 +14,7 @@ void default_run(vector<Instance*> *instances, Config* config);
 void run_pair_instance_seed(vector<Instance*> *instances, string instance_name, long seed, Config* config);
 void run_instance(vector<Instance*> *instances, string instance_name, Config* config);
 void grasp_run(Instance *instance, Config* config, Stats* stats);
-void test_solution(Instance *instance, Config* config, Stats* stats);
+void test_solution(vector<Instance *> *instances, string instance_name, Config *config);
 void irace_run(int argc, char *argv[]);
 
 void test_shortest_path(vector<Instance*> *instances);
@@ -35,8 +35,10 @@ int main(int argc, char *argv[])
 
         //test_shortest_path(&instances);
         //run_pair_instance_seed(&instances,"C101_co_25.txt",0,config);
-        run_instance(&instances,"C104_co_25.txt",config);
-        //default_run(&instances,config);
+        //run_instance(&instances,"RC107_co_50.txt",config);
+        //run_instance(&instances,"C104_co_25.txt",config);
+        ///default_run(&instances,config);
+        test_solution(&instances,"RC107_co_50.txt", config);
 
         cout<<"EXPERIMENTS FINISHED"<<endl;
         delete config;
@@ -49,7 +51,7 @@ int main(int argc, char *argv[])
 void default_run(vector<Instance*> *instances, Config* config) {
 
     for(Instance * instance: *instances) {
-        cout<<"Instance "<< instance->inst_name<<endl;
+        cout<<"Instance "<< instance->name<<endl;
         Stats* stats = new Stats(instance, config);
         Utils::print_result_file(nullptr, instance, 0, 0.0, 0.0);
 
@@ -84,7 +86,7 @@ void default_run(vector<Instance*> *instances, Config* config) {
 void run_instance(vector<Instance *> *instances, string instance_name, Config *config) {
     Instance* instance = nullptr;
     for(Instance* i: *instances) {
-        if (i->inst_name == instance_name) {
+        if (i->name == instance_name) {
             instance = i;
             break;
         }
@@ -92,7 +94,7 @@ void run_instance(vector<Instance *> *instances, string instance_name, Config *c
 
     if(instance == nullptr) {cout<<"Instance not found"<<endl; return;}
 
-    cout<<"Instance "<< instance->inst_name<<endl;
+    cout<<"Instance "<< instance->name<<endl;
     Stats* stats = new Stats(instance, config);
     Utils::print_result_file(nullptr, instance, 0, 0.0, 0.0);
     double best_known = -1.0;
@@ -136,7 +138,7 @@ void run_instance(vector<Instance *> *instances, string instance_name, Config *c
 void run_pair_instance_seed(vector<Instance *> *instances, string instance_name, long seed, Config *config) {
     Instance* instance = nullptr;
     for(Instance* i: *instances) {
-        if (i->inst_name == instance_name) {
+        if (i->name == instance_name) {
             instance = i;
             break;
         }
@@ -145,7 +147,7 @@ void run_pair_instance_seed(vector<Instance *> *instances, string instance_name,
     if(instance == nullptr) {cout<<"Instance not found"<<endl; return;}
 
 
-    cout<<"Instance "<< instance->inst_name<<endl;
+    cout<<"Instance "<< instance->name<<endl;
     Stats* stats = new Stats(instance, config);
     Utils::print_result_file(nullptr, instance, 0, 0.0, 0.0);
 
@@ -216,18 +218,36 @@ void irace_run(int argc, char *argv[]) {
     delete search;
 }
 
-void test_solution(Instance *instance, Config* config, Stats* stats) {
+void test_solution(vector<Instance *> *instances, string instance_name, Config *config) {
+
+    Instance* instance = nullptr;
+    for(Instance* inst: *instances) {
+        if(inst->name == instance_name) {
+            instance = inst;
+            break;
+        }
+    }
+
         /*{"C18", "P0-C2","P0-C6","P0-C7","P0-C8","P0-C10","P0-C11","P0-C17","P0-C19","P0-C23", "C9", "C0"},
         {"C14", "P1-C1", "P1-C3", "P1-C4", "P1-C5", "P1-C12", "P1-C13", "P1-C15", "P1-C20", "P1-C21", "P1-C22", "P1-C24", "C16"}
     */
     vector<vector<string>> routes = {
-    {"C18","P0-C2","P0-C6","P0-C7","P0-C8","P0-C10","P0-C11","P0-C17","P0-C19","P0-C23","C9","C0"},
-    {"C14","P1-C1", "P1-C3", "P1-C4", "P1-C5", "P1-C12", "P1-C13", "P1-C15", "P1-C20", "P1-C21", "P1-C22", "P1-C24","C16"}
+        {"D0", "C21", "C18", "C17", "P0(C19,C20,C22,C23,C24,C47,C48)", "Dt"},
+        {"D0", "C41", "C43", "C42", "C39", "C36", "C34", "P2()", "Dt"},
+        {"D0", "P1()", "C6", "C4", "C2", "C45", "C3", "Dt"},
+        {"D0", "P2()", "C30", "C33", "Dt"},
+        {"D0", "C13", "C46", "C16", "C14", "C12", "P1()", "Dt"}
     };
 
     Search *s = new Search(instance,config);
 
     s->build_predefined_solution(routes);
+
+    s->solution->print();
+    cout<<"\n-----------TESTING SOLUTION:--------"<<endl<<endl;
+    Utils::test_cost(s->solution);
+    Utils::test_print_viability(s->solution,0);
+    cout<<endl;
 
     delete s;
 

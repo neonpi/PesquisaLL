@@ -672,43 +672,59 @@ void Search::shift_k(int k, vector<Sequence> *route_sequences, int i_seq_a, int 
 
 void Search::build_predefined_solution(vector<vector<string>> solution) {
 
-    /*for(int i_solution_route = 0; i_solution_route < (int)solution.size(); i_solution_route++) {
+
+    for(int i_solution_route = 0; i_solution_route < (int)solution.size(); i_solution_route++) {
         vector<string> solution_route = solution.at(i_solution_route);
-        for(int i_solution_node = 0, i_insertion = 0; i_solution_node < (int)solution_route.size(); i_solution_node++) {
-            string route_el = solution_route.at(i_solution_node);
-            vector<string> parsed_route_el = Utils::tookenize(route_el,"-");
 
-            Node* node = this->instance->find_node_per_id(parsed_route_el.at(0));
-            Node* customer = nullptr;
-            if((int) parsed_route_el.size() > 1) {
-                customer = this->instance->find_node_per_id(parsed_route_el.at(1));
-            }else {
-                customer = node;
+        for(int i_solution_node = 0; i_solution_node < (int)solution_route.size(); i_solution_node++) {
+            string node_str = solution_route.at(i_solution_node);
+
+            if(node_str != "D0" && node_str != "Dt") {
+
+                //Verificando se eh locker
+                if(node_str.find('P') != -1) {
+                    vector<string> parsed_route_el = Utils::tookenize(node_str,"(");
+                    string locker_str = parsed_route_el.at(0);
+                    vector<string> locker_customers = Utils::tookenize(Utils::tookenize(parsed_route_el.at(1),")")[0],",");
+
+                    Node* node = this->instance->find_node_per_id(locker_str);
+
+                    Sequence seq;
+                    seq.node = node;
+
+                    for(string c: locker_customers) {
+                        node = this->instance->find_node_per_id(c);
+                        seq.customers.push_back(node);
+                        this->solution->served[node->index] = true;
+                    }
+
+                    Route* route = this->solution->routes.at(i_solution_route);
+                    vector<Sequence>* route_sequences = &route->sequences;
+                    route_sequences->insert(route_sequences->end() - 1,1,seq);
+                }else {
+                    Node* node = this->instance->find_node_per_id(node_str);
+
+                    Sequence seq;
+                    seq.node = node;
+                    this->solution->served[node->index] = true;
+                    Route* route = this->solution->routes.at(i_solution_route);
+                    vector<Sequence>* route_sequences = &route->sequences;
+                    route_sequences->insert(route_sequences->end() - 1,1,seq);
+                }
             }
 
-            this->solution->served[customer->index] = true;
-            Route* route = this->solution->routes.at(i_solution_route);
-            vector<Sequence>* route_sequences = &route->sequences;
+        }
 
-            if((route_sequences->end()-2)->node->id == node->id) {
-                (route_sequences->end()-2)->customers.push_back(customer);
-            }else {
-                Sequence s;
-                s.node = node;
-                s.customers.push_back(customer);
-                route_sequences->insert(route_sequences->begin() + i_insertion++ + 1,1,s);
-            }
-
+        Route* route = this->solution->routes.at(i_solution_route);
+        vector<Sequence>* route_sequences = &route->sequences;
+        for(int i=1; i<(int)route_sequences->size(); i++) {
+            route->traveled_distance += this->instance->distances[route_sequences->at(i).node->index][route_sequences->at(i-1).node->index];
         }
 
         propagate(i_solution_route,0);
     }
     this->solution->used_routes = (int)solution.size();
     this->solution->calculate_total_cost();
-    this->solution->print();
-    cout<<"\n-----------TESTING SOLUTION:--------"<<endl<<endl;
-    //this->solution->print_is_viable(2);
-    cout<<endl;*/
 
 }
 

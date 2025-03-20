@@ -12,7 +12,7 @@
 using namespace std;
 class Instance {
 public:
-    string inst_name;
+    string name;
     int n_node;
     vector<Node> nodes;
     int customer_indexes[2]; //[i,j)

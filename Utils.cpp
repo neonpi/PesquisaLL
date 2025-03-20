@@ -132,7 +132,7 @@ Instance * Utils::buildInstance(string fileName) {
                     Node* locker = &instance->nodes.at(instance->locker_indexes[0] + j);
                     instance->nodes.at(i).designated_locker = locker;
                     locker->designated_customers.push_back(&instance->nodes.at(i));
-                    break;
+                    break;  //TODO VER O QUE FAZER COM A INSTÂNCIA
                 }
             }
         }

@@ -25,7 +25,7 @@ void Search::iterated_greedy() {
             }
 
             insertion_heuristic();
-            this->ls_locker_reducer();
+            this->ls_locker_reducer(nullptr);
             this->rvnd_inter();
 
             if(this->solution->cost < this->best_solution->cost && Count::differs(this->solution->cost,this->best_solution->cost)) {

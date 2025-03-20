@@ -79,39 +79,36 @@ void Search::rvnd_intra() {
     vector<int> neighb = {0,1,2,3,4};
     int last_improved_neighb = -1;
     random_shuffle(neighb.begin(),neighb.end());
-    double cost_backup = this->solution->cost;
-
+    bool improved = false;
     for(int i=0;i<5;i++) {
         if(neighb[i] != last_improved_neighb) {
             switch (neighb[i]) {
                 case 0:
-                    this->ls_intra_2opt();
+                    this->ls_intra_2opt(&improved);
                 break;
                 case 1:
-                    this->ls_intra_exchange();
+                    this->ls_intra_exchange(&improved);
                 break;
                 case 2:
-                    this->ls_intra_or_opt_1();
+                    this->ls_intra_or_opt_1(&improved);
                 break;
                 case 3:
-                    this->ls_intra_or_opt_k(2);
+                    this->ls_intra_or_opt_k(2, &improved);
                 break;
                 case 4:
-                    this->ls_intra_or_opt_k(3);
+                    this->ls_intra_or_opt_k(3, &improved);
                 break;
                 default:
                     cout<<"Unknown LS"<<endl;
             }
-            if(this->solution->cost < cost_backup) {
-                cost_backup = this->solution->cost;
+            if(improved) {
                 last_improved_neighb = neighb[i];
                 i=-1;
+                improved = false;
             }
         }
     }
 }
-
-
 
 void Search::rvnd_inter() {
 
@@ -120,40 +117,42 @@ void Search::rvnd_inter() {
     vector<int> neighb = {0,1,2,3,4};
     int last_improved_neighb = -1;
     random_shuffle(neighb.begin(),neighb.end());
-    double cost_backup = this->solution->cost;
+    bool improved = false;
 
     for(int i=0;i<5;i++) {
         if(neighb[i] != last_improved_neighb) {
             switch (neighb[i]) {
                 case 0:
-                    this->ls_inter_swap_1_1();
+                    this->ls_inter_swap_1_1(&improved);
                     break;
                 case 1:
-                    this->ls_inter_swap_2_1();
+                    this->ls_inter_swap_2_1(&improved);
                     break;
                 case 2:
-                    this->ls_inter_swap_2_2();
+                    this->ls_inter_swap_2_2(&improved);
                     break;
                 case 3:
-                    this->ls_inter_shift_1_0();
+                    this->ls_inter_shift_1_0(&improved);
                     break;
                 case 4:
-                    this->ls_inter_shift_2_0();
+                    this->ls_inter_shift_2_0(&improved);
                     break;
                 default:
                     cout<<"Unknown LS"<<endl;
             }
-            this->ls_locker_reducer();
-            if(this->solution->cost < cost_backup) {
+
+            this->ls_locker_reducer(&improved);
+
+            if(improved) {
                 double cost_before_intra = this->solution->cost;
                 this->rvnd_intra();
-                cost_backup = this->solution->cost;
                 if(this->solution->cost < cost_before_intra) {
                     last_improved_neighb = -1;
                 }else {
                     last_improved_neighb = neighb[i];
                 }
                 i=-1;
+                improved = false;
             }
         }
     }

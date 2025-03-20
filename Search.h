@@ -34,29 +34,29 @@ public:
 
     //Busca local
     void rvnd_intra();
-    void ls_intra_exchange();
-    void ls_intra_2opt();
-    void ls_intra_or_opt_1();
-    void ls_intra_or_opt_k(int k);
+    void ls_intra_exchange(bool *improved);
+    void ls_intra_2opt(bool *improved);
+    void ls_intra_or_opt_1(bool *improved);
+    void ls_intra_or_opt_k(int k, bool *improved);
 
 
     void rvnd_inter();
-    void ls_inter_shift_1_0();
+    void ls_inter_shift_1_0(bool *improved);
     void persist_shift_1_0(int* coordinates, double delta, bool is_reduction);
 
-    void ls_inter_shift_2_0();
+    void ls_inter_shift_2_0(bool *improved);
     void persist_shift_2_0(int* coordinates, double delta);
 
-    void ls_inter_swap_1_1();
+    void ls_inter_swap_1_1(bool *improved);
     void persist_swap_1_1(int* coordinates, double delta);
 
-    void ls_inter_swap_2_1();
+    void ls_inter_swap_2_1(bool *improved);
     void persist_swap_2_1(int* coordinates, double delta);
 
-    void ls_inter_swap_2_2();
+    void ls_inter_swap_2_2(bool *improved);
     void persist_swap_2_2(int* coordinates, double delta);
 
-    void ls_locker_reducer();
+    void ls_locker_reducer(bool *improved);
     void reduce_double_locker(int i_route, Route *route, Node *locker);
 
     //IG

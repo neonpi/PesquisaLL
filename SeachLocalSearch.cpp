@@ -5,7 +5,7 @@
 #include "Search.h"
 #include "Utils.h"
 //LS INTRA ROUTE
-void Search::ls_intra_exchange() {
+void Search::ls_intra_exchange(bool *improved) {
 
     for(int i_route=0; i_route<(int)this->solution->routes.size();i_route++) {
         Route* route = this->solution->routes.at(i_route);
@@ -42,6 +42,7 @@ void Search::ls_intra_exchange() {
             }
 
             if(best_delta<0.0) {
+                *improved = true;
                 swap_sequence_intraroute(i_route,coordinates[0],coordinates[1], best_delta);
                 propagate(i_route,coordinates[0]-1);
                 this->solution->cost+=best_delta;
@@ -52,7 +53,7 @@ void Search::ls_intra_exchange() {
 }
 
 
-void Search::ls_intra_2opt() {
+void Search::ls_intra_2opt(bool *improved) {
 
     for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
 
@@ -88,6 +89,7 @@ void Search::ls_intra_2opt() {
            }
 
             if(best_delta<0.0) {
+                *improved = true;
                 reverse(route_sequences->begin()+coordinates[0]+1,route_sequences->begin()+coordinates[1]);
                 propagate(i_route,coordinates[0]);
                 route->traveled_distance += best_delta;
@@ -99,7 +101,7 @@ void Search::ls_intra_2opt() {
 
 }
 
-void Search::ls_intra_or_opt_1() {
+void Search::ls_intra_or_opt_1(bool *improved) {
     bool is_reduction = false;
     for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
 
@@ -165,6 +167,7 @@ void Search::ls_intra_or_opt_1() {
 
 
         if (best_delta < 0.0) {
+            *improved = true;
             if(is_reduction) {
                 Sequence* seq_a = &route->sequences.at(coordinates[0]);
                 Sequence* seq_b = &route->sequences.at(coordinates[1]);
@@ -186,7 +189,7 @@ void Search::ls_intra_or_opt_1() {
     }
 }
 
-void Search::ls_intra_or_opt_k(int k) {
+void Search::ls_intra_or_opt_k(int k, bool *improved) {
 
     for (int i_route = 0;i_route<(int)this->solution->routes.size();i_route++) {
 
@@ -236,6 +239,7 @@ void Search::ls_intra_or_opt_k(int k) {
                 }
             }
             if (best_delta < 0.0) {
+                *improved = true;
                 shift_k(k,route_sequences,coordinates[0],coordinates[1]);
                 propagate(i_route,min(coordinates[0],coordinates[1])-1);
                 route->traveled_distance += best_delta;
@@ -249,7 +253,7 @@ void Search::ls_intra_or_opt_k(int k) {
 }
 //LS INTER ROUTE
 
-void Search::ls_inter_swap_1_1() {
+void Search::ls_inter_swap_1_1(bool *improved) {
     double best_delta = 0.0;
     int coordinates[4] = {-1,-1,-1,-1}; //i_route_a,i_seq_a,i_route_b,i_seq_b
     Route* route_a = nullptr;
@@ -307,12 +311,13 @@ void Search::ls_inter_swap_1_1() {
     }
 
     if(best_delta<0.0) {
+        *improved = true;
         persist_swap_1_1(coordinates,best_delta);
     }
 
 }
 
-void Search::ls_inter_swap_2_2() {
+void Search::ls_inter_swap_2_2(bool *improved) {
     double best_delta = 0.0;
     int coordinates[4] = {-1,-1,-1,-1}; //i_route_a,i_seq_a,i_route_b,i_seq_b
     Route * route_a = nullptr;
@@ -367,12 +372,13 @@ void Search::ls_inter_swap_2_2() {
         }
     }
     if(best_delta<0.0) {
+        *improved = true;
         this->persist_swap_2_2(coordinates,best_delta);
     }
 
 }
 
-void Search::ls_inter_shift_1_0() {
+void Search::ls_inter_shift_1_0(bool *improved) {
     double best_delta = 0.0;
     int coordinates[4] = {-1,-1,-1,-1}; //i_route_a,i_seq_a,i_route_b,i_seq_b
     Route* route_a = nullptr;
@@ -461,13 +467,13 @@ void Search::ls_inter_shift_1_0() {
     }
 
     if(best_delta<0.0) {
-
+        *improved = true;
         this->persist_shift_1_0(coordinates,best_delta, is_reduction);
     }
 }
 
 
-void Search::ls_inter_shift_2_0() {
+void Search::ls_inter_shift_2_0(bool *improved) {
 
     double best_delta = 0.0;
     int coordinates[4] = {-1,-1,-1,-1}; //i_route_a,i_seq_a,i_route_b,i_seq_b
@@ -527,11 +533,12 @@ void Search::ls_inter_shift_2_0() {
     }
 
     if(best_delta<0.0) {
+        *improved = true;
         this->persist_shift_2_0(coordinates,best_delta);
     }
 }
 
-void Search::ls_inter_swap_2_1() {
+void Search::ls_inter_swap_2_1(bool *improved) {
     double best_delta = 0.0;
     int coordinates[4] = {-1,-1,-1,-1}; //i_route_a,i_seq_a,i_route_b,i_seq_b
     Route * route_a = nullptr;
@@ -583,13 +590,14 @@ void Search::ls_inter_swap_2_1() {
     }
 
     if(best_delta<0.0) {
+        *improved = true;
         this->persist_swap_2_1(coordinates,best_delta);
     }
 }
 
 
 
-void Search::ls_locker_reducer() {
+void Search::ls_locker_reducer(bool *improved) {
 
     for(int i_route = 0; i_route < this->solution->used_routes; i_route++) {
         Route * route = this->solution->routes.at(i_route);
@@ -599,6 +607,9 @@ void Search::ls_locker_reducer() {
 
             if(route->visited_lockers[locker] > 1) {
                 reduce_double_locker(i_route,route, locker);
+                if(improved != nullptr) {
+                    *improved = true;
+                }
             }
         }
 

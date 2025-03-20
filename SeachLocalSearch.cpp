@@ -664,3 +664,54 @@ void Search::reduce_double_locker(int i_route, Route *route, Node *locker) {
 
 
 }
+
+void Search::ls_hybrid_reducer(bool *improved) {
+
+    for(int i_route = 0; i_route < this->solution->used_routes; i_route++) {
+        Route * route = this->solution->routes.at(i_route);
+        vector<Sequence>* sequences = &route->sequences;
+        for(int i_locker = this->instance->locker_indexes[0]; i_locker < this->instance->locker_indexes[1]; i_locker++) {
+            Node* locker = &this->instance->nodes.at(i_locker);
+
+            if(route->visited_lockers[locker] > 0) {
+
+                for(int i_seq=1; i_seq < (int)(sequences->size()-1); i_seq++) {
+                    Sequence* seq = &sequences->at(i_seq);
+                    Node *node = seq->node;
+                    if(node->type == "c3" && node->designated_locker->id == locker->id) {
+                        reduce_hybrid(i_route,route, i_seq, seq, improved);
+                    }
+
+                }
+
+
+            }
+        }
+
+    }
+}
+
+void Search::reduce_hybrid(int i_route, Route *route, int i_seq, Sequence *seq, bool *improved) {
+
+    double delta = calculate_delta_destruction(&route->sequences,i_seq);
+    if(delta < 0) {
+
+        vector<Sequence> *route_sequences = &route->sequences;
+        Node* n = seq->node;
+        for(int i=1;i<(int)(route_sequences->size()-1); i++) {
+            Sequence* s = &route_sequences->at(i);
+            if(s->node->id == n->designated_locker->id) {
+                s->customers.push_back(n);
+                route_sequences->erase(route_sequences->begin() + i_seq,route_sequences->begin() + i_seq + 1);
+                propagate(i_route,i_seq-1);
+                this->solution->cost += delta;
+                route->traveled_distance += delta;
+                if(improved != nullptr) {
+                    *improved = true;
+                }
+                break;
+            }
+        }
+    }
+
+}

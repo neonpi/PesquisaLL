@@ -59,6 +59,10 @@ public:
     void ls_locker_reducer(bool *improved);
     void reduce_double_locker(int i_route, Route *route, Node *locker);
 
+    void ls_hybrid_reducer(bool *improved);
+    void reduce_hybrid(int i_route, Route *route, int i_seq, Sequence *seq, bool *improved);
+
+
     //IG
     void iterated_greedy();
     void deconstruct_random(int dec_size);

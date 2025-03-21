@@ -2,10 +2,11 @@ import gurobipy as gp
 import utils as ut
 import timeit as tm
 import math
+best = -1
 def run_all(instance):
     
     instance = ut.build_instance(instance)
-    min_qty_vehicles = math.ceil(instance['total_demands']/instance['vehicle_capacity'])
+    min_qty_vehicles = 3#math.ceil(instance['total_demands']/instance['vehicle_capacity']) + 2
     qty_vehicles = min_qty_vehicles
     print(f"Running instance {instance['inst_name'].split('/')[-1]} (min_v = {min_qty_vehicles})")
     
@@ -22,8 +23,8 @@ def run_all(instance):
     print(f"Best cost found")
 
 
-def run_exp(instance, qty_vehicles):
 
+def run_exp(instance, qty_vehicles):
     #-------------------------------------------------------------#
 
     v_capacity = int(instance['vehicle_capacity'])
@@ -82,6 +83,7 @@ def run_exp(instance, qty_vehicles):
     #Criando modelo
     m = gp.Model()
     m.setParam(gp.GRB.Param.OutputFlag,0)
+    # m.setParam('TimeLimit',120)
 
     #Criando Variaveis
     x_ijk = m.addVars(nodes,nodes, vehicles, vtype=gp.GRB.BINARY)
@@ -232,8 +234,9 @@ def run_exp(instance, qty_vehicles):
         vl_k[v] >= 0 for v in vehicles
     )
 
+    
     time = tm.default_timer()
-    m.optimize()
+    m.optimize(callback)
     time = tm.default_timer() - time
     has_empty_vehicle = False
 
@@ -251,3 +254,24 @@ def run_exp(instance, qty_vehicles):
             ut.print_h_i_file(x_ijk,h_i,l_i, y_ij, psi_jk, delta_k, vl_k, customers, lockers, locker_attrib, vehicles, qty_vehicles, instance,m,nodes, time)    
         
     return m, time, has_empty_vehicle
+
+def callback(model,where):
+    global best
+    if where == gp.GRB.Callback.MIPSOL:
+        with open('output.txt','a') as file:
+            try:
+                file.write(f"MS- {model.cbGet(gp.GRB.Callback.MIPSOL_OBJBST)}\n")
+                if(best == -1 or model.cbGet(gp.GRB.Callback.MIPSOL_OBJBST) < best):
+                    best = model.cbGet(gp.GRB.Callback.MIPSOL_OBJBST)
+            except:
+                print("erro")
+    elif where == gp.GRB.Callback.MIP:
+        with open('output.txt','a') as file:
+            try:
+                if(best == -1 or model.cbGet(gp.GRB.Callback.MIP_OBJBST) < best):
+                    file.write(f"M- {model.cbGet(gp.GRB.Callback.MIP_OBJBST)}\n")
+                    best = model.cbGet(gp.GRB.Callback.MIP_OBJBST)
+                
+            except:
+                print(type(model.cbGet(gp.GRB.Callback.MIP_OBJBST)))
+                print(best)

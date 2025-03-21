@@ -14,3 +14,31 @@ P1 que na verdade é P2 no outro algoritmo
 {"D0", "C24", "C30", "C34", "C36", "C33", "C21", "Dt"},
 {"D0", "P0()", "C42", "C41", "C39", "C43", "C45", "C46", "Dt"},
 {"D0", "C12", "C16", "C17", "C18", "C14", "C13", "C11", "Dt"}
+
+------------------- Comparando as rotas ----------------------
+
+Solver:
+V0 - D0 C4 C2 C6 P2() C3 Dt
+V1 - D0 P0() Dt ++++
+V2 - D0 C24 C30 C34 C36 C33 C21 Dt ++++
+V3 - D0 P0() C42 C41 C39 C43 C45 C46 Dt +++
+V4 - D0 C12 C16 C17 C18 C14 C13 C11 Dt
+
+Heurística:
+V0 - D0 C12 C16 C17 C18 C13 P2(C0, C1, C5, C7, C8) C3 Dt
+V1 - D0 P0(C19, C20, C22, C23, C26, C27, C28, C29, C31, C32, C35, C25) Dt ++++
+V2 - D0 P0(C37, C38, C40, C47, C44, C49, C48) C42 C41 C39 C43 C45 C46 Dt +++
+V3 - D0 C4 C2 P2(C9, C11, C14, C15, C10) C6 Dt
+V4 - D0 C24 C30 C34 C36 C33 C21 Dt ++++
+
+Rotas diferentes:
+Solver:
+
+V0 - D0 C4 C2 C6 P2() C3 Dt
+V4 - D0 C12 C16 C17 C18 C14 C13 C11 Dt
+
+Heurística:
+V0 - D0 C12 C16 C17 C18 C13 P2(C0, C1, C5, C7, C8) C3 Dt
+V3 - D0 C4 C2 P2(C9, C11, C14, C15, C10) C6 Dt
+
+A maior diferença é a divisão dos lockers

@@ -24,7 +24,7 @@ void Search::iterated_greedy() {
                 deconstruct_route(iter-iter_random_limit);
             }
 
-            insertion_heuristic();
+            insertion_heuristic(true);
             this->ls_locker_reducer(nullptr);
             this->rvnd_inter();
 

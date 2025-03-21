@@ -44,17 +44,22 @@ void Search::debug_run() {
 }
 
 void Search::construct() {
-    this->insertion_heuristic();
+    this->insertion_heuristic(false);
 }
 
-void Search::insertion_heuristic() {
+void Search::insertion_heuristic(bool is_ig) {
 
     vector<tuple<int,int,Sequence,double>> cand_list = build_candidate_list(); //(rota,antecessor,cliente destino)
 
     while(!cand_list.empty()) {
 
         //Randomizado
-        int candidates = int((int)cand_list.size()*this->config->alpha);
+        double alpha = this->config->alpha_constr;
+        if(is_ig) {
+            alpha = this->config->alpha_ig;
+        }
+
+        int candidates = int((int)cand_list.size()*alpha);
 
         int rand_index = 0;
         if(candidates>0) {

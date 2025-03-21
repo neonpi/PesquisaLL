@@ -30,7 +30,7 @@ public:
     void debug_run();
     //Construtivo
     void construct();
-    void insertion_heuristic();
+    void insertion_heuristic(bool is_ig);
 
     //Busca local
     void rvnd_intra();

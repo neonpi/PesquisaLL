@@ -27,7 +27,8 @@ int main(int argc, char *argv[])
         vector<Instance*> instances = Utils::buildInstances();
         cout<<"LOADING FINISHED"<<endl;
 
-        Config* config = new Config(30,0.2,false);
+
+        Config* config = new Config(100,0.2,0.6,false);
         //Config* config = new Config(1000000,0.2,false);
         config->print();
 
@@ -35,9 +36,9 @@ int main(int argc, char *argv[])
 
         //test_shortest_path(&instances);
         //run_pair_instance_seed(&instances,"C101_co_25.txt",0,config);
-        //run_instance(&instances,"RC107_co_50.txt",config);
-        run_instance(&instances,"C101_co_25.txt",config);
-        //default_run(&instances,config);
+        //run_instance(&instances,"C104_co_25.txt",config);
+        //run_instance(&instances,"R205_co_50.txt",config);
+        default_run(&instances,config);
         //test_solution(&instances,"R205_co_50.txt", config);
 
         cout<<"EXPERIMENTS FINISHED"<<endl;
@@ -203,9 +204,10 @@ void grasp_run(Instance *instance, Config* config, Stats* stats) {
 void irace_run(int argc, char *argv[]) {
     string instance_name = argv[2];
     long seed = stol(argv[4]);
-    double alpha = stod(argv[6]);
+    double alpha_constr = stod(argv[6]);
+    double alpha_ig = stod(argv[8]);
 
-    Config* config = new Config(1,alpha,false);
+    Config* config = new Config(1, alpha_constr, alpha_ig,false);
     Instance* instance = Utils::buildInstance(instance_name);
 
     Search* search = new Search(instance,config);

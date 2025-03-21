@@ -21,29 +21,6 @@ analizar somatório de clientes por locker
 TODO: Testar varredura das buscas locais, pra ver se fazerm sentido
 Lembrar da questão de interseções de movimentos entre buscas
 
-seq_a_1 = &this->solution->routes.at(coordinates[0])->sequences.at(coordinates[1]);
-seq_a_2 = &this->solution->routes.at(coordinates[0])->sequences.at(coordinates[1]+1);
-seq_b = &this->solution->routes.at(coordinates[2])->sequences.at(coordinates[3]);
-cout<<seq_a_1->node->id<<","<<seq_a_2->node->id<<","<<coordinates[0]<<
-" - "<<seq_b->node->id<<","<<coordinates[2]<<" - "<<best_delta<<endl;
-
-Verificar por que alguns deltas do reduce de lockers são positivos
-
-TOTAL COST: 437.3
-PATHS: 
-V_0: D0 -> C23 -> P1(C31) -> P2(C38) -> P1(C41, C26, C30) -> C28 -> C29 -> C27 -> C25 -> C21 -> C0 -> Dt -> 
-V_1: D0 -> C6 -> C7 -> C10 -> C8 -> C3 -> C1 -> P0(C2, C4, C5, C9, C11) -> C48 -> C46 -> Dt -> 
-V_2: D0 -> C40 -> C39 -> C43 -> C45 -> C44 -> C47 -> C49 -> Dt -> 
-V_3: D0 -> P1(C32, C34, C35) -> C17 -> C18 -> P0(C15, C16, C19, C20, C22, C42) -> Dt -> 
-V_4: D0 -> P0(C12, C13, C14) -> C24 -> C36 -> C37 -> C33 -> Dt -> 
-TOTAL COST: 437.3
-PATHS: 
-V_0: D0 -> C23 -> P1(C31, C41, C26, C30) -> P2(C38) -> C28 -> C29 -> C27 -> C25 -> C21 -> C0 -> Dt -> 
-V_1: D0 -> C6 -> C7 -> C10 -> C8 -> C3 -> C1 -> P0(C2, C4, C5, C9, C11) -> C48 -> C46 -> Dt -> 
-V_2: D0 -> C40 -> C39 -> C43 -> C45 -> C44 -> C47 -> C49 -> Dt -> 
-V_3: D0 -> P1(C32, C34, C35) -> C17 -> C18 -> P0(C15, C16, C19, C20, C22, C42) -> Dt -> 
-V_4: D0 -> P0(C12, C13, C14) -> C24 -> C36 -> C37 -> C33 -> Dt -> 
-
 
 Analisar parametros
 
@@ -63,7 +40,7 @@ d[][] double
 11,235145
 112,354... (*10)
 112,000 (floor)
-11,2000 (/10)
+11,2000 (10)
 -------------
 d[][] int
 11,235145
@@ -76,9 +53,29 @@ double(112)/10
 Instância R103_co_100 possui clientes sem locker. O gurobi nao conseguiu resultados
 
 
+retornar bool nas ls para o rvnd (Estudar o impacto)
+    -> No inter, o condensador de locker pode conseguir uma condensação, o que é bom, mas o resultado ser o mesmo.
+        Tecnicamente com o algoritmo de caminho mínimo isso deve ser mitigado. Testar
+
 Construtivo: Se colocar locker ve ser tem flex dele na rota e condensar
-retornar boolean nas ls para o rvnd (Estudar o impacto)
 Visitar as citações do trabalho
 Trabalhar a escrita
 
 swap 1 1 : a -> b : Se tiver locker de a na rota b, o custo dele nao precisa nem ser considerado pra ir
+
+Instâncias problematicas
+
+Nunca bati a RC107_co_50 -> AGORA SIM
+
+Testar no gurobi imprescindivelmente (instancias que sempre perdemos):
+- C104_co_25 -> rodando
+
+- C107_co_50 -> Essa instância tem um locker sem ninguem (P1). A solução ta meio maluca. Uma rota com P1 -> P2 -> P1, apenas. Tirei o P1 da instância pra ver se ela gera uma solução normal. Talvez essa instância quebre o modelo e o resultado da literatura está errado.
+    Pra ela, validado o custo do solver no projeto, o problema ta na heurística, que nao acha a solução.
+
+- R205_co_50 rodando
+
+Pra amanhã:
+Inconsistencias da atribuição de locker: Considera sempre o primeiro
+Passei a executar o GUROBI com print periodico do melhor custo, e encerrei quando ele batia o custo da literatura.
+Tw do locker e do deposito não são considerados. Isso impedia bater a RC107_co_50

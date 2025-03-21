@@ -37,8 +37,8 @@ int main(int argc, char *argv[])
         //run_pair_instance_seed(&instances,"C101_co_25.txt",0,config);
         //run_instance(&instances,"RC107_co_50.txt",config);
         //run_instance(&instances,"C104_co_25.txt",config);
-        default_run(&instances,config);
-        //test_solution(&instances,"RC107_co_50.txt", config);
+        //default_run(&instances,config);
+        test_solution(&instances,"C107_co_50.txt", config);
 
         cout<<"EXPERIMENTS FINISHED"<<endl;
         delete config;
@@ -228,15 +228,12 @@ void test_solution(vector<Instance *> *instances, string instance_name, Config *
         }
     }
 
-        /*{"C18", "P0-C2","P0-C6","P0-C7","P0-C8","P0-C10","P0-C11","P0-C17","P0-C19","P0-C23", "C9", "C0"},
-        {"C14", "P1-C1", "P1-C3", "P1-C4", "P1-C5", "P1-C12", "P1-C13", "P1-C15", "P1-C20", "P1-C21", "P1-C22", "P1-C24", "C16"}
-    */
     vector<vector<string>> routes = {
-        {"D0", "C21", "C18", "C17", "P0(C19,C20,C22,C23,C24,C47,C48)", "Dt"},
-        {"D0", "C41", "C43", "C42", "C39", "C36", "C34", "P2()", "Dt"},
-        {"D0", "P1()", "C6", "C4", "C2", "C45", "C3", "Dt"},
-        {"D0", "P2()", "C30", "C33", "Dt"},
-        {"D0", "C13", "C46", "C16", "C14", "C12", "P1()", "Dt"}
+        {"D0", "C4", "C2", "C6", "P2()", "C3", "Dt"},
+        {"D0", "P0()", "Dt"},
+        {"D0", "C24", "C30", "C34", "C36", "C33", "C21", "Dt"},
+        {"D0", "P0()", "C42", "C41", "C39", "C43", "C45", "C46", "Dt"},
+        {"D0", "C12", "C16", "C17", "C18", "C14", "C13", "C11", "Dt"}
     };
 
     Search *s = new Search(instance,config);
@@ -314,11 +311,11 @@ void test_shortest_path(vector<Instance *> *instances) {
 
             for(int j=0; j < instance -> n_node; j++) {
 
-                if(shortest_path.at(i).at(j) < instance->distances[i][j] && Count::differs(shortest_path.at(i).at(j),instance->distances[i][j])) {
-                    double* bo = &instance->distances[i][j];
                     instance->distances[i][j] = shortest_path.at(i).at(j);
+                /*if(shortest_path.at(i).at(j) < instance->distances[i][j] && Count::differs(shortest_path.at(i).at(j),instance->distances[i][j])) {
+                    double* bo = &instance->distances[i][j];
                     broke_inequalty = true;
-                }
+                }*/
 
             }
 

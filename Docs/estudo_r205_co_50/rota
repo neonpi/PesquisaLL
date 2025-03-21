@@ -29,12 +29,12 @@ V2 - D0 C30 C6 P0(C7, C9, C10, C17, C18, C19, C35, C44, C46, C47, C48, C26) C45 
 Rotas diferentes:
 Solver:
 V0 - D0 C30 C6 C45 P0() Dt
-V1 - D0 C20 C21 P1() C3 C23 C25 Dt
 V3 - D0 C4 P2() C15 C43 C36 C5 Dt
+V1 - D0 C20 C21 P1() C3 C23 C25 Dt
 
 Heurística:
 V0 - D0 C4 P2(C16, C37, C13, C41, C42, C12) C15 C43 C20 C21 P1(C1, C2, C14, C22, C24, C28, C33, C38, C40, C34, C11, C39) C3 C23 C25 Dt
 V2 - D0 C30 C6 P0(C7, C9, C10, C17, C18, C19, C35, C44, C46, C47, C48, C26) C45 C36 C5 Dt
 
 Na Heurística, um veículo a mais
-A V0 da heurística é exatamente a junção da V3 com a V1 do solver
+A V0 da heurística é quase a junção da V3 com a V1 do solver

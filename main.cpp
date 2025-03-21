@@ -36,9 +36,9 @@ int main(int argc, char *argv[])
         //test_shortest_path(&instances);
         //run_pair_instance_seed(&instances,"C101_co_25.txt",0,config);
         //run_instance(&instances,"RC107_co_50.txt",config);
-        //run_instance(&instances,"C104_co_25.txt",config);
+        run_instance(&instances,"C101_co_25.txt",config);
         //default_run(&instances,config);
-        test_solution(&instances,"C107_co_50.txt", config);
+        //test_solution(&instances,"R205_co_50.txt", config);
 
         cout<<"EXPERIMENTS FINISHED"<<endl;
         delete config;
@@ -229,11 +229,10 @@ void test_solution(vector<Instance *> *instances, string instance_name, Config *
     }
 
     vector<vector<string>> routes = {
-        {"D0", "C4", "C2", "C6", "P2()", "C3", "Dt"},
-        {"D0", "P0()", "Dt"},
-        {"D0", "C24", "C30", "C34", "C36", "C33", "C21", "Dt"},
-        {"D0", "P0()", "C42", "C41", "C39", "C43", "C45", "C46", "Dt"},
-        {"D0", "C12", "C16", "C17", "C18", "C14", "C13", "C11", "Dt"}
+        {"D0", "C30", "C6", "C45", "P0()", "Dt"},
+        {"D0", "C20", "C21", "P1()", "C3", "C23", "C25", "Dt"},
+        {"D0", "C27", "C32", "C8", "C29", "C31", "C0", "C49", "Dt"},
+        {"D0", "C4", "P2()", "C15", "C43", "C36", "C5", "Dt"}
     };
 
     Search *s = new Search(instance,config);

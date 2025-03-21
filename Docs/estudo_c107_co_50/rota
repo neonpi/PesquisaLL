@@ -33,7 +33,6 @@ V4 - D0 C24 C30 C34 C36 C33 C21 Dt ++++
 
 Rotas diferentes:
 Solver:
-
 V0 - D0 C4 C2 C6 P2() C3 Dt
 V4 - D0 C12 C16 C17 C18 C14 C13 C11 Dt
 
@@ -41,4 +40,12 @@ Heurística:
 V3 - D0 C4 C2 P2(C9, C11, C14, C15, C10) C6 Dt
 V0 - D0 C12 C16 C17 C18 C13 P2(C0, C1, C5, C7, C8) C3 Dt
 
-A maior diferença é a divisão dos lockers. O problema não está sendo cliente híbrido fora de locker
+
+A maior diferença é a divisão dos lockers.
+O problema não está sendo cliente híbrido fora de locker
+
+shift_1_0
+V3 - D0 C4 C2 P2(C9, C11, C14, C15, C10) C6 Dt + P2(C0, C1, C5, C7, C8)
+
+swap_1_1
+V3 - D0 C4 C2 P2(C9, C11, C14, C15, C10) C6 Dt - C14 + P2(C0, C1, C5, C7, C8)

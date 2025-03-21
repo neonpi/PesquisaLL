@@ -39,6 +39,7 @@ void Search::iterated_greedy() {
             }
 
         }
+        //vnd2
         dec_size++;
     }
 }

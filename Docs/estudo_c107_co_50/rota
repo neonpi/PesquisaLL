@@ -1,0 +1,16 @@
+V0 - D0 C4 C2 C6 P1() C3 Dt
+V1 - D0 P0() Dt
+V2 - D0 C24 C30 C34 C36 C33 C21 Dt
+V3 - D0 P0() C42 C41 C39 C43 C45 C46 Dt
+V4 - D0 C12 C16 C17 C18 C14 C13 C11 Dt
+
+P0(C19 C20 C22 C23 C25 C26 C27 C28 C29 C31 C32 C35 C37 C38 C40 C44 C47 C48 C49)
+P1(C0 C1 C5 C6 C7 C9 C10 C15)
+
+P1 que na verdade é P2 no outro algoritmo
+
+{"D0", "C4", "C2", "C6", "P1()", "C3", "Dt"}
+{"D0", "P0()", "Dt"}
+{"D0", "C24", "C30", "C34", "C36", "C33", "C21", "Dt"}
+{"D0", "P0()", "C42", "C41", "C39", "C43", "C45", "C46", "D"}
+{"D0", "C12", "C16", "C17", "C18", "C14", "C13", "C11", "Dt"}

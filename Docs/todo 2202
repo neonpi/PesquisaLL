@@ -73,7 +73,7 @@ Testar no gurobi imprescindivelmente (instancias que sempre perdemos):
 - C107_co_50 -> Essa instância tem um locker sem ninguem (P1). A solução ta meio maluca. Uma rota com P1 -> P2 -> P1, apenas. Tirei o P1 da instância pra ver se ela gera uma solução normal. Talvez essa instância quebre o modelo e o resultado da literatura está errado.
     Pra ela, validado o custo do solver no projeto, o problema ta na heurística, que nao acha a solução.
 
-- R205_co_50 rodando
+- R205_co_50 Pra ela, validado o custo do solver no projeto, o problema ta na heurística, que nao acha a solução.
 
 Pra amanhã:
 Inconsistencias da atribuição de locker: Considera sempre o primeiro

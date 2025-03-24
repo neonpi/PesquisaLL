@@ -711,6 +711,7 @@ void Search::build_predefined_solution(vector<vector<string>> solution) {
 
                     Sequence seq;
                     seq.node = node;
+                    seq.customers.push_back(node);
                     this->solution->served[node->index] = true;
                     Route* route = this->solution->routes.at(i_solution_route);
                     vector<Sequence>* route_sequences = &route->sequences;

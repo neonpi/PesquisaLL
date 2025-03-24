@@ -5,6 +5,61 @@
 #include "Utils.h"
 
 
+void Utils::fix_instance(Instance* instance) {
+
+    vector<string> instances_to_fix{
+        "C104_co_25.txt",
+        "C108_co_25.txt",
+        "C201_co_25.txt",
+        "C202_co_25.txt",
+        "C203_co_25.txt",
+        "C204_co_25.txt",
+        "C205_co_25.txt",
+        "C206_co_25.txt",
+        "C207_co_25.txt"
+    };
+
+    for(string s: instances_to_fix) {
+        if(s == instance->name) {
+            cout<<"Fixing "<<instance->name<<endl;
+            ifstream input_file;
+            input_file.open("instances/vrppl/25/" + instance->name);
+
+            ofstream output_file;
+            output_file.open("instances/fixed_instances/fixed_"+instance->name,ofstream::out);
+            output_file.close();
+            output_file.open("instances/fixed_instances/fixed_"+instance->name,ofstream::app);
+            if(input_file.is_open()) {
+                string line;
+                for(int i=0;i<55;i++) {
+                    getline(input_file,line);
+                    output_file<<line<<endl;
+                }
+
+                for(int i_cus = instance->customer_indexes[0]; i_cus < instance->customer_indexes[1]; i_cus++) {
+                    Node* n = &instance->nodes.at(i_cus);
+                    if(n->type == "c3" || n->type == "c2") {
+
+                        Node* p0 = &instance->nodes.at(instance->locker_indexes[0]);
+                        Node* p1 = &instance->nodes.at(instance->locker_indexes[0]+1);
+
+                        if(instance->distances[n->index][p0->index] < instance->distances[n->index][p1->index]) {
+                            output_file<<"1 0"<<endl;
+                        }else {
+                            output_file<<"0 1"<<endl;
+                        }
+                    }else{
+                        output_file<<"0 0"<<endl;
+                    }
+
+                }
+            }
+            output_file.close();
+            input_file.close();
+        }
+    }
+
+}
 vector<Instance *> Utils::buildInstances() {
     ifstream file;
     file.open("instances/instances.txt");
@@ -267,11 +322,13 @@ void Utils::test_print_viability(Solution *solution, long seed) {
     bool load_viable = true;
     bool load_sum_viable = true;
     bool time_window_viable = true;
+    bool locker_attrib_viable = true;
     int used_vehicles = 0;
 
     vector<string> inviable_customers;
     vector<string> inviable_tws;
     vector<string> inviable_load_sum;
+    vector<string> wrong_locker;
 
     //Verificando viabilidade de cliente atendido
     for(int i=solution->instance->customer_indexes[0];
@@ -326,6 +383,21 @@ void Utils::test_print_viability(Solution *solution, long seed) {
         if((int)r->sequences.size() > 2) {
             used_vehicles++;
         }
+
+        //Verificando se os clientes estão no locker certo
+        for(const Sequence& s: r->sequences) {
+            if(s.node->type == "p") {
+                for(Node* n: s.customers) {
+                    if(n->designated_locker != s.node) {
+                        locker_attrib_viable = false;
+                        wrong_locker.push_back(n->id);
+                    }
+                }
+
+            }
+        }
+
+
     }
 
     //Imprimindo resultados
@@ -360,6 +432,15 @@ void Utils::test_print_viability(Solution *solution, long seed) {
     if(used_vehicles != solution->used_routes) {
         inviabilities++;
         cout<<"# Vehicle differs: "<<used_vehicles<<" x "<<solution->used_routes<<endl;
+    }
+    if(!locker_attrib_viable) {
+        inviabilities++;
+        cout<<"# Wrong locker: (";
+
+        for(string s: wrong_locker) {
+            cout<<s<<",";
+        }
+        cout<<")"<<endl;
     }
 
     //Saindo se houver inviabilidade

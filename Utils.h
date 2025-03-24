@@ -18,6 +18,7 @@ public:
     static Instance* buildInstance(string fileName);
     static void defineNodeIndexes(Instance* instance);
 
+    static void fix_instance(Instance* instance);
 
     static void print_result_file(Search *search, Instance *instance, int run, double time, long seed);
     static vector<string> tookenize(string str, string symbol);

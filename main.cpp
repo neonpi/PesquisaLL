@@ -16,6 +16,8 @@ void run_instance(vector<Instance*> *instances, string instance_name, Config* co
 void grasp_run(Instance *instance, Config* config, Stats* stats);
 void test_solution(vector<Instance *> *instances, string instance_name, Config *config);
 void irace_run(int argc, char *argv[]);
+void fix_instances(vector<Instance*> *instances);
+
 
 void test_shortest_path(vector<Instance*> *instances);
 
@@ -27,19 +29,28 @@ int main(int argc, char *argv[])
         vector<Instance*> instances = Utils::buildInstances();
         cout<<"LOADING FINISHED"<<endl;
 
-
-        Config* config = new Config(100,0.2,0.6,false);
+        Config* config = new Config(30,0.2,0.6,false);
         //Config* config = new Config(1000000,0.2,false);
         config->print();
 
         cout<<"RUNNING EXPERIMENTS"<<endl;
 
+        //fix_instances(&instances);
+
         //test_shortest_path(&instances);
         //run_pair_instance_seed(&instances,"C101_co_25.txt",0,config);
-        //run_instance(&instances,"C104_co_25.txt",config);
+        /*run_instance(&instances,"fixed_C104_co_25.txt",config);
+        run_instance(&instances,"fixed_C108_co_25.txt",config);
+        run_instance(&instances,"fixed_C201_co_25.txt",config);
+        run_instance(&instances,"fixed_C202_co_25.txt",config);
+        run_instance(&instances,"fixed_C203_co_25.txt",config);
+        run_instance(&instances,"fixed_C204_co_25.txt",config);
+        run_instance(&instances,"fixed_C205_co_25.txt",config);
+        run_instance(&instances,"fixed_C206_co_25.txt",config);
+        run_instance(&instances,"fixed_C207_co_25.txt",config);*/
         //run_instance(&instances,"R205_co_50.txt",config);
         default_run(&instances,config);
-        //test_solution(&instances,"R205_co_50.txt", config);
+        //test_solution(&instances,"fixed_C108_co_25.txt", config);
 
         cout<<"EXPERIMENTS FINISHED"<<endl;
         delete config;
@@ -48,7 +59,6 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
-
 void default_run(vector<Instance*> *instances, Config* config) {
 
     for(Instance * instance: *instances) {
@@ -114,14 +124,6 @@ void run_instance(vector<Instance *> *instances, string instance_name, Config *c
         Utils::print_result_file(search, instance, i, (double) time / CLOCKS_PER_SEC, config->seeds.at(i));
         Utils::test_cost(search->solution);
         Utils::test_print_viability(search->solution,config->seeds.at(i));
-
-        /*if(best_known == -1.0 || search->solution->cost < best_known) {
-            best_known = search->solution->cost;
-            cout<<"Improvement found "<<best_known<<" on run "<<i<<endl;
-            if(best_known < 182) {
-                break;
-            }
-        }*/
 
         delete search;
 
@@ -231,10 +233,9 @@ void test_solution(vector<Instance *> *instances, string instance_name, Config *
     }
 
     vector<vector<string>> routes = {
-        {"D0", "C30", "C6", "C45", "P0()", "Dt"},
-        {"D0", "C20", "C21", "P1()", "C3", "C23", "C25", "Dt"},
-        {"D0", "C27", "C32", "C8", "C29", "C31", "C0", "C49", "Dt"},
-        {"D0", "C4", "P2()", "C15", "C43", "C36", "C5", "Dt"}
+        {"D0", "P0(C0,C1,C2,C4,C7,C8,C10,C22,C23,C24,C6)", "Dt"},
+        {"D0", "C16", "C17", "C14", "C11", "P1(C15,C13,C12,C18)", "C20", "Dt"},
+        {"D0", "C9", "C5", "C3", "P0(C19,C21)", "Dt"}
     };
 
     Search *s = new Search(instance,config);
@@ -329,4 +330,37 @@ void test_shortest_path(vector<Instance *> *instances) {
 
     cout<<broken_inequalties<<" broken"<<endl;
 
+}
+
+void fix_instances(vector<Instance*> *instances) {
+    for(Instance* i: *instances) {
+        bool happens = false;
+        if(i->customers_qty == 25) {
+
+            for(int i_cus = i->customer_indexes[0]; i_cus < i->customer_indexes[1]; i_cus++) {
+                Node* n = &i->nodes.at(i_cus);
+                if(n->type == "c3" || n->type == "c2") {
+                    Node* node_locker = n->designated_locker;
+                    for(int i_locker=i->locker_indexes[0]; i_locker<i->locker_indexes[1]; i_locker++) {
+                        Node* locker_i = &i->nodes.at(i_locker);
+
+                        if(node_locker!= nullptr && locker_i != node_locker &&  i->distances[n->index][locker_i->index] < i->distances[n->index][node_locker->index]) {
+                            cout<<"O cliente "<<n->id<<" esta mais proximo do locker "<<locker_i->id<<" que do seu locker "<<node_locker->id<<", instancia "<<i->name<<endl;
+                            happens = true;
+                            Utils::fix_instance(i);
+                            //break;
+                        }
+                        if(node_locker!= nullptr && locker_i != node_locker &&  i->distances[n->index][locker_i->index] == i->distances[n->index][node_locker->index]) {
+                            cout<<"O cliente "<<n->id<<" iguaaaaaal "<<locker_i->id<<" que do seu locker "<<node_locker->id<<", instancia "<<i->name<<endl;
+                            happens = true;
+                            //Utils::fix_instance(i);
+                            //break;
+                        }
+                    }
+                }
+                //if(happens){break;}
+
+            }
+        }
+    }
 }

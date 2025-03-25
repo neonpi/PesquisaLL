@@ -103,3 +103,15 @@ V3 - D0 C4 C2 P2(C9, C11, C14, C15, C10) C6 Dt - C14 + P2(C0, C1, C5, C7, C8)
 Criar uma ls no final do rvnd para tentar fazer essas coisas
 Talvez antes da desconstrução de rota
 Tentar um valor alto no alpha da desconstrução
+
+analisar o load do caminhao. Se a somatorio da semana dos clientes do p0 é maior que a demanda do caminhao
+fixed_C108_co_25
+--- 1,162.700000,3,0.062000,2918
+D0 C16 C17 C14 C11 P1(C12, C13, C18, C15) Dt
+D0 C9 C8 C5 C3 C20 Dt
+D0 P0(C4, C24, C7, C10, C19, C21, C22, C23, C1, C2, C6, C0) Dt
+locker p0:
+210/200
+Entender a rota R205co25
+arrumar a plotagem
+escrever

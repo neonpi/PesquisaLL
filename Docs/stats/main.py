@@ -19,10 +19,11 @@ st.session_state['debug'] = st.sidebar.toggle("Debug mode")
 # st.session_state['instances'] = dt.build_instances()
 
 
-pg=st.navigation([
-                  st.Page("page_general_result.py", title="General Result")])
-
 # pg=st.navigation([
+#                   st.Page("page_general_result.py", title="General Result"),
 #                   st.Page("page_instance_result.py", title="Instance Result")])
+
+pg=st.navigation([
+                  st.Page("page_instance_result.py", title="Instance Result")])
 pg.run()
 

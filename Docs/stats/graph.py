@@ -1,6 +1,38 @@
 import plotly.graph_objects as go
 import networkx as nx
 import data as dt
+import streamlit as st
+
+
+
+def build_nodes(G,node_size):
+    node_xs =[]
+    node_ys = []
+    for node in G.nodes():
+        x,y = G.nodes[node]['pos']
+        node_xs.append(x)
+        node_ys.append(y)
+    
+    return go.Scatter(
+            x = node_xs,
+            y = node_ys,
+            mode='markers+text',
+            hoverinfo='text',
+            zorder=4,
+            # text= [G.nodes[node]['node_data'].id if (G.nodes[node]['node_data'].id !='Dt' and G.nodes[node]['node_data'].id !='S0') else "" for node in G.nodes()  ],
+            text= build_node_text(G),
+            textposition='top center',
+            textfont= dict(color='black',
+                        weight='bold',
+                        size=max(10,node_size*0.3)),
+            marker = dict(color=[choose_node_color(G.nodes[node]['node_data']) for node in G.nodes()],
+                        size=node_size,
+                        line_width= 2,
+                        line_color='#000',
+                        symbol=[choose_node_symbol(G.nodes[node]['node_data']) for node in G.nodes()])
+            
+        )
+# -----------------------------#
 
 def build_graph(traces):
     return go.Figure(data = traces,
@@ -42,9 +74,10 @@ def build_all_edges(G, show):
     return trace
     
 
-def build_locker_edges(G,instance, show):
+def build_locker_edges(G, show):
     locker_edge_xs =[]
     locker_edge_ys = []
+    instance = st.session_state['instance']
 
     
     for node_i in instance.nodes:
@@ -123,35 +156,6 @@ def build_path_edges_trace(G,instance,show, paths_array_strings):
 
     return path_edges_trace
 
-
-def build_nodes(G,node_size):
-    node_xs =[]
-    node_ys = []
-    for node in G.nodes():
-        x,y = G.nodes[node]['pos']
-        node_xs.append(x)
-        node_ys.append(y)
-        # st.sidebar.write(G.nodes[node]['node_data'].demand)
-    return go.Scatter(
-            x = node_xs,
-            y = node_ys,
-            mode='markers+text',
-            hoverinfo='text',
-            zorder=4,
-            # text= [G.nodes[node]['node_data'].id if (G.nodes[node]['node_data'].id !='Dt' and G.nodes[node]['node_data'].id !='S0') else "" for node in G.nodes()  ],
-            text= build_node_text(G),
-            textposition='top center',
-            textfont= dict(color='black',
-                        weight='bold',
-                        size=max(10,node_size*0.3)),
-            marker = dict(color=[choose_node_color(G.nodes[node]['node_data']) for node in G.nodes()],
-                        size=node_size,
-                        line_width= 2,
-                        line_color='#000',
-                        symbol=[choose_node_symbol(G.nodes[node]['node_data']) for node in G.nodes()])
-            
-        )
-# TODO Está quebrando pq os arquivos de saida estão diferentes 
 def choose_node_symbol(node):
     if node.type == 'd':
         return 'square-x'

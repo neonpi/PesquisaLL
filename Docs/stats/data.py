@@ -5,35 +5,51 @@ import streamlit as st
 import numpy as np
 import traceback
 
-def build_paths(instance_name, debug):
-    
-    routes = []
 
-    try:
+def build_runs():
+    debug = st.session_state['debug']
+    instance = st.session_state['instance']
+    path = f"../../output/{instance.name}_stats"
+    runs = list()
 
-        file = None
+    current_run = None
+    current_run_routes = None
+    with open(path,"r") as file:
+        lines = [line.strip() for line in file.readlines()]
+        for index, line in enumerate(lines):
+            if "---" in line:
+                current_run = dict()
+                current_run_routes = list()
+                p_line = line.strip().split(',')
+                p_line[0] = p_line[0].split(" ")[1]
+                current_run['run'] = int(p_line[0])
+                current_run['cost'] = round(float(p_line[1]),2)
+                current_run['n_vehicles'] = int(p_line[2])
+                current_run['time'] = round(float(p_line[3]),4)
+            else:
+                if(len(line) <= 1 or index == (len(lines)-1)):
+                    current_run['routes'] = current_run_routes
+                    runs.append(current_run)
+                    current_run = None
+                    current_run_routes = None
+                elif(index > 0):
+                    line = line.split(" ")
+                    route = list()
 
-        if debug:
-            file = pd.read_csv(f'..\\..\\cmake-build-debug\\Output\\{instance_name}_routes')
-        else:
-            file = pd.read_csv(f'..\\..\\Output\\{instance_name}_routes')
+                    for str_node in line:
+                        node = dict()
+                        if("P" in str_node):
+                            node['id'] = str_node.split("(")[0]
+                            node['customers'] = str_node.split("(")[1].split(")")[0].split(",")
+                        else:
+                            node['id'] = str_node
+                            node['customers'] = [str_node]
+                        route.append(node)
+                    
+                    current_run_routes.append(route)
+                    
+    st.session_state['runs'] = runs
 
-        file = list(file['route'])
-
-        run = []
-
-        for route in file:
-            if "---" in route:
-               routes.append(run)
-               run = []
-            else: 
-                run.append(route.split(" "))
-    
-    except FileNotFoundError as error:
-        print(f"File {instance_name} not Found")  
-
-    finally:
-        return routes    
     
 def build_stats(debug):
 
@@ -125,15 +141,23 @@ def build_stats(debug):
     finally:
         return instance_results, overall_df, summary_result
 
-def build_path_strings(selected_instance,in_debug_mode):
-    paths_array_strings = build_paths(selected_instance.name,in_debug_mode)
-
-    for run in paths_array_strings:
-        i = 0
-        for path_i in range(len(run)):
-            run[path_i] = [f"V{i}",run[path_i]]
-            i+=1            
-    return paths_array_strings
+def build_path_strings():
+    show_path_string = st.session_state['show_path_string']
+    
+    if(show_path_string):
+        runs = st.session_state['runs_to_show']
+        for run in runs:
+            st.write(f"**Run {run['run']}** :")
+            veh_no = 0
+            for route in run['routes']:
+                line = f"   - V{veh_no} - "
+                for node in route:
+                    if(len(node['customers']) > 1):
+                        line = f"{line} {node['id']}({",".join(node["customers"])})"
+                    else:
+                        line = f"{line} {node['id']}"
+                veh_no += 1
+                st.write(line)
 
 def build_instances():
     instance_list = open('../../instances/instances.txt', "r")

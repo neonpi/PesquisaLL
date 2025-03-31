@@ -378,6 +378,42 @@ void Search::ls_inter_swap_2_2(bool *improved) {
 
 }
 
+
+void Search::ls_inter_split(bool *improved) {
+    double best_delta = 0.0;
+    int coordinates[3] = {-1,-1,-1};
+    Route * route_a = nullptr;
+    Route * route_b = this->solution->routes.at(this->solution->used_routes);
+    vector<Sequence> * route_a_sequences = nullptr;
+    vector<Sequence> * route_b_sequences = &route_b->sequences;
+    Sequence * seq_a_1 = nullptr;
+    Sequence * seq_a_2 = nullptr;
+    Sequence * seq_b = nullptr;
+    this->solution->print();
+    for (int i_route_a = 0; i_route_a < this->solution->used_routes ;i_route_a++) {
+        route_a = this->solution->routes.at(i_route_a);
+        route_a_sequences = &route_a->sequences;
+
+        if ((int)route_a_sequences->size()>3) {
+
+            for (int i_seq_a_1 = 1; i_seq_a_1<((int)route_a_sequences->size() - 1);i_seq_a_1++) {
+                seq_a_1 = &route_a_sequences->at(i_seq_a_1);
+
+                for (int i_seq_a_2 = i_seq_a_1; i_seq_a_2 < ((int)route_a_sequences->size()-1);i_seq_a_2++) {
+                    seq_a_2 = &route_a_sequences->at(i_seq_a_2);
+
+                    double delta = this->calculate_delta_split(route_a_sequences,i_seq_a_1, i_seq_a_2, 'c');
+                    if (Count::improves(best_delta,delta)) {
+                        coordinates[0] = i_route_a;
+                        coordinates[1] = i_seq_a_1;
+                        coordinates[2] = i_seq_a_2;
+                    }
+                }
+            }
+        }
+    }
+}
+
 void Search::ls_inter_shift_1_0(bool *improved) {
     double best_delta = 0.0;
     int coordinates[4] = {-1,-1,-1,-1}; //i_route_a,i_seq_a,i_route_b,i_seq_b
@@ -416,9 +452,7 @@ void Search::ls_inter_shift_1_0(bool *improved) {
                                 if(node_a->type == "c3" && route_b->visited_lockers[node_a->designated_locker] > 0) {
                                     int i_locker = 0;
                                     while(route_b->sequences[++i_locker].node != node_a->designated_locker);
-                                    if(i_route_a == 0) {
-                                        //cout<<endl;
-                                    }
+
                                     delta = this->calculate_delta_destruction(route_a_sequences,i_seq_a);
 
                                     if(Count::improves(0.0,delta) &&

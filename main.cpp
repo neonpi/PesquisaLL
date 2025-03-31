@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
         vector<Instance*> instances = Utils::buildInstances();
         cout<<"LOADING FINISHED"<<endl;
 
-        Config* config = new Config(30,0.2,0.6,false);
+        Config* config = new Config(30,0.2,0.7,false);
         //Config* config = new Config(1000000,0.2,false);
         config->print();
 
@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
 
         //test_shortest_path(&instances);
         //run_pair_instance_seed(&instances,"C101_co_25.txt",0,config);
+        run_instance(&instances,"R205_co_50.txt",config);
         /*run_instance(&instances,"fixed_C104_co_25.txt",config);
         run_instance(&instances,"fixed_C108_co_25.txt",config);
         run_instance(&instances,"fixed_C201_co_25.txt",config);
@@ -49,7 +50,7 @@ int main(int argc, char *argv[])
         run_instance(&instances,"fixed_C206_co_25.txt",config);
         run_instance(&instances,"fixed_C207_co_25.txt",config);*/
         //run_instance(&instances,"R205_co_50.txt",config);
-        default_run(&instances,config);
+        //default_run(&instances,config);
         //test_solution(&instances,"fixed_C108_co_25.txt", config);
 
         cout<<"EXPERIMENTS FINISHED"<<endl;
@@ -112,6 +113,7 @@ void run_instance(vector<Instance *> *instances, string instance_name, Config *c
     for(int i=0;i<config->runs;i++) {
 
         srand(config->seeds.at(i));
+        srand(0);
         config->run = i;
 
         Search* search = new Search(instance,config);

@@ -29,8 +29,10 @@ Search::~Search() {
 
 void Search::run() {
     this->construct();
+    this->ls_inter_split(nullptr);
+    /*
     this->rvnd_inter();
-    this->iterated_greedy();
+    this->iterated_greedy();*/
 
 }
 

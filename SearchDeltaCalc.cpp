@@ -407,3 +407,31 @@ double Search::calculate_delta_destruction(vector<Sequence> *route, int i_seq) {
 
     return delta;
 }
+
+double Search::calculate_delta_split(vector<Sequence> *route, int i_seq_1, int i_seq_2, char to_route) {
+    Sequence* seq_1_prev = &route->at(i_seq_1-1);
+    Sequence* seq_1 = &route->at(i_seq_1);
+    Sequence* seq_2 = &route->at(i_seq_2);
+    Sequence* seq_2_next = &route->at(i_seq_2 + 1);
+
+    double delta = 0.0;
+
+
+    if (to_route == 'a') {
+        delta += this->instance->distances[seq_1_prev->node->index][seq_2_next->node->index];
+        delta -= this->instance->distances[seq_1_prev->node->index][seq_1->node->index];
+        delta -= this->instance->distances[seq_2->node->index][seq_2_next->node->index];
+    }else if (to_route == 'b') {
+        delta += this->instance->distances[0][seq_1->node->index];
+        delta += this->instance->distances[seq_2->node->index][1];
+    }else {
+        delta += this->instance->distances[seq_1_prev->node->index][seq_2_next->node->index];
+        delta -= this->instance->distances[seq_1_prev->node->index][seq_1->node->index];
+        delta -= this->instance->distances[seq_2->node->index][seq_2_next->node->index];
+        delta += this->instance->distances[0][seq_1->node->index];
+        delta += this->instance->distances[seq_2->node->index][1];
+    }
+
+    return delta;
+
+}

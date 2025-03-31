@@ -257,7 +257,7 @@ void Utils::print_result_file(Search *search, Instance *instance, int run, doubl
                                 Node* customer = sequence.customers.at(i_customer);
                                 route_string+= customer->id;
                                 if(i_customer < (int)sequence.customers.size() -1) {
-                                    route_string+=", ";
+                                    route_string+=",";
                                 }
                             }
 

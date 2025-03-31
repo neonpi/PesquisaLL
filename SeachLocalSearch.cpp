@@ -417,9 +417,6 @@ void Search::ls_inter_split(bool *improved) {
     if (best_delta < 0.0) {
         *improved = true;
         this->persist_split(coordinates,best_delta);
-        Utils::test_cost(this->solution);
-        Utils::test_print_viability(this->solution,0);
-
     }
 }
 

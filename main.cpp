@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
         //test_shortest_path(&instances);
         //run_pair_instance_seed(&instances,"C101_co_25.txt",0,config);
-        run_instance(&instances,"R205_co_50.txt",config);
+        //run_instance(&instances,"R205_co_50.txt",config);
         /*run_instance(&instances,"fixed_C104_co_25.txt",config);
         run_instance(&instances,"fixed_C108_co_25.txt",config);
         run_instance(&instances,"fixed_C201_co_25.txt",config);
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
         run_instance(&instances,"fixed_C206_co_25.txt",config);
         run_instance(&instances,"fixed_C207_co_25.txt",config);*/
         //run_instance(&instances,"R205_co_50.txt",config);
-        //default_run(&instances,config);
+        default_run(&instances,config);
         //test_solution(&instances,"fixed_C108_co_25.txt", config);
 
         cout<<"EXPERIMENTS FINISHED"<<endl;

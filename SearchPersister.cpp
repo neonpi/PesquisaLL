@@ -615,11 +615,18 @@ void Search::persist_split(int *coordinates, double delta) {
     vector<Sequence>* route_b_sequences = &route_b->sequences;
 
     //Atualizando o load das rotas
+    // Tambem ajustando o contador de lockers da rota
     double seq_a_load = 0.0;
     double min_seq_a_load = -1.0;
 
     for (int i=i_seq_a_1; i<=i_seq_a_2; i++) {
         Sequence *s = &route_a_sequences->at(i);
+
+        // Ajustando o contador de lockers da rota
+        if (s->node->type == "p") {
+            route_a->visited_lockers[s->node]--;
+            route_b->visited_lockers[s->node]++;
+        }
 
         for (Node* n: s->customers) {
             seq_a_load += n->load_demand;
@@ -636,17 +643,13 @@ void Search::persist_split(int *coordinates, double delta) {
     route_b->minimun_route_load = min_seq_a_load;
 
     // Reajustando a demanda mínima da rota a, se o cara que saiu detém a menor demanda
-    // Tambem ajustando o contador de lockers da rota
     if (route_a->minimun_route_load == min_seq_a_load) {
         route_a->minimun_route_load = -1.0;
         for (int i=1; i < (int)route_a_sequences->size() - 1;i++) {
             Sequence *s = &route_a_sequences->at(i);
 
             if (i == i_seq_a_1) {
-                if (s->node->type == "p") {
-                    route_a->visited_lockers[s->node]--;
-                    route_b->visited_lockers[s->node]++;
-                }
+                i = i_seq_a_2;
             }else {
                 for (Node* n: s->customers) {
                     if (n->load_demand < route_a->minimun_route_load || route_a->minimun_route_load == -1.0) {

@@ -40,31 +40,31 @@ fig = gph.build_fig([node_trace,all_edge_trace, locker_edge_trace] + path_edges_
 st.plotly_chart(fig)
 
 
-# distances = pd.DataFrame(selected_instance.distances, columns = [node.id for node in selected_instance.nodes])
-# distances.index = [node.id for node in selected_instance.nodes]
-# distances_formatted = distances.map(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
+distances = pd.DataFrame(instance.distances, columns = [node.id for node in instance.nodes])
+distances.index = [node.id for node in instance.nodes]
+distances_formatted = distances.map(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
 
-# tab_inst, tab_stats = st.tabs(["Instance data", "Stats"])
-# with tab_inst:
-#     node_a = st.selectbox("Node a", [node.id for node in selected_instance.nodes])
-#     node_b = st.selectbox("Node b", [node.id for node in selected_instance.nodes])
-#     st.write(f"Distance: {distances.loc[node_a,node_b]}")
-#     st.write("Distance Matrix")
-#     st.table(distances_formatted)
-#     load_demands = pd.DataFrame([[node.demand for node in selected_instance.nodes]], columns=[node.id for node in selected_instance.nodes])
-#     st.write("Load Demmand")
-#     st.table(load_demands)
-#     time_demands = pd.DataFrame([[node.service_time for node in selected_instance.nodes]], columns=[node.id for node in selected_instance.nodes])
-#     st.write("Time Demmand")
-#     st.table(time_demands)
-#     time_window = pd.DataFrame([[(node.ready_time,node.due_time) for node in selected_instance.nodes]], columns=[node.id for node in selected_instance.nodes])
-#     st.write("Time Window")
-#     st.table(time_window)
-# with tab_stats:
-#     stats = dt.build_stats(selected_instance.name,in_debug_mode)
-#     stats['cost'] = stats['cost'].round(3)
-#     stats['time'] = stats['time'].round(3)
-#     selected_row = st.dataframe(stats.style.highlight_min(axis=0), width=500, height=1100, selection_mode="single-row",on_select="rerun")
-#     selected_run = selected_row.selection.rows[0]
-#     selected_run_file = open('selected_run','w')
-#     selected_run_file.write(f"{selected_run}")
+tab_inst, tab_stats = st.tabs(["Instance data", "Stats"])
+with tab_inst:
+    node_a = st.selectbox("Node a", [node.id for node in instance.nodes])
+    node_b = st.selectbox("Node b", [node.id for node in instance.nodes])
+    st.write(f"Distance: {distances.loc[node_a,node_b]}")
+    st.write("Distance Matrix")
+    st.table(distances_formatted)
+    load_demands = pd.DataFrame([[node.demand for node in instance.nodes]], columns=[node.id for node in instance.nodes])
+    st.write("Load Demmand")
+    st.table(load_demands)
+    time_demands = pd.DataFrame([[node.service_time for node in instance.nodes]], columns=[node.id for node in instance.nodes])
+    st.write("Time Demmand")
+    st.table(time_demands)
+    time_window = pd.DataFrame([[(node.ready_time,node.due_time) for node in instance.nodes]], columns=[node.id for node in instance.nodes])
+    st.write("Time Window")
+    st.table(time_window)
+with tab_stats:
+    stats = dt.build_stats(instance.name,in_debug_mode)
+    stats['cost'] = stats['cost'].round(3)
+    stats['time'] = stats['time'].round(3)
+    selected_row = st.dataframe(stats.style.highlight_min(axis=0), width=500, height=1100, selection_mode="single-row",on_select="rerun")
+    selected_run = selected_row.selection.rows[0]
+    selected_run_file = open('selected_run','w')
+    selected_run_file.write(f"{selected_run}")

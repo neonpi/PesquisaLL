@@ -2,11 +2,12 @@ import gurobipy as gp
 import utils as ut
 import timeit as tm
 import math
+import sys
 best = -1
 def run_all(instance):
     
     instance = ut.build_instance(instance)
-    min_qty_vehicles = 3#math.ceil(instance['total_demands']/instance['vehicle_capacity']) + 2
+    min_qty_vehicles = 4#3#math.ceil(instance['total_demands']/instance['vehicle_capacity']) + 2
     qty_vehicles = min_qty_vehicles
     print(f"Running instance {instance['inst_name'].split('/')[-1]} (min_v = {min_qty_vehicles})")
     
@@ -121,21 +122,21 @@ def run_exp(instance, qty_vehicles):
         gp.quicksum(x_ijk[customer_i,node_j,v_k] for node_j in nodes for v_k in vehicles) == 0 for customer_i in customers_lc
     )
 
-    #Sempre sair do deposito TODO: mudei de customers para customers + lockers
+    #Sempre sair do deposito TODO: mudei de customers para customers + lockers TODO: desfiz
     c5 = m.addConstrs(
-        gp.quicksum(x_ijk[depot,customer_j,v_k] for customer_j in customers + lockers) <= 1 for v_k in vehicles
+        gp.quicksum(x_ijk[depot,customer_j,v_k] for customer_j in customers) <= 1 for v_k in vehicles
     )
 
     #Dinâmica de fluxo
     c6 = m.addConstrs(
-        gp.quicksum(x_ijk[node_i,node_j,v_k] for node_i in nodes if node_i != node_j) ==
-        gp.quicksum(x_ijk[node_j,node_i,v_k] for node_i in nodes if node_j != node_i) for node_j in nodes for v_k in vehicles  
+        (gp.quicksum(x_ijk[node_i,node_j,v_k] for node_i in nodes if node_i != node_j) ==
+        gp.quicksum(x_ijk[node_j,node_i,v_k] for node_i in nodes if node_j != node_i)) for node_j in nodes for v_k in vehicles  
         
     )
 
-    #Sempre chiegar no deposito TODO: mudei de customers para customers + lockers
+    #Sempre chiegar no deposito TODO: mudei de customers para customers + lockers TODO: desfiz
     c7 = m.addConstrs(
-        gp.quicksum(x_ijk[customer_i,depot,v_k] for customer_i in customers + lockers) <= 1 for v_k in vehicles
+        gp.quicksum(x_ijk[customer_i,depot,v_k] for customer_i in customers) <= 1 for v_k in vehicles
     )
 
 
@@ -167,15 +168,16 @@ def run_exp(instance, qty_vehicles):
 
     #Time window
     c12a =  m.addConstrs(
-        tw_a[customer_j] * x_ijk[node_i,customer_j,v_k] <=
-        mu_ik[customer_j,v_k] * x_ijk[node_i,customer_j, v_k]
-        for v_k in vehicles for customer_j in customers for node_i in nodes
+        tw_a[customer_i] * h_i[customer_i] <=
+        mu_ik[customer_i,v_k] * h_i[customer_i]
+        for v_k in vehicles for customer_i in customers
     )
     c12b =  m.addConstrs(
-        mu_ik[customer_j,v_k] * x_ijk[node_i,customer_j, v_k] <= 
-        tw_b[customer_j] * x_ijk[node_i,customer_j,v_k] 
-        for v_k in vehicles for customer_j in customers for node_i in nodes
+        mu_ik[customer_i,v_k] * h_i[customer_i] <= 
+        tw_b[customer_i] * h_i[customer_i] 
+        for v_k in vehicles for customer_i in customers
     )
+
     #Ou casa ou locker vai atender o N_HLC
     c13 =  m.addConstrs(
         h_i[customer_i] + l_i[customer_i] == 1 for customer_i in customers
@@ -207,6 +209,12 @@ def run_exp(instance, qty_vehicles):
         for locker_j in lockers
     )
 
+    # Limita a quantidade de atendimentos ao locker
+    c19 =  m.addConstrs(
+        (gp.quicksum(y_ij[customer_i, locker_j] for customer_i in customers) <= len(instance['nodes'][locker_j]['customers']))
+        for locker_j in lockers
+    )
+
     #---#
     # Garante que o locker seja visitadoe seja visitado se l_j = 1
     c20 =  m.addConstrs(
@@ -219,12 +227,22 @@ def run_exp(instance, qty_vehicles):
         gp.quicksum(x_ijk[node_i,customer_j,v] for node_i in nodes for v in vehicles) >= h_i[customer_j] for customer_j in customers
     )
 
+    # Restrição estranha
+    c22 =  m.addConstrs(
+        x_ijk[node_i,node_i,v]  >= 0 for node_i in nodes for v in vehicles
+    )
+
     # --- #
 
     # Domínio PSI_jk
     c27 =  m.addConstrs(
         psi_jk[node_j,v] >= 0 for node_j in lockers for v in vehicles
     )
+
+    # Restrição estranha
+    # c28 =  m.addConstrs(
+    #     mu_ik[node_i,v] > 0 for node_i in nodes for v in vehicles
+    # )
 
     c29 =  m.addConstrs(
         delta_k[v] >= 0 for v in vehicles

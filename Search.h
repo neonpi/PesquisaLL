@@ -57,6 +57,7 @@ public:
     void persist_swap_2_2(int* coordinates, double delta);
 
     void ls_inter_split(bool *improved);
+    void persist_split(int* coordinates, double delta);
 
     void ls_locker_reducer(bool *improved);
     void reduce_double_locker(int i_route, Route *route, Node *locker);

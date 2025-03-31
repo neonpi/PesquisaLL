@@ -601,3 +601,87 @@ void Search::persist_swap_2_1(int *coordinates, double delta)
     propagate(coordinates[2], coordinates[3] - 1);
 
 }
+
+
+void Search::persist_split(int *coordinates, double delta) {
+    int i_route_a = coordinates[0];
+    int i_seq_a_1 = coordinates[1];
+    int i_seq_a_2 = coordinates[2];
+    Route* route_a = this->solution->routes.at(i_route_a);
+    vector<Sequence>* route_a_sequences = &route_a->sequences;
+    Sequence *seq_a_1 = &route_a_sequences->at(i_seq_a_1);
+    Sequence *seq_a_2 = &route_a_sequences->at(i_seq_a_2);
+    Route* route_b = this->solution->routes.at(this->solution->used_routes);
+    vector<Sequence>* route_b_sequences = &route_b->sequences;
+
+    //Atualizando o load das rotas
+    double seq_a_load = 0.0;
+    double min_seq_a_load = -1.0;
+
+    for (int i=i_seq_a_1; i<=i_seq_a_2; i++) {
+        Sequence *s = &route_a_sequences->at(i);
+
+        for (Node* n: s->customers) {
+            seq_a_load += n->load_demand;
+            if (n->load_demand < min_seq_a_load || min_seq_a_load == -1.0) {
+                min_seq_a_load = n->load_demand;
+            }
+        }
+    }
+
+    route_a->load -= seq_a_load;
+    route_b->load += seq_a_load;
+
+    // Atualizando a demanda mínima para a rota b
+    route_b->minimun_route_load = min_seq_a_load;
+
+    // Reajustando a demanda mínima da rota a, se o cara que saiu detém a menor demanda
+    // Tambem ajustando o contador de lockers da rota
+    if (route_a->minimun_route_load == min_seq_a_load) {
+        route_a->minimun_route_load = -1.0;
+        for (int i=1; i < (int)route_a_sequences->size() - 1;i++) {
+            Sequence *s = &route_a_sequences->at(i);
+
+            if (i == i_seq_a_1) {
+                if (s->node->type == "p") {
+                    route_a->visited_lockers[s->node]--;
+                    route_b->visited_lockers[s->node]++;
+                }
+            }else {
+                for (Node* n: s->customers) {
+                    if (n->load_demand < route_a->minimun_route_load || route_a->minimun_route_load == -1.0) {
+                        route_a->minimun_route_load = n->load_demand;
+                    }
+                }
+            }
+        }
+    }
+
+    route_b_sequences->insert(route_b_sequences->begin() + 1,(route_a_sequences->begin() + i_seq_a_1),(route_a_sequences->begin() + i_seq_a_2 + 1));
+    route_a_sequences->erase(route_a_sequences->begin() + i_seq_a_1, route_a_sequences->begin() + i_seq_a_2 + 1);
+
+    propagate(i_route_a, i_seq_a_1 - 1);
+    propagate(this->solution->used_routes, 0);
+
+    this->solution->used_routes++;
+    this->solution->cost += delta;
+
+    //Atualizando distância da rota a
+    route_a->traveled_distance = 0;
+    for (int i=1; i < (int)route_a_sequences->size();i++) {
+        Node* n_i = route_a_sequences->at(i).node;
+        Node* n_j = route_a_sequences->at(i-1).node;
+
+        route_a->traveled_distance += this->instance->distances[n_i->index][n_j->index];
+    }
+
+    //Atualizando distância da rota b
+    route_b->traveled_distance = 0;
+    for (int i=1; i < (int)route_b_sequences->size();i++) {
+        Node* n_i = route_b_sequences->at(i).node;
+        Node* n_j = route_b_sequences->at(i-1).node;
+
+        route_b->traveled_distance += this->instance->distances[n_i->index][n_j->index];
+    }
+}
+

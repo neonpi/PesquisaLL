@@ -29,10 +29,8 @@ Search::~Search() {
 
 void Search::run() {
     this->construct();
-    this->ls_inter_split(nullptr);
-    /*
     this->rvnd_inter();
-    this->iterated_greedy();*/
+    this->iterated_greedy();
 
 }
 
@@ -121,12 +119,12 @@ void Search::rvnd_inter() {
 
     this->rvnd_intra();
 
-    vector<int> neighb = {0,1,2,3,4};
+    vector<int> neighb = {0,1,2,3,4,5};
     int last_improved_neighb = -1;
     random_shuffle(neighb.begin(),neighb.end());
     bool improved = false;
 
-    for(int i=0;i<5;i++) {
+    for(int i=0;i<6;i++) {
         if(neighb[i] != last_improved_neighb) {
             switch (neighb[i]) {
                 case 0:
@@ -143,6 +141,9 @@ void Search::rvnd_inter() {
                     break;
                 case 4:
                     this->ls_inter_shift_2_0(&improved);
+                    break;
+                case 5:
+                    this->ls_inter_split(&improved);
                     break;
                 default:
                     cout<<"Unknown LS"<<endl;

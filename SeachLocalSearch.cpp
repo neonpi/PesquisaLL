@@ -389,7 +389,7 @@ void Search::ls_inter_split(bool *improved) {
     Sequence * seq_a_1 = nullptr;
     Sequence * seq_a_2 = nullptr;
     Sequence * seq_b = nullptr;
-    this->solution->print();
+
     for (int i_route_a = 0; i_route_a < this->solution->used_routes ;i_route_a++) {
         route_a = this->solution->routes.at(i_route_a);
         route_a_sequences = &route_a->sequences;
@@ -407,10 +407,19 @@ void Search::ls_inter_split(bool *improved) {
                         coordinates[0] = i_route_a;
                         coordinates[1] = i_seq_a_1;
                         coordinates[2] = i_seq_a_2;
+                        best_delta = delta;
                     }
                 }
             }
         }
+    }
+
+    if (best_delta < 0.0) {
+        *improved = true;
+        this->persist_split(coordinates,best_delta);
+        Utils::test_cost(this->solution);
+        Utils::test_print_viability(this->solution,0);
+
     }
 }
 

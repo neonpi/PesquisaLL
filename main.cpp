@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
         vector<Instance*> instances = Utils::buildInstances();
         cout<<"LOADING FINISHED"<<endl;
 
-        Config* config = new Config(30,0.2,0.7,false);
+        Config* config = new Config(30,0.2,1.0,false);
         //Config* config = new Config(1000000,0.2,false);
         config->print();
 

@@ -18,9 +18,6 @@ void test_solution(vector<Instance *> *instances, string instance_name, Config *
 void irace_run(int argc, char *argv[]);
 void fix_instances(vector<Instance*> *instances);
 
-
-void test_shortest_path(vector<Instance*> *instances);
-
 int main(int argc, char *argv[])
 {
     if(argc < 2) {
@@ -35,21 +32,7 @@ int main(int argc, char *argv[])
 
         cout<<"RUNNING EXPERIMENTS"<<endl;
 
-        //fix_instances(&instances);
-
-        //test_shortest_path(&instances);
-        //run_pair_instance_seed(&instances,"C101_co_25.txt",0,config);
-        //run_instance(&instances,"R205_co_50.txt",config);
-        /*run_instance(&instances,"fixed_C104_co_25.txt",config);
-        run_instance(&instances,"fixed_C108_co_25.txt",config);
-        run_instance(&instances,"fixed_C201_co_25.txt",config);
-        run_instance(&instances,"fixed_C202_co_25.txt",config);
-        run_instance(&instances,"fixed_C203_co_25.txt",config);
-        run_instance(&instances,"fixed_C204_co_25.txt",config);
-        run_instance(&instances,"fixed_C205_co_25.txt",config);
-        run_instance(&instances,"fixed_C206_co_25.txt",config);
-        run_instance(&instances,"fixed_C207_co_25.txt",config);*/
-        //run_instance(&instances,"R205_co_50.txt",config);
+        /*run_instance(&instances,"fixed_C104_co_25.txt",config);*/
         default_run(&instances,config);
         //test_solution(&instances,"fixed_C108_co_25.txt", config);
 
@@ -252,85 +235,6 @@ void test_solution(vector<Instance *> *instances, string instance_name, Config *
 
     delete s;
 
-
-}
-
-void test_shortest_path(vector<Instance *> *instances) {
-    int broken_inequalties = 0;
-    double inf = 1000000.0;
-    for(Instance* instance: *instances) {
-        //cout<<"Instance "<< instance->inst_name<<endl;
-        bool broke_inequalty = false;
-        //Instanciando matriz de distancias
-        vector<vector<double>> shortest_path;
-        shortest_path.reserve(instance->n_node);
-
-        for(int i=0; i<instance->n_node; i++) {
-            shortest_path.emplace_back();
-            vector<double>* current_vector = &*(shortest_path.end() -1);
-
-            for(int j=0; j < instance->n_node; j++) {
-                if(j==i) {
-                    current_vector->push_back(0.0);
-                }else {
-                    current_vector->push_back(inf);
-                }
-            }
-        }
-        //Calculando distâncias mínimas
-        for(int i_node_i=0; i_node_i<instance->n_node; i_node_i++) {
-            vector<double>* current_vector = &shortest_path.at(i_node_i);
-            Node* node_i = &instance->nodes.at(i_node_i);
-
-            vector<bool> relaxed;
-            for(int i=0;i<instance->n_node; i++){relaxed.push_back(false);}
-
-
-            for(int j=0; j < instance->n_node; j++) {
-
-                //Escolhendo o menor nó não relaxado
-                int i_node_j = -1;
-                for(int k=0; k<instance->n_node;k++) {
-                    if(!relaxed.at(k) && (i_node_j == -1 || current_vector->at(k) < current_vector->at(i_node_j))) {
-                        i_node_j = k;
-                    }
-                }
-
-                Node* node_j = &instance->nodes.at(i_node_j);
-
-                for(int i_node_k=0; i_node_k< instance->n_node; i_node_k++) {
-                    Node* node_k = &instance->nodes.at(i_node_k);
-
-                    if(current_vector->at(i_node_k) > (current_vector->at(i_node_j) + instance->distances[i_node_j][i_node_k])) {
-                        broke_inequalty = true;
-                        current_vector->at(i_node_k) = (current_vector->at(i_node_j) + instance->distances[i_node_j][i_node_k]);
-                    }
-
-                }
-                relaxed.at(i_node_j) = true;
-            }
-        }
-
-        for(int i=0; i < instance -> n_node; i++) {
-
-            for(int j=0; j < instance -> n_node; j++) {
-
-                    instance->distances[i][j] = shortest_path.at(i).at(j);
-                /*if(shortest_path.at(i).at(j) < instance->distances[i][j] && Count::differs(shortest_path.at(i).at(j),instance->distances[i][j])) {
-                    double* bo = &instance->distances[i][j];
-                    broke_inequalty = true;
-                }*/
-
-            }
-
-        }
-
-        if(broke_inequalty) {
-            broken_inequalties++;
-        }
-    }
-
-    cout<<broken_inequalties<<" broken"<<endl;
 
 }
 

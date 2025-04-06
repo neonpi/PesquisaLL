@@ -278,8 +278,8 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *c
         Sequence cand_sequence;
         cand_sequence.node = cand_node;
         cand_sequence.customers.push_back(cand_node);
-        tuple<int, int, Sequence, double> cand_tuple = {-1,-1,cand_sequence, MAX_DOUBLE};
-        double delta = -1.0;
+        tuple<int, int, Sequence, double> cand_tuple = {-1,-1,cand_sequence, MAX_DOUBLE}; //<route, index, sequence, delta>
+        double delta = MAX_DOUBLE;
 
 
         for (int i_route = 0; i_route<(int)this->solution->routes.size();i_route++) {
@@ -292,7 +292,7 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *c
                     if (previous_sequence->node->id != "Dt") {
                         delta = calculate_delta_distance(i_route, i_prev_seq, &cand_sequence);
 
-                        if(Count::differs(get<3>(cand_tuple),MAX_DOUBLE) || delta < get<3>(cand_tuple)) {
+                        if(delta < get<3>(cand_tuple)) {
 
                             bool is_insertion_viable = propagate_virtual(i_route, i_prev_seq, &cand_sequence);
 
@@ -315,7 +315,7 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *c
 
         }
 
-        if(get<0>(cand_tuple) != -1.0) {
+        if(get<0>(cand_tuple) < MAX_DOUBLE) {
             cand_list->push_back(cand_tuple);
         }
 
@@ -328,14 +328,14 @@ void Search::try_locker_candidate(vector<tuple<int, int, Sequence, double>> *can
 
     Sequence cand_sequence;
     cand_sequence.node = cand_node;
-    tuple<int, int, Sequence, double> cand_tuple = {-1,-1,cand_sequence,MAX_DOUBLE};
+    tuple<int, int, Sequence, double> cand_tuple = {-1,-1,cand_sequence,-1};
     vector<Node*> cand_customers;
-    double delta = MAX_DOUBLE;
+    double delta = -1.0;
 
     int route_index = 0;
     for (Route* route : this->solution->routes) {
 
-        tuple<int, double> route_cand_tuple = {-1,MAX_DOUBLE};
+        tuple<int, double> route_cand_tuple = {-1,-1.0};
         vector<Node*> route_cand_customers;
 
         //Inserindo todos os clientes que podem caber na rota

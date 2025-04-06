@@ -18,7 +18,7 @@
 #include "Counter.h"
 #include "Config.h"
 #include "Solution.h"
-#define MAX_DOUBLE 9999.9
+#define MAX_DOUBLE 9999999.9
 
 using namespace std;
 

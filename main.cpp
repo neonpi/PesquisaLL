@@ -32,8 +32,8 @@ int main(int argc, char *argv[])
 
         cout<<"RUNNING EXPERIMENTS"<<endl;
 
-        /*run_instance(&instances,"fixed_C104_co_25.txt",config);*/
-        default_run(&instances,config);
+        run_instance(&instances,"C101_co_50.txt",config);
+        //default_run(&instances,config);
         //test_solution(&instances,"fixed_C108_co_25.txt", config);
 
         cout<<"EXPERIMENTS FINISHED"<<endl;
@@ -92,11 +92,10 @@ void run_instance(vector<Instance *> *instances, string instance_name, Config *c
     cout<<"Instance "<< instance->name<<endl;
     Stats* stats = new Stats(instance, config);
     Utils::print_result_file(nullptr, instance, 0, 0.0, 0.0);
-    double best_known = -1.0;
-    for(int i=0;i<config->runs;i++) {
 
+    for(int i=0;i<config->runs;i++) {
         srand(config->seeds.at(i));
-        srand(0);
+        //srand(3);
         config->run = i;
 
         Search* search = new Search(instance,config);

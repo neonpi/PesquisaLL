@@ -151,7 +151,6 @@ def build_path_edges_trace():
 
             for index, node in enumerate(route):
                 if node['id'] != "D0":
-                    print(node['id'])
                     node_i = list(filter(lambda x: x.id == node['id'], instance.nodes))[0]
                     node_j = list(filter(lambda x: x.id == route[index-1]['id'], instance.nodes))[0]
                     G.add_edge(node_i.id, node_j.id)

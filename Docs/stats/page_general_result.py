@@ -32,7 +32,6 @@ st.dataframe(overall_df, height=6000, width=600, column_config={
 
 # for i in range(len(instances)):
 #     if instances[i].name in [stat[0] for stat in stats]:
-#         print(instances[i].name)
 #         # inst_data = np.array([instances[i].name, np.mean(stats[i][1]['time'].to_numpy()).round(5),np.mean(stats[i][1]['cost'].to_numpy()).round(5),(np.array(stats[i][1]['time'])).min(),(np.array(stats[i][1]['cost']).min()).round(3)])
 #     else:
 #         inst_data = [instances[i].name,0,0,0,0]

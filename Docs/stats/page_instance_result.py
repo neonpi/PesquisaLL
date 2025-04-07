@@ -8,7 +8,7 @@ import pandas as pd
 dt.build_runs()
 instance = st.session_state['instance']
 runs = st.session_state['runs']
-# st.write(st.session_state['runs'])
+debug = st.session_state['debug']
 
 #Controllers
 show_all_edges = st.sidebar.toggle("Show all edges")
@@ -60,11 +60,11 @@ with tab_inst:
     time_window = pd.DataFrame([[(node.ready_time,node.due_time) for node in instance.nodes]], columns=[node.id for node in instance.nodes])
     st.write("Time Window")
     st.table(time_window)
-with tab_stats:
-    stats = dt.build_stats(instance.name,in_debug_mode)
-    stats['cost'] = stats['cost'].round(3)
-    stats['time'] = stats['time'].round(3)
-    selected_row = st.dataframe(stats.style.highlight_min(axis=0), width=500, height=1100, selection_mode="single-row",on_select="rerun")
-    selected_run = selected_row.selection.rows[0]
-    selected_run_file = open('selected_run','w')
-    selected_run_file.write(f"{selected_run}")
+# with tab_stats:
+#     stats = dt.build_stats(instance.name,debug)
+#     stats['cost'] = stats['cost'].round(3)
+#     stats['time'] = stats['time'].round(3)
+#     selected_row = st.dataframe(stats.style.highlight_min(axis=0), width=500, height=1100, selection_mode="single-row",on_select="rerun")
+#     selected_run = selected_row.selection.rows[0]
+#     selected_run_file = open('selected_run','w')
+#     selected_run_file.write(f"{selected_run}")

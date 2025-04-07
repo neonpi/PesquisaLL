@@ -4,21 +4,20 @@ class Instance:
         self.name=""
         self.nodes = []
         self.distances = []
+        self.load_capacity = 0
     def __str__(self):
-        instance_str = self.name + " - "
+        instance_str = f"Name: {self.name} - Load Capacity: {self.load_capacity} - "
         for node in self.nodes:
-            instance_str = instance_str + node.__str__()+" "
+            instance_str += f" {node.__str__()}"
         return instance_str
     
     def to_dict(self):
-        for node in self.nodes:
-            if node.type == 'p':
-                print([locker.to_dict() for locker in node.locker_customers])
-        # print([node.to_dict() for node in self.nodes])
+
         obj = {
             "name": self.name,
             "nodes": [node.to_dict() for node in self.nodes],
-            "distances": self.distances 
+            "distances": self.distances ,
+            "load_capacity": self.load_capacity
         }
         return obj
     
@@ -34,9 +33,10 @@ class Node:
         self.service_time = 0
         self.locker_customers = []
         self.assigned_locker = ''
+        self.index = 0
     
     def __str__(self):
-        return "ID:" + self.id
+        return f"ID: {self.id} "
     
     def to_dict(self):
         return {
@@ -49,5 +49,6 @@ class Node:
             "due_time" : self.due_time,
             "service_time" : self.service_time,
             "locker_customer" : [node.id for node in self.locker_customers],
-            "assigned_locker" : self.assigned_locker.id if isinstance(self.assigned_locker,Node) else ""
+            "assigned_locker" : self.assigned_locker.id if isinstance(self.assigned_locker,Node) else "",
+            "index": self.index
         }

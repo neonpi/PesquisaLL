@@ -3,11 +3,7 @@ import data as dt
 import utils as ut
 import json
 
-if "instances" not in st.session_state:
-    st.session_state['instances'] = dt.build_instances()
-
-# selected_instance = instances[0]
-# st.write(json.dumps(st.session_state['instances'][0].to_dict()))
+st.session_state['instances'] = dt.build_instances()
 
 instances = st.session_state['instances']
 selected_instance = st.sidebar.selectbox("Instance",[instance.name for instance in instances],0)

@@ -4,4 +4,6 @@ def def_environment():
 
 def select_instance(instance_name):
 
-    st.session_state['instance'] = [instance for instance in st.session_state['instances'] if instance.name == instance_name][0]
+    instance = [instance for instance in st.session_state['instances'] if instance.name == instance_name][0]
+    st.session_state['instance'] = instance
+    st.sidebar.write(f"Load capacity: {instance.load_capacity}")

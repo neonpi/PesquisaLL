@@ -101,7 +101,6 @@ def build_stats(debug):
             
             i_num+=1
 
-            # print(times)
             data = {
                 "Cost": costs,
                 "#Vehicle": vehicles,
@@ -135,7 +134,6 @@ def build_stats(debug):
 
     except FileNotFoundError as error:
         print(f"File  not Found")  
-        # print(f"File {instance_name}_stats not Found")  
     except Exception as error:
         print(f"Erro {error}")
     finally:
@@ -143,6 +141,7 @@ def build_stats(debug):
 
 def build_path_strings():
     show_path_string = st.session_state['show_path_string']
+    instance = st.session_state['instance']
     
     if(show_path_string):
         runs = st.session_state['runs_to_show']
@@ -150,12 +149,26 @@ def build_path_strings():
             st.write(f"**Run {run['run']}** :")
             veh_no = 0
             for route in run['routes']:
+                load = 0
+                distance = 0
                 line = f"   - V{veh_no} - "
-                for node in route:
+                for index_node, node in enumerate(route):
                     if(len(node['customers']) > 1):
-                        line = f"{line} {node['id']}({",".join(node["customers"])})"
+                        line = f"{line} {node['id']}({','.join(node['customers'])})"
                     else:
                         line = f"{line} {node['id']}"
+                    
+                    if index_node > 0:
+                        curr_node = [c_node for c_node in instance.nodes if node['id'] == c_node.id][0]
+                        prev_node = [c_node for c_node in instance.nodes if route[index_node-1]['id'] == c_node.id][0]
+                        distance += instance.distances[curr_node.index][prev_node.index]
+
+                    for customer in node['customers']:
+                        customer_node = [cust for cust in instance.nodes if customer == cust.id][0]
+                        load += float(customer_node.demand)
+                
+                
+                line = f"{line} - **Load: {load} - Dist.: {math.trunc(distance * 10) / 10}**"
                 veh_no += 1
                 st.write(line)
 
@@ -181,7 +194,7 @@ def build_instances():
         line = instance_file.readline()
         line = line.split(" ")
         n_vehicle = int(line[0])
-        load_capacity = float(line[1])
+        new_instance.load_capacity = float(line[1])
         
         ## Definindo nós
 
@@ -245,9 +258,6 @@ def build_instances():
                     new_instance.nodes[i].type = 'p'
 
 
-            # print(line)
-            # print(new_instance.nodes[i].x, new_instance.nodes[i].y, new_instance.nodes[i].ready_time, new_instance.nodes[i].due_time, new_instance.nodes[i].service_time, new_instance.nodes[i].type)
-        
         #Definindo locker
         for i in range(2,n_customers+2):
             line = instance_file.readline()
@@ -262,15 +272,13 @@ def build_instances():
                     break
             
         ready_instances.append(new_instance)
-        #print([node.id for node in new_instance.nodes])
-            
-        
-        
-
-        # for line in instance_file:
-        #     print(line)
 
     calculate_distances(ready_instances)
+
+    for instance in ready_instances:
+        for i in range(len(instance.nodes)):
+            instance.nodes[i].index = i
+    
     return ready_instances
 
 def is_node(line):

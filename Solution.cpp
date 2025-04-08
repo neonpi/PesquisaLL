@@ -4,6 +4,7 @@
 
 #include "Solution.h"
 
+#include "Counter.h"
 
 
 Solution::Solution(Instance* instance) {

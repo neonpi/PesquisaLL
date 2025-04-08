@@ -46,6 +46,12 @@ distances_formatted = distances.map(lambda x: f"{x:.2f}" if isinstance(x, (int, 
 
 tab_inst, tab_stats = st.tabs(["Instance data", "Stats"])
 with tab_inst:
+    for node in instance.nodes:
+        if node.type == "p":
+            str_locker_cust = f"**{node.id}**: "
+            for cust in node.locker_customers:
+                str_locker_cust = str_locker_cust + f"{cust.id},"
+            st.write(str_locker_cust)
     node_a = st.selectbox("Node a", [node.id for node in instance.nodes])
     node_b = st.selectbox("Node b", [node.id for node in instance.nodes])
     st.write(f"Distance: {distances.loc[node_a,node_b]}")

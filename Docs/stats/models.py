@@ -48,7 +48,7 @@ class Node:
             "ready_time" : self.ready_time,
             "due_time" : self.due_time,
             "service_time" : self.service_time,
-            "locker_customer" : [node.id for node in self.locker_customers],
+            "locker_customers" : [node.id for node in self.locker_customers],
             "assigned_locker" : self.assigned_locker.id if isinstance(self.assigned_locker,Node) else "",
             "index": self.index
         }

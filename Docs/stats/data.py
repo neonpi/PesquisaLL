@@ -142,12 +142,13 @@ def build_stats(debug):
 def build_path_strings():
     show_path_string = st.session_state['show_path_string']
     instance = st.session_state['instance']
-    
+    total_distance = 0
+    lines=[]
     if(show_path_string):
         runs = st.session_state['runs_to_show']
         for run in runs:
-            st.write(f"**Run {run['run']}** :")
             veh_no = 0
+            served_customers = 0
             for route in run['routes']:
                 load = 0
                 distance = 0
@@ -166,11 +167,16 @@ def build_path_strings():
                     for customer in node['customers']:
                         customer_node = [cust for cust in instance.nodes if customer == cust.id][0]
                         load += float(customer_node.demand)
-                
-                
+
+                total_distance += distance
                 line = f"{line} - **Load: {load} - Dist.: {math.trunc(distance * 10) / 10}**"
                 veh_no += 1
-                st.write(line)
+                served_customers += line.count("C")
+                lines.append(line)
+
+        st.write(f"**Run {run['run']}** (Cost: **{math.trunc(total_distance*10)/10}**, Cust served: {served_customers}):")
+        for line in lines:
+            st.write(line)
 
 def build_instances():
     instance_list = open('../../instances/instances.txt', "r")

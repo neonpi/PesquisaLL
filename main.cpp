@@ -1,4 +1,5 @@
 #include <iostream>
+#include <random>
 #include <string>
 
 #include "vector"
@@ -15,6 +16,9 @@ void run_pair_instance_seed(vector<Instance*> *instances, string instance_name, 
 void run_instance(vector<Instance*> *instances, string instance_name, Config* config);
 void grasp_run(Instance *instance, Config* config, Stats* stats);
 void test_solution(vector<Instance *> *instances, string instance_name, Config *config);
+void test_solutions(vector<Instance *> *instances, string instance_name, Config *config);
+
+
 void irace_run(int argc, char *argv[]);
 void fix_instances(vector<Instance*> *instances);
 
@@ -26,15 +30,16 @@ int main(int argc, char *argv[])
         vector<Instance*> instances = Utils::buildInstances();
         cout<<"LOADING FINISHED"<<endl;
 
-        Config* config = new Config(30,0.2,1.0,false);
+        Config* config = new Config(1,0.2,1.0,false);
         //Config* config = new Config(1000000,0.2,false);
         config->print();
 
         cout<<"RUNNING EXPERIMENTS"<<endl;
 
-        run_instance(&instances,"C101_co_50.txt",config);
+        //run_instance(&instances,"C101_co_50.txt",config);
         //default_run(&instances,config);
-        //test_solution(&instances,"fixed_C108_co_25.txt", config);
+        //test_solutions(&instances,"C104_co_25.txt", config);
+        test_solution(&instances,"C104_co_25.txt", config);
 
         cout<<"EXPERIMENTS FINISHED"<<endl;
         delete config;
@@ -205,7 +210,98 @@ void irace_run(int argc, char *argv[]) {
     delete instance;
     delete search;
 }
+bool criter(vector<string> a, vector<string> b){return (int)a.size() > (int)b.size();}
+void test_solutions(vector<Instance *> *instances, string instance_name, Config *config) {
+    Instance* instance = nullptr;
+    for(Instance* inst: *instances) {
+        if(inst->name == instance_name) {
+            instance = inst;
+            break;
+        }
+    }
 
+    /*for(int i=instance->locker_indexes[0]; i < instance->locker_indexes[1]; i++) {
+        Node* locker = &instance->nodes.at(i);
+        double load = 0;
+        for (Node* n : locker->designated_customers) {
+            load += n->load_demand;
+        }
+        cout<<locker->id<<" "<<load<<endl;
+    }*/
+
+    Utils::print_result_file(nullptr, instance, 0, 0.0, 0.0);
+
+
+    vector<string> nodes = {};
+    for(Node &n: instance->nodes) {
+        if(n.type == "c1" || n.type == "p") {
+            nodes.push_back(n.id);
+        }
+    }
+
+    for(int i=0; i<config->runs; i++) {
+
+
+        //vector<int> locker_route = {-1, -1};
+
+        int qtd_nodes = (int)nodes.size();
+
+        srand(config->seeds.at(i));
+
+
+        vector<vector<string>> routes;
+        do {
+            shuffle(nodes.begin(),nodes.end(), std::mt19937(std::random_device()()));
+            routes = {{},{},{}};
+            for(int j=0; j<qtd_nodes; j++) {
+                string route_str = nodes.at(j);
+                int i_route = rand()%(int)routes.size();
+                int i_seq = (int)routes.at(i_route).size() == 0? 0 : rand()%(int)routes.at(i_route).size();
+
+                vector<string>* route = &routes.at(i_route);
+                if(!route_str.find("P")) {
+                    //int locker_index = route[1]=='0'? 0 : 1;
+
+                   // locker_route.at(locker_index) = i_route;
+                    route_str = route_str+"()";
+
+                }
+
+                route->insert(route->begin()+i_seq,route_str);
+            }
+
+            for(vector<string> &route: routes) {
+                route.insert(route.begin(),"D0");
+                route.insert(route.end(),"Dt");
+            }
+
+            stable_sort(routes.begin(),routes.end(),criter);
+
+            while((routes.end()-1)->size() == 2) {
+                routes.erase(routes.end()-1);
+            }
+        }while((int)routes.size() < 3);
+
+        Search *s = new Search(instance,config);
+        s->build_predefined_solution(routes);
+
+        if(s->solution->cost <= 182.1) {
+            Utils::print_result_file(s, instance, 0, 0, 0);
+        }
+
+        if(i%10000 == 0) {
+            cout<<i<<endl;
+        }
+
+        if(!Count::differs(s->solution->cost,181.8) || !Count::differs(s->solution->cost,182.0)) {
+            exit(0);
+        }
+        delete s;
+
+    }
+
+
+}
 void test_solution(vector<Instance *> *instances, string instance_name, Config *config) {
 
     Instance* instance = nullptr;
@@ -217,9 +313,10 @@ void test_solution(vector<Instance *> *instances, string instance_name, Config *
     }
 
     vector<vector<string>> routes = {
-        {"D0", "P0(C0,C1,C2,C4,C7,C8,C10,C22,C23,C24,C6)", "Dt"},
-        {"D0", "C16", "C17", "C14", "C11", "P1(C15,C13,C12,C18)", "C20", "Dt"},
-        {"D0", "C9", "C5", "C3", "P0(C19,C21)", "Dt"}
+        {"D0", "C16", "C14", "C11", "P0(C8,C15,C18,C22,C12,C13)", "C3", "Dt"},
+        {"D0", "C19", "C23", "C24", "C21", "C20", "Dt"},
+        {"D0", "C6","C7","P1(C2,C4,C5,C17,C1,C0)","C10","C9",  "Dt"}
+        //{"D0", "C9", "C10", "P1(C2,C4,C5,C17,C1,C0)", "C7", "C6", "Dt"}
     };
 
     Search *s = new Search(instance,config);

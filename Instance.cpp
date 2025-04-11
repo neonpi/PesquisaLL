@@ -48,7 +48,8 @@ void Instance::calculate_distances() {
                         +
                         pow(this->nodes.at(i).coord[1]-this->nodes.at(j).coord[1],2)
                         );
-                distance = trunc(distance*10)/10;
+                        distance = trunc(distance*10)/10;
+                // distance = ceil(distance*10);
                 this->distances[i][j] = distance;
 
                 this->distances[j][i] = this->distances[i][j];

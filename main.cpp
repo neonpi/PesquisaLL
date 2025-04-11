@@ -30,16 +30,16 @@ int main(int argc, char *argv[])
         vector<Instance*> instances = Utils::buildInstances();
         cout<<"LOADING FINISHED"<<endl;
 
-        Config* config = new Config(1,0.2,1.0,false);
+        Config* config = new Config(30,0.2,1.0,false);
         //Config* config = new Config(1000000,0.2,false);
         config->print();
 
         cout<<"RUNNING EXPERIMENTS"<<endl;
 
         //run_instance(&instances,"C101_co_50.txt",config);
-        //default_run(&instances,config);
+        default_run(&instances,config);
         //test_solutions(&instances,"C104_co_25.txt", config);
-        test_solution(&instances,"C104_co_25.txt", config);
+        //test_solution(&instances,"C104_co_25.txt", config);
 
         cout<<"EXPERIMENTS FINISHED"<<endl;
         delete config;

@@ -315,7 +315,7 @@ void Search::try_customer_candidate(vector<tuple<int, int, Sequence, double>> *c
 
         }
 
-        if(get<0>(cand_tuple) < MAX_DOUBLE) {
+        if(get<0>(cand_tuple) != -1) {
             cand_list->push_back(cand_tuple);
         }
 

@@ -29,7 +29,7 @@ public:
     static void test_print_viability(Solution *solution, long seed);
     static void test_cost(Solution* solution);
     static void print_candidate_list(vector<tuple<int, int, Sequence, double>> *cand_list);
-
+    static void print_gurobi_variables(Solution* solution);
 
 };
 

@@ -497,4 +497,18 @@ void Utils::print_candidate_list(vector<tuple<int, int, Sequence, double>> *cand
     cout<<endl;
 }
 
+void Utils::print_gurobi_variables(Solution *solution) {
+
+    Instance* instance = solution->instance;
+    vector<vector<int>> x_ijk;
+
+    //inicializando vector
+    for (int k = 0; k < solution->used_routes; k++) {
+        x_ijk.push_back({});
+        for (int i=0; i<instance->n_node - 1; i++) {
+
+        }
+    }
+}
+
 

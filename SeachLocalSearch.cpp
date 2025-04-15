@@ -400,6 +400,7 @@ void Search::ls_inter_split(bool *improved) {
                 seq_a_1 = &route_a_sequences->at(i_seq_a_1);
 
                 for (int i_seq_a_2 = i_seq_a_1; i_seq_a_2 < ((int)route_a_sequences->size()-1);i_seq_a_2++) {
+                    if (i_seq_a_1 == 1 && i_seq_a_2 == (int)route_a_sequences->size()-2) {break;}
                     seq_a_2 = &route_a_sequences->at(i_seq_a_2);
 
                     double delta = this->calculate_delta_split(route_a_sequences,i_seq_a_1, i_seq_a_2, 'c');

@@ -55,7 +55,7 @@ for file_name in file_names:
             output += f"{file.loc[i]['gap']:.3f} \\\\\n"
 
         if (file.loc[i]['ig_avg_time'] == min(file.loc[i]['sa_avg_time'],file.loc[i]['g_avg_time'],file.loc[i]['ig_avg_time'])):
-            output += f"\\textbf{'{'}{file.loc[i]['gap']:.3f}{'}'} \\\\\n"
+            # output += f"\\textbf{'{'}{file.loc[i]['ig_avg_time']:.3f}{'}'} \\\\\n"
             if(file_name == "result_25.csv"):
                 qtd_time_ig[0]+=1
             elif (file_name == "result_50.csv"):
@@ -98,13 +98,13 @@ avg_times_g[3]=f"{everyone['g_avg_time'].mean():.3f}"
 avg_times_sa[3]=f"{everyone['sa_avg_time'].mean():.3f}"
 avg_times_ig[3]=f"{everyone['ig_avg_time'].mean():.3f}"
 
-output = f"$\gap& médio {avg_gaps[0]} & {avg_gaps[1]} & {avg_gaps[2]} & \\textbf{'{'}{avg_gaps[3]}{'}'}\\\\\n"
+output = f"Avg. $\gap & {avg_gaps[0]} & {avg_gaps[1]} & {avg_gaps[2]} & \\textbf{'{'}{avg_gaps[3]}{'}'}\\\\\n"
 miscelaneous.write(output)
 
 output = f"$\#gap\leq 0$ & {qtd_gap[0]} & {qtd_gap[1]} & {qtd_gap[2]} & \\textbf{'{'}{qtd_gap[3]}{'}'}\\\\\n"
 miscelaneous.write(output)
 
-output = f"qtd tempo melhor (s) & G & {qtd_time_ig[0]} & {qtd_time_ig[1]} & {qtd_time_ig[2]} & \\textbf{'{'}{qtd_time_ig[3]}{'}'}\\\\\n"
+output = f"$\#t_{'{'}ig{'}'} \leq t_{'{'}g,sa{'}'}$ (s) & G & {qtd_time_ig[0]} & {qtd_time_ig[1]} & {qtd_time_ig[2]} & \\textbf{'{'}{qtd_time_ig[3]}{'}'}\\\\\n"
 miscelaneous.write(output)
 
 output = f"tempo medio g (s) & G & {avg_times_g[0]} & {avg_times_g[1]} & {avg_times_g[2]} & \\textbf{'{'}{avg_times_g[3]}{'}'}\\\\\n"

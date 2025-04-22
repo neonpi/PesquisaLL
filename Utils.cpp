@@ -97,7 +97,7 @@ Instance * Utils::buildInstance(string fileName) {
 
     Instance* instance = new Instance();
     instance->avg_speed = 1.0;
-    vector<string> instanceName = Utils::tookenize(fileName,"\\");
+    vector<string> instanceName = Utils::tookenize(fileName,"/");
     instance->name = instanceName.at(instanceName.size()-1);
 
     //Numero de clientes e número de lockers

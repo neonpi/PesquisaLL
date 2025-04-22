@@ -37,9 +37,12 @@ public:
     void print() {
         ofstream file;
         file.open("Output/0_config",ofstream::out);
+        if (!file.is_open()) {
+            cout<<"Output file not opened"<<endl;
+        }
         file<<"runs: "<<to_string(this->runs)<<endl;
         file<<"alpha_constr: "<<to_string(this->alpha_constr)<<endl;
-        file<<"alpha_ig: "<<to_string(this->alpha_constr)<<endl;
+        file<<"alpha_ig: "<<to_string(this->alpha_ig)<<endl;
         file<<"seeds:"<<endl;
         for(int i=0;i<this->runs;i++) {
             file<<to_string(i)<<"-"<<this->seeds.at(i)<<endl;

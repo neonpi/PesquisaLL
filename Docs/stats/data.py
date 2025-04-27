@@ -9,7 +9,7 @@ import traceback
 def build_runs():
     debug = st.session_state['debug']
     instance = st.session_state['instance']
-    path = f"../../output/{instance.name}_stats"
+    path = f"../../Output/{instance.name}_stats"
     runs = list()
 
     current_run = None
@@ -188,7 +188,7 @@ def build_instances():
         instance_file = open(instance_name,"r")
 
         new_instance = md.Instance()
-        new_instance.name = instance_name.split("\\")[len(instance_name.split("\\"))-1]
+        new_instance.name = instance_name.split("/")[len(instance_name.split("/"))-1]
 
         #Numero de clientes e lockers
         line = instance_file.readline()

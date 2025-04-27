@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.graph_objects as go
+import plotly.io as pio
 import networkx as nx
 import graph as gph
 import data as dt
@@ -36,9 +37,9 @@ locker_edge_trace = gph.build_locker_edges()
 path_edges_trace = gph.build_path_edges_trace()
 
 fig = gph.build_fig([node_trace,all_edge_trace, locker_edge_trace] + path_edges_trace)
-
+fig.update_layout(margin=dict(l=0, r=0, t=0, b=0))
 st.plotly_chart(fig)
-
+st.sidebar.button("Download Graph", on_click = lambda : (pio.write_image(fig,'graph.pdf',format='pdf')))
 
 distances = pd.DataFrame(instance.distances, columns = [node.id for node in instance.nodes])
 distances.index = [node.id for node in instance.nodes]

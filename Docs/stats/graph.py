@@ -120,8 +120,9 @@ def build_locker_edges():
             visible= show,
             zorder=2,
             line = dict(
-                width=5.5,
-                color='#888',
+                width = 2.5,
+                color = '#888',
+                dash = 'dash'
             ),
             mode='lines'
         )

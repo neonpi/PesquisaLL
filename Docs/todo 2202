@@ -12,10 +12,6 @@ Gerar uma solução heurística com o ig, depois pegar os dados e jogar no gurob
 
 Construtivo: Priorizar os obrigatorios (SERA?)
 
-------------------------------------------
-Como é melhor aprimorante, ja é suficiente para ignorar a inconsistencia Se for locker locker tentar juntar
-analizar somatório de clientes por locker
-
 ----------------------------------------------
 
 TODO: Testar varredura das buscas locais, pra ver se fazerm sentido
@@ -114,3 +110,51 @@ Mudar construtivo do IG: para cada cliente, manter os 30% de menor custo na list
 Ver outros trabalhos com outras instâncias parecidas. Delivery options 2021 delivery options
 
 Modelo presente descrito formalmente presente em ....
+
+
+Deadline: 17/06
+--------------------------
+usar rota a d como referencia
+
+Falar que Esta rodando com essas cooisas ja definidas: Capacidade de locker e atribuição de locker
+2 paragrafos 
+
+Sugestões escrita:
+
+Dado um conjunto de rotas, as buscas locais intra-rota buscam melhorar o custo da solução por meio de pequenos refinamentos, de modo que os nós percorridos por cada veículo não sejam alterados. As buscas locais inter-rota ampliam a vizinhança de busca através de alterações mais amplas, envolvendo mais de uma rota. Portanto, o sequenciamento de execução desses conjuntos de buscas deve ser levando em consideração de forma estratégica. Desta forma, este trabalho propõe três etapas para a execução das buscas:
+
+Executar o RVND intra-rota para refinar a solução corrente;
+Executar o RVND inter-rota a fim de ampliar a vizinhança de busca;
+Caso uma solução melhor tenha sido obtida, executar novamente o RVND intra-rota;
+Repetir os passos 2 e 3 até que nenhuma busca seja capaz de melhorar a solução.
+
+Os resultado são bons porque tambem foram comparados com o gurobi Gurobi (um solver comercial de ponta) e SA (uma meta-heurística consolidada).
+
+o IG não se limita a replicar resultados, mas tem o potencial de explorar o espaço de busca de forma mais eficaz em certos cenários.
+
+Para conclusão: Essa velocidade superior torna o IG extremamente promissor para aplicações que exigem tomada de decisão rápida ou resolução de problemas em larga escala
+
+o IG consistentemente encontra soluções utilizando o mesmo número de veículos (NV) que as melhores soluções apresentadas por Gurobi e SA. Isso reitera que a melhoria no custo não compromete a eficiência no uso dos recursos (veículos).
+
+-----
+No geral, observando as três tabelas, o IG apresentou desempenho considerável, uma vez que o Gurobi é um solver comercial amplamente utilizado e o SA é uma meta-heurística consolidada. A manutenção da qualidade do custo e desempenho em ambos os tamanhos de instância demonstra que o IG tem uma escalabilidade excelente quando aplicado ao VRPPL
+
+Essa demonstração explícita de tempo baixo e controlado em todas as categorias reforça a viabilidade prática do IG para diversos tamanhos de problema.
+
+
+\rever{Procurar exemplos que sai da rota bagunçada e melhora a rota. Ex.: figura c}
+
+Usar somente o D. Não precisa explicitar
+(D0), serving customers directly as well as through the PLs
+and, at the end, returning to the depot (Dt ). The nomenclatures
+D0 and Dt refer to the same location. The subscripts are
+differentiated only to facilitate understanding of the moment
+in which the depot is being visited
+
+Equações: 
+
+Algoritmo 2: rever parametros do algoritmo
+
+Colocar as setinhas e legenda
+
+Referencias em relação aos teses estatisticos

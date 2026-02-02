@@ -1,3 +1,3 @@
-C:/ws/prj_vrppl/cmake-build-debug/CMakeFiles/prj_evrp.dir
-C:/ws/prj_vrppl/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/ws/prj_vrppl/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/user/Documents/CLionProjects/prj_vrppl/cmake-build-debug/CMakeFiles/prj_evrp.dir
+C:/Users/user/Documents/CLionProjects/prj_vrppl/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/user/Documents/CLionProjects/prj_vrppl/cmake-build-debug/CMakeFiles/rebuild_cache.dir

@@ -6,7 +6,7 @@
 
 #include "Utils.h"
 
-
+//Construtor
 Search::Search(Instance *instance, Config* config) {
     this->instance = instance;
     this->config = config;
@@ -26,17 +26,17 @@ Search::~Search() {
     delete this->virtual_sequence;
 }
 
-
+//Chama o iterated greedy
 void Search::run() {
     this->construct();
-    this->rvnd_inter();
+    //this->rvnd_inter();
     this->iterated_greedy();
 
 }
 
 void Search::debug_run() {
     this->construct();
-    this->rvnd_inter();
+    //this->rvnd_inter();
     this->iterated_greedy();
     /*Utils::test_cost(this->solution);
     Utils::test_print_viability(this->solution,0);*/
@@ -47,6 +47,7 @@ void Search::construct() {
     this->insertion_heuristic(false);
 }
 
+//Insere heuristica?
 void Search::insertion_heuristic(bool is_ig) {
 
     vector<tuple<int,int,Sequence,double>> cand_list = build_candidate_list(); //(rota,antecessor,cliente destino)
@@ -117,17 +118,18 @@ void Search::rvnd_intra() {
 
 void Search::rvnd_inter() {
 
-    this->rvnd_intra();
+    //this->rvnd_intra();
+    //,1,2,3,4,5,6,7
 
-    vector<int> neighb = {0,1,2,3,4,5};
+    vector<int> neighb = {0};
     int last_improved_neighb = -1;
     random_shuffle(neighb.begin(),neighb.end());
     bool improved = false;
 
-    for(int i=0;i<6;i++) {
+    for(int i=0;i<1;i++) {
         if(neighb[i] != last_improved_neighb) {
             switch (neighb[i]) {
-                case 0:
+                case 7:
                     this->ls_inter_swap_1_1(&improved);
                     break;
                 case 1:
@@ -145,15 +147,21 @@ void Search::rvnd_inter() {
                 case 5:
                     this->ls_inter_split(&improved);
                     break;
+                case 6:
+                    this->ls_hybrid_reducer(&improved);
+                    break;
+                case 0:
+                    this->ls_inter_swap_c3_locker(&improved);
+                    break;
                 default:
                     cout<<"Unknown LS"<<endl;
             }
 
-            this->ls_locker_reducer(&improved);
+            //this->ls_locker_reducer(&improved);
 
             if(improved) {
                 double cost_before_intra = this->solution->cost;
-                this->rvnd_intra();
+                //this->rvnd_intra();
                 if(this->solution->cost < cost_before_intra) {
                     last_improved_neighb = -1;
                 }else {
@@ -432,6 +440,7 @@ void Search::fill_forward_virtual(Sequence *previous_sequence, Sequence *current
 }
 
 //TODO testar Agora o fill forward só trata o tw
+//pega a partir da instancia e atualiza os tempos (tw) = atualiza current time
 void Search::fill_forward(Sequence *previous_sequence, Sequence *current_sequence) {
 
 

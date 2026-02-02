@@ -21,6 +21,7 @@ Solution::Solution(Instance* instance) {
         this->routes.push_back(r);
     }
 
+    
 }
 //TODO testar
 Solution::~Solution() {

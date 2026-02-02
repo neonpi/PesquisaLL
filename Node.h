@@ -22,7 +22,7 @@ public:
     Node* designated_locker;
     Node* nearest_station;
     vector<Node*> designated_customers;
-    int customers_qty;
+    int customers_qty; //? não entendi muito bem
 
     Node();
     ~Node();

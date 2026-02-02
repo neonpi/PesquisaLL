@@ -4,7 +4,7 @@
 
 #include "Utils.h"
 
-
+//fix_instance => trata clientes c3 (escolhe c2)
 void Utils::fix_instance(Instance* instance) {
 
     vector<string> instances_to_fix{
@@ -60,6 +60,7 @@ void Utils::fix_instance(Instance* instance) {
     }
 
 }
+//Build Instances
 vector<Instance *> Utils::buildInstances() {
     ifstream file;
     file.open("instances/instances.txt");
@@ -82,6 +83,8 @@ vector<Instance *> Utils::buildInstances() {
 
 
 Instance * Utils::buildInstance(string fileName) {
+
+    //fileName = fileName.substr(0,fileName.size()-1);
 
     ifstream file;
     file.open(fileName);
@@ -142,7 +145,8 @@ Instance * Utils::buildInstance(string fileName) {
 
     instance->n_node = nodes.size();
 
-    //Definindo coordenadas, TW, ST e Customer type
+    //Definindo coordenadas, TW (time window), ST (service time) e Customer type
+    //Eaqui
     for(int i=0;i<instance->n_node;i++) {
         if(i!=1) {
             getline(file,line);
@@ -240,6 +244,16 @@ void Utils::print_result_file(Search *search, Instance *instance, int run, doubl
             cout<<"Output file not opened"<<endl;
         }
         file<<"--- "<<to_string(run)<<","<<to_string(search->solution->cost)<<","<<to_string(search->solution->used_routes)<<","<<to_string(time)<<","<<to_string(seed)<<endl;
+        //Mexi aqui
+        cout << "Imprime rotas" << endl;
+        cout << "num rotas usadas: " << search->solution->used_routes << endl;
+        for (Route* route: search->solution->routes) {
+            vector<Sequence>* route_sequences = &route->sequences;
+            for (Sequence sequence: *route_sequences) {
+                cout << sequence.node->id << " -> ";
+            }
+            cout << endl;
+        }
 
         for (Route* route: search->solution->routes) {
             vector<Sequence>* route_sequences = &route->sequences;
@@ -271,7 +285,6 @@ void Utils::print_result_file(Search *search, Instance *instance, int run, doubl
 
         }
         file<<endl;
-
     }
 
 
@@ -279,7 +292,7 @@ void Utils::print_result_file(Search *search, Instance *instance, int run, doubl
 
 }
 
-
+//tookenize
 vector<string> Utils::tookenize(string str, string symbol) {
 
     stringstream ss(str);
@@ -315,6 +328,8 @@ void Utils::print_final_stats(Stats *stats) {
 void Utils::print_screen_run(Stats *stats) {
     cout<<"AVG_COST: "<<stats->avg_cost<<" - AVG_TIME: "<<stats->avg_time<<" - BEST_COST: "<<stats->best_solution->cost<<" - BEST_TIME: "<<stats->best_time<<endl;
 }
+
+//TESTES
 //TODO testar
 void Utils::test_print_viability(Solution *solution, long seed) {
     int inviabilities = 0;

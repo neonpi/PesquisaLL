@@ -34,13 +34,14 @@ public:
     void insertion_heuristic(bool is_ig);
 
     //Busca local
+    //Intra
     void rvnd_intra();
     void ls_intra_exchange(bool *improved);
     void ls_intra_2opt(bool *improved);
     void ls_intra_or_opt_1(bool *improved);
     void ls_intra_or_opt_k(int k, bool *improved);
 
-
+    //Inter
     void rvnd_inter();
     void ls_inter_shift_1_0(bool *improved);
     void persist_shift_1_0(int* coordinates, double delta, bool is_reduction);
@@ -66,6 +67,11 @@ public:
     void ls_hybrid_reducer(bool *improved);
     void reduce_hybrid(int i_route, Route *route, int i_seq, Sequence *seq, bool *improved);
 
+    void aplica_inter_swap_c3(bool *improved, int b_rA, int b_sA, int b_rB, int b_sB);
+
+    void ls_change_c3(bool *improved);
+    void ls_inter_swap_c3_locker(bool *improved);
+    void reduce_c3(int i_route, Route *route, int i_seq, Sequence *seq, bool *improved);
 
     //IG
     void iterated_greedy();
@@ -114,6 +120,7 @@ public:
     bool propagate_virtual_swap_2_1(int route_index, int previous_sequence_index, Sequence *cand_sequence_1,Sequence *cand_sequence_2);
     bool propagate_virtual_swap_2_2(int route_index, int previous_sequence_index, Sequence *cand_sequence_1,Sequence *cand_sequence_2);
 
+    void persist_swap_1_1C3(int *coordinates, double delta);
     void fill_forward_virtual(Sequence *previous_sequence, Sequence* current_sequence);
     void fill_forward(Sequence *previous_sequence, Sequence* current_sequence);
 

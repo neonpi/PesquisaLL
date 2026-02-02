@@ -6,6 +6,7 @@
 
 #include <algorithm>
 
+//Leitura do arquivo p instância
 Instance::Instance() {
     this->name="";
     this->n_node = 0;
@@ -22,6 +23,7 @@ Instance::Instance() {
     this->avg_speed=0;
 }
 
+//Construtor?
 Instance::~Instance() {
 
     if(this->nodes.empty()) {
@@ -32,12 +34,14 @@ Instance::~Instance() {
     }
 
 }
+
+//Calcula a distância das coordenadas index
 void Instance::calculate_distances() {
     this->distances = new double*[this->n_node];
     for(int i=0; i<this->n_node; i++) {
         this->distances[i] = new double[this->n_node];
     }
-
+    //Distâncias = peso arestas?
     for(int i=0; i<this->n_node; i++) {
         for(int j=i; j<this->n_node;j++) {
             if(i==j) {
@@ -79,6 +83,7 @@ void Instance::print() {
     }
 }
 
+//Achar um nó dentro do vetor de nós pelo id dele
 Node * Instance::find_node_per_id(string id) {
     for(int i=0; i<(int)this->nodes.size(); i++) {
         if(this->nodes.at(i).id == id) {

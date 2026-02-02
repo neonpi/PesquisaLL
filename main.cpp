@@ -30,7 +30,8 @@ int main(int argc, char *argv[])
         vector<Instance*> instances = Utils::buildInstances();
         cout<<"LOADING FINISHED"<<endl;
 
-        Config* config = new Config(30,0.2,1.0,false);
+        //Config* config = new Config(30,0.2,1.0,false);
+        Config* config = new Config(1,0.2,1.0,true);
         //Config* config = new Config(1000000,0.2,false);
         config->print();
 
@@ -48,10 +49,13 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
+
+
 void default_run(vector<Instance*> *instances, Config* config) {
 
     for(Instance * instance: *instances) {
         cout<<"Instance "<< instance->name<<endl;
+        //Constroi "Status" dessa run
         Stats* stats = new Stats(instance, config);
         Utils::print_result_file(nullptr, instance, 0, 0.0, 0.0);
 
@@ -193,7 +197,7 @@ void grasp_run(Instance *instance, Config* config, Stats* stats) {
 
 
 void irace_run(int argc, char *argv[]) {
-    string instance_name = argv[2];
+    string instance_name = argv[1];
     long seed = stol(argv[4]);
     double alpha_constr = stod(argv[6]);
     double alpha_ig = stod(argv[8]);

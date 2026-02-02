@@ -692,31 +692,6 @@ void Search::reduce_hybrid(int i_route, Route *route, int i_seq, Sequence *seq, 
     }
 }
 
-//Apagar
-// void Search::aplica_inter_swap_c3(bool *improved, int b_rA, int b_sA, int b_rB, int b_sB) {
-//     Route *routeA = this->solution->routes[b_rA];
-//     Route *routeB = this->solution->routes[b_rB];
-//     Sequence *seqA = &routeA->sequences[b_sA];
-//     Sequence *seqB = &routeB->sequences[b_sB];
-//
-//     // Atualização de carga manual
-//     double d_a = 0.0;
-//     for (Node *n: seqA->customers) d_a += n->load_demand;
-//     double d_b = 0.0;
-//     for (Node *n: seqB->customers) d_b += n->load_demand;
-//
-//     routeA->load = routeA->load - d_a + d_b;
-//     routeB->load = routeB->load - d_b + d_a;
-//
-//     // Troca física
-//     Node *tN = seqA->node;
-//     seqA->node = seqB->node;
-//     seqB->node = tN;
-//     std::swap(seqA->customers, seqB->customers);
-//
-//     *improved = true;
-// }
-
 void Search::ls_inter_swap_c3_locker(bool *improved) {
     double best_delta = 0.0;
     int coordinates[4] = {-1, -1, -1, -1}; //i_route_a,i_seq_a,i_route_b,i_seq_b
